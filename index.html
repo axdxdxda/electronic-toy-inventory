@@ -4,29 +4,36 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>電子元件互動教學 | 首頁</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* 創客DIY風格色彩 - 白色主題 */
-      --bg-primary: #ffffff;
-      --bg-secondary: #f8fafc;
-      --bg-gradient: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
-      --card-bg: rgba(255, 255, 255, 0.9);
-      --card-border: rgba(226, 232, 240, 0.8);
-      --text-primary: #1e293b;
-      --text-secondary: #475569;
-      --text-muted: #64748b;
+      /* 🍬 糖果色系 - 小朋友最愛！ */
+      --candy-pink: #FF6B9D;
+      --candy-orange: #FF9F43;
+      --candy-yellow: #FECA57;
+      --candy-green: #5CD85A;
+      --candy-cyan: #48DBFB;
+      --candy-blue: #54A0FF;
+      --candy-purple: #A55EEA;
       
-      /* 創新科技色彩 */
-      --accent-cyber: #00d4ff;
-      --accent-neon: #39ff14;
-      --accent-electric: #ff6b35;
-      --accent-maker: #ff9500;
-      --accent-purple: #8b5cf6;
+      /* 背景與卡片 */
+      --bg-primary: #FFF9F0;
+      --bg-secondary: #FFF5E6;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(255, 200, 150, 0.4);
       
-      /* 互動效果 */
-      --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.3);
-      --glow-green: 0 0 20px rgba(57, 255, 20, 0.3);
-      --glow-orange: 0 0 20px rgba(255, 107, 53, 0.3);
+      /* 文字顏色 */
+      --text-primary: #2D3436;
+      --text-secondary: #636E72;
+      --text-fun: #6C5CE7;
+      
+      /* 陰影與光暈 */
+      --shadow-soft: 0 10px 40px rgba(255, 107, 157, 0.15);
+      --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.08);
+      --glow-pink: 0 0 30px rgba(255, 107, 157, 0.4);
+      --glow-cyan: 0 0 30px rgba(72, 219, 251, 0.4);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -37,42 +44,162 @@
     }
     
     body {
-      font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
-      line-height: 1.6;
+      line-height: 1.7;
       overflow-x: hidden;
+      font-size: 18px;
       
-      /* 動態背景 - 白色主題 */
+      /* 夢幻漸層背景 */
       background: 
-        radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 40% 80%, rgba(255, 149, 0, 0.03) 0%, transparent 50%),
-        var(--bg-gradient);
-      
-      animation: backgroundShift 20s ease-in-out infinite;
-    }
-    
-    @keyframes backgroundShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
+        radial-gradient(circle at 10% 20%, rgba(255, 107, 157, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(72, 219, 251, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(254, 202, 87, 0.05) 0%, transparent 60%),
+        linear-gradient(180deg, #FFF9F0 0%, #FFF5E6 50%, #FFEFDB 100%);
+      background-attachment: fixed;
     }
 
-    /* 創客風格頭部 */
-    header {
-      position: sticky;
+    /* ===== 漂浮裝飾動畫 ===== */
+    .floating-decorations {
+      position: fixed;
       top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .float-item {
+      position: absolute;
+      font-size: 2rem;
+      opacity: 0.6;
+      animation: floatAround 20s ease-in-out infinite;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+    }
+
+    .float-item:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; animation-duration: 25s; }
+    .float-item:nth-child(2) { top: 20%; right: 10%; animation-delay: -5s; animation-duration: 22s; }
+    .float-item:nth-child(3) { top: 60%; left: 8%; animation-delay: -10s; animation-duration: 28s; }
+    .float-item:nth-child(4) { top: 70%; right: 5%; animation-delay: -15s; animation-duration: 24s; }
+    .float-item:nth-child(5) { top: 40%; left: 3%; animation-delay: -8s; animation-duration: 26s; }
+    .float-item:nth-child(6) { top: 85%; left: 15%; animation-delay: -12s; animation-duration: 23s; }
+    .float-item:nth-child(7) { top: 30%; right: 3%; animation-delay: -18s; animation-duration: 27s; }
+    .float-item:nth-child(8) { top: 50%; right: 8%; animation-delay: -3s; animation-duration: 21s; }
+
+    @keyframes floatAround {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(20px, -30px) rotate(10deg); }
+      50% { transform: translate(-10px, 20px) rotate(-5deg); }
+      75% { transform: translate(15px, 10px) rotate(8deg); }
+    }
+
+    /* ===== 可愛吉祥物 ===== */
+    .mascot {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      z-index: 1000;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .mascot-body {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--candy-cyan), var(--candy-blue));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      box-shadow: var(--shadow-soft), 0 0 0 4px white;
+      animation: mascotBounce 2s ease-in-out infinite;
+      position: relative;
+    }
+
+    .mascot-body::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, var(--candy-yellow), var(--candy-orange));
+      border-radius: 50%;
+      animation: antennaBob 1s ease-in-out infinite alternate;
+    }
+
+    .mascot:hover .mascot-body {
+      transform: scale(1.1);
+      box-shadow: var(--glow-cyan), 0 0 0 4px white;
+    }
+
+    .mascot-speech {
+      position: absolute;
+      bottom: 100%;
+      right: 0;
+      background: white;
+      padding: 12px 18px;
+      border-radius: 20px;
+      box-shadow: var(--shadow-card);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      margin-bottom: 10px;
+    }
+
+    .mascot-speech::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      right: 30px;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid white;
+    }
+
+    .mascot:hover .mascot-speech {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes mascotBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes antennaBob {
+      from { transform: translateX(-50%) rotate(-15deg); }
+      to { transform: translateX(-50%) rotate(15deg); }
+    }
+
+    /* ===== 頂部導航（固定於畫面上方，捲動時跟著顯示）===== */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
       z-index: 100;
       background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px) saturate(180%);
-      border-bottom: 1px solid var(--card-border);
-      padding: 16px 0;
-      
-      /* 科技感邊框陰影 */
-      box-shadow: 
-        0 1px 0 rgba(0, 0, 0, 0.05),
-        0 1px 20px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(20px);
+      border-bottom: 3px solid var(--candy-pink);
+      padding: 12px 0;
+      box-shadow: 0 4px 20px rgba(255, 107, 157, 0.1);
     }
+
+    /* 避免內容被固定導航遮住 */
+    body { padding-top: 76px; }
+    /* 點擊導航錨點時，區塊標題不會被導航列遮住 */
+    section[id] { scroll-margin-top: 76px; }
 
     .navbar {
       max-width: 1200px;
@@ -87,28 +214,29 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: 24px;
-      font-weight: 800;
+      font-size: 1.5rem;
+      font-weight: 900;
       color: var(--text-primary);
       text-decoration: none;
     }
 
     .logo-icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--accent-cyber), var(--accent-purple));
-      border-radius: 8px;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--candy-pink), var(--candy-orange));
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      box-shadow: var(--glow-cyan);
-      animation: logoGlow 3s ease-in-out infinite alternate;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+      animation: logoWiggle 3s ease-in-out infinite;
     }
-    
-    @keyframes logoGlow {
-      from { box-shadow: var(--glow-cyan); }
-      to { box-shadow: 0 0 30px rgba(0, 212, 255, 0.6); }
+
+    @keyframes logoWiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-5deg); }
+      75% { transform: rotate(5deg); }
     }
 
     .nav-links {
@@ -118,347 +246,174 @@
     }
 
     .nav-link {
-      padding: 8px 16px;
-      border-radius: 8px;
+      padding: 10px 20px;
+      border-radius: 50px;
       color: var(--text-secondary);
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 700;
+      font-size: 1rem;
       transition: all 0.3s ease;
-      border: 1px solid transparent;
+      border: 2px solid transparent;
     }
 
     .nav-link:hover {
-      color: var(--accent-cyber);
-      background: rgba(0, 212, 255, 0.08);
-      border-color: rgba(0, 212, 255, 0.2);
-      box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+      color: white;
+      background: linear-gradient(135deg, var(--candy-pink), var(--candy-purple));
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(255, 107, 157, 0.3);
     }
 
-    /* 主要內容容器 */
+    /* 漢堡選單 */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      padding: 10px;
+      z-index: 1001;
+    }
+
+    .hamburger span {
+      width: 30px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--candy-pink), var(--candy-orange));
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(7px, 7px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -7px);
+    }
+
+    /* 手機版選單 */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.98);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-menu.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-menu a {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      text-decoration: none;
+      padding: 15px 40px;
+      border-radius: 50px;
+      background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(72, 219, 251, 0.1));
+      transition: all 0.3s ease;
+    }
+
+    .mobile-menu a:hover {
+      background: linear-gradient(135deg, var(--candy-pink), var(--candy-purple));
+      color: white;
+      transform: scale(1.05);
+    }
+
+    /* ===== 主要內容容器 ===== */
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 40px 24px;
+      position: relative;
+      z-index: 1;
     }
 
-    /* 英雄區域 */
+    /* ===== 英雄區域 ===== */
     .hero {
       text-align: center;
       padding: 60px 0 80px;
       position: relative;
     }
 
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 200px;
-      height: 200px;
-      background: radial-gradient(circle, var(--accent-cyber) 0%, transparent 70%);
-      opacity: 0.1;
-      border-radius: 50%;
-      animation: heroGlow 4s ease-in-out infinite alternate;
-    }
-    
-    @keyframes heroGlow {
-      from { transform: translateX(-50%) scale(1); opacity: 0.1; }
-      to { transform: translateX(-50%) scale(1.2); opacity: 0.2; }
-    }
-
-    .hero h1 {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--accent-cyber), var(--accent-neon), var(--accent-electric));
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 20px;
-      line-height: 1.2;
-    }
-
-    .hero p {
-      font-size: 1.2rem;
-      color: var(--text-secondary);
-      max-width: 600px;
-      margin: 0 auto 40px;
-    }
-
     .hero-badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(0, 212, 255, 0.08);
-      border: 1px solid rgba(0, 212, 255, 0.2);
+      gap: 10px;
+      background: linear-gradient(135deg, var(--candy-yellow), var(--candy-orange));
       border-radius: 50px;
-      padding: 8px 20px;
-      color: var(--accent-cyber);
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 30px;
-      box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
-    }
-
-    /* 區段標題 */
-    .section {
-      margin-bottom: 60px;
-    }
-
-    .section-header {
-      background: var(--card-bg);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 32px;
-      margin-bottom: 32px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .section-header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent-cyber), var(--accent-neon), var(--accent-electric));
-    }
-
-    .section-title {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .section-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, var(--accent-electric), var(--accent-maker));
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      box-shadow: var(--glow-orange);
-    }
-
-    .section-desc {
-      color: var(--text-secondary);
-      font-size: 1.1rem;
-      line-height: 1.6;
-    }
-
-    /* 卡片網格 */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px;
-    }
-
-    /* 創客風格卡片 */
-    .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 24px;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
-      
-      /* 白色主題陰影效果 */
-      box-shadow: 
-        0 4px 20px rgba(0, 0, 0, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent-cyber), transparent);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-8px);
-      border-color: var(--accent-cyber);
-      box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.12),
-        0 0 20px rgba(0, 212, 255, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 1);
-    }
-
-    .card:hover::before {
-      opacity: 1;
-    }
-
-    .card-content {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-    }
-
-    .card-icon {
-      width: 80px;
-      height: 80px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(139, 92, 246, 0.1));
-      border: 1px solid rgba(0, 212, 255, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card-icon img {
-      width: 72px;
-      height: 72px;
-      object-fit: contain;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 8px;
-    }
-
-    .card-info {
-      flex: 1;
-    }
-
-    .card-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 8px;
-      line-height: 1.3;
-    }
-
-    .card-desc {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      line-height: 1.5;
-      margin-bottom: 16px;
-    }
-
-    .card-action {
-      background: linear-gradient(135deg, var(--accent-cyber), var(--accent-purple));
+      padding: 12px 28px;
       color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 16px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-      box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 25px rgba(255, 159, 67, 0.35);
+      animation: badgePop 0.6s ease-out;
     }
 
-    .card-action:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 212, 255, 0.25);
+    @keyframes badgePop {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
     }
 
-    /* 特殊效果卡片變化 */
-    .card:nth-child(2n) .card-icon {
-      background: linear-gradient(135deg, rgba(57, 255, 20, 0.1), rgba(255, 107, 53, 0.1));
-      border-color: rgba(57, 255, 20, 0.2);
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--candy-pink), var(--candy-purple), var(--candy-cyan));
+      background-size: 200% 200%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 24px;
+      line-height: 1.2;
+      animation: gradientShift 5s ease-in-out infinite;
     }
 
-    .card:nth-child(3n) .card-icon {
-      background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 149, 0, 0.1));
-      border-color: rgba(255, 107, 53, 0.2);
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
-    /* 響應式設計 */
-    @media (max-width: 768px) {
-      .navbar {
-        padding: 0 16px;
-      }
-      
-      .nav-links {
-        display: none;
-      }
-      
-      .hero {
-        padding: 40px 0 60px;
-      }
-      
-      .container {
-        padding: 20px 16px;
-      }
-      
-      .grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-      
-      .card-content {
-        gap: 16px;
-      }
-      
-      .card-icon {
-        width: 64px;
-        height: 64px;
-      }
-      
-      .card-icon img {
-        width: 56px;
-        height: 56px;
-      }
+    .hero p {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin: 0 auto 50px;
+      line-height: 1.8;
     }
 
-    /* 特殊裝飾效果 */
-    .circuit-pattern {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.008;
-      z-index: -1;
-      background-image: 
-        linear-gradient(90deg, #64748b 1px, transparent 1px),
-        linear-gradient(180deg, #64748b 1px, transparent 1px);
-      background-size: 60px 60px;
-      animation: circuitMove 50s linear infinite;
-    }
-    
-    @keyframes circuitMove {
-      from { transform: translate(0, 0); }
-      to { transform: translate(40px, 40px); }
-    }
-
-    /* 輪播圖樣式 */
+    /* ===== 輪播圖樣式 ===== */
     .carousel-container {
       position: relative;
       width: 100%;
       max-width: 1000px;
       margin: 40px auto;
-      border-radius: 20px;
+      border-radius: 30px;
       overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 20px 60px rgba(255, 107, 157, 0.2);
       background: white;
+      border: 4px solid white;
     }
 
     .carousel-wrapper {
       position: relative;
       width: 100%;
-      height: 400px;
+      height: 420px;
       overflow: hidden;
     }
 
@@ -466,7 +421,7 @@
       display: flex;
       width: 300%;
       height: 100%;
-      animation: carousel 12s infinite;
+      animation: carousel 15s infinite;
     }
 
     .carousel-slide {
@@ -480,11 +435,11 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.3s ease;
+      transition: transform 0.5s ease;
     }
 
     .carousel-slide:hover img {
-      transform: scale(1.05);
+      transform: scale(1.08);
     }
 
     .carousel-overlay {
@@ -492,11 +447,11 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
       color: white;
-      padding: 30px 24px 24px;
+      padding: 40px 30px 30px;
       transform: translateY(100%);
-      transition: transform 0.3s ease;
+      transition: transform 0.4s ease;
     }
 
     .carousel-slide:hover .carousel-overlay {
@@ -504,141 +459,586 @@
     }
 
     .carousel-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 8px;
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 10px;
     }
 
     .carousel-desc {
-      font-size: 1rem;
+      font-size: 1.1rem;
       opacity: 0.9;
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
     @keyframes carousel {
-      0%, 30% {
-        transform: translateX(0);
-      }
-      33.33%, 63.33% {
-        transform: translateX(-33.333%);
-      }
-      66.66%, 96.66% {
-        transform: translateX(-66.666%);
-      }
-      100% {
-        transform: translateX(0);
-      }
+      0%, 28% { transform: translateX(0); }
+      33%, 61% { transform: translateX(-33.333%); }
+      66%, 94% { transform: translateX(-66.666%); }
+      100% { transform: translateX(0); }
     }
 
     .carousel-indicators {
       position: absolute;
-      bottom: 20px;
+      bottom: 25px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 12px;
+      gap: 15px;
       z-index: 10;
     }
 
     .carousel-indicator {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.5);
       cursor: pointer;
       transition: all 0.3s ease;
-      animation: indicatorCycle 12s infinite;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      padding: 2px;
-      position: relative;
+      animation: indicatorCycle 15s infinite;
+      border: 3px solid rgba(255, 255, 255, 0.3);
     }
-    
+
     .carousel-indicator:hover {
-      background: rgba(0, 212, 255, 0.6);
-      transform: scale(1.1);
-      border-color: rgba(255, 255, 255, 0.6);
-    }
-    
-    .carousel-indicator:active {
-      transform: scale(0.95);
+      background: var(--candy-pink);
+      transform: scale(1.3);
     }
 
-    .carousel-indicator:nth-child(1) {
-      animation-delay: 0s;
-    }
-
-    .carousel-indicator:nth-child(2) {
-      animation-delay: 4s;
-    }
-
-    .carousel-indicator:nth-child(3) {
-      animation-delay: 8s;
-    }
+    .carousel-indicator:nth-child(1) { animation-delay: 0s; }
+    .carousel-indicator:nth-child(2) { animation-delay: 5s; }
+    .carousel-indicator:nth-child(3) { animation-delay: 10s; }
 
     @keyframes indicatorCycle {
-      0%, 30% {
-        background: rgba(0, 212, 255, 0.8);
-        transform: scale(1.2);
-      }
-      33.33%, 100% {
-        background: rgba(255, 255, 255, 0.5);
-        transform: scale(1);
-      }
+      0%, 28% { background: var(--candy-pink); transform: scale(1.3); }
+      33%, 100% { background: rgba(255, 255, 255, 0.5); transform: scale(1); }
     }
 
     .carousel-pause-btn {
       position: absolute;
       top: 20px;
       right: 20px;
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
       border-radius: 50%;
-      width: 44px;
-      height: 44px;
+      width: 50px;
+      height: 50px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
       cursor: pointer;
       transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
       z-index: 10;
-      font-size: 16px;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
     .carousel-pause-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: scale(1.1);
+      background: white;
+      transform: scale(1.15);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     }
 
-    /* 響應式設計 */
+    /* ===== 區段標題 ===== */
+    .section {
+      margin-bottom: 70px;
+    }
+
+    .section-header {
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      border-radius: 24px;
+      padding: 36px;
+      margin-bottom: 36px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .section-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--candy-pink), var(--candy-yellow), var(--candy-cyan), var(--candy-purple));
+      border-radius: 24px 24px 0 0;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .section-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .section-icon.circuits { background: linear-gradient(135deg, var(--candy-yellow), var(--candy-orange)); }
+    .section-icon.components { background: linear-gradient(135deg, var(--candy-cyan), var(--candy-blue)); }
+    .section-icon.arduino { background: linear-gradient(135deg, var(--candy-purple), var(--candy-pink)); }
+    .section-icon.print3d { background: linear-gradient(135deg, var(--candy-cyan), #6366f1); }
+    .icon-3d-printer { display: inline-block; vertical-align: middle; }
+    .icon-3d-printer svg { display: block; width: 1.1em; height: 1.1em; }
+    .section-icon .icon-3d-printer svg { width: 32px; height: 32px; }
+    .card-icon .icon-3d-printer svg { width: 42px; height: 42px; }
+
+    .section-desc {
+      color: var(--text-secondary);
+      font-size: 1.15rem;
+      line-height: 1.8;
+    }
+
+    /* ===== 卡片網格 ===== */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 28px;
+    }
+
+    /* ===== 超可愛卡片 ===== */
+    .card {
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      border-radius: 24px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      box-shadow: var(--shadow-card);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 107, 157, 0.03),
+        transparent
+      );
+      transform: rotate(45deg);
+      transition: all 0.6s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-12px) scale(1.02);
+      border-color: var(--candy-pink);
+      box-shadow: 
+        0 25px 50px rgba(255, 107, 157, 0.2),
+        0 0 0 4px rgba(255, 107, 157, 0.1);
+    }
+
+    .card:hover::before {
+      left: 100%;
+    }
+
+    /* 卡片閃亮星星效果 */
+    .card::after {
+      content: '✨';
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.5rem;
+      opacity: 0;
+      transform: scale(0) rotate(-45deg);
+      transition: all 0.4s ease;
+    }
+
+    .card:hover::after {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+
+    .card-content {
+      display: flex;
+      gap: 22px;
+      align-items: flex-start;
+    }
+
+    .card-icon {
+      width: 90px;
+      height: 90px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      flex-shrink: 0;
+      position: relative;
+      transition: all 0.4s ease;
+    }
+
+    .card:hover .card-icon {
+      transform: rotate(-5deg) scale(1.1);
+    }
+
+    .card-icon.gradient-1 { background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(255, 159, 67, 0.15)); border: 2px solid rgba(255, 107, 157, 0.2); }
+    .card-icon.gradient-2 { background: linear-gradient(135deg, rgba(72, 219, 251, 0.15), rgba(84, 160, 255, 0.15)); border: 2px solid rgba(72, 219, 251, 0.2); }
+    .card-icon.gradient-3 { background: linear-gradient(135deg, rgba(254, 202, 87, 0.15), rgba(92, 216, 90, 0.15)); border: 2px solid rgba(254, 202, 87, 0.2); }
+    .card-icon.gradient-4 { background: linear-gradient(135deg, rgba(165, 94, 234, 0.15), rgba(255, 107, 157, 0.15)); border: 2px solid rgba(165, 94, 234, 0.2); }
+
+    .card-icon img {
+      width: 75px;
+      height: 75px;
+      object-fit: contain;
+      border-radius: 16px;
+      background: white;
+      padding: 8px;
+    }
+
+    .card-info {
+      flex: 1;
+    }
+
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .card-action {
+      background: linear-gradient(135deg, var(--candy-pink), var(--candy-purple));
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 28px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(255, 107, 157, 0.3);
+    }
+
+    .card-action:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
+    }
+
+    .card-action::after {
+      content: '→';
+      transition: transform 0.3s ease;
+    }
+
+    .card-action:hover::after {
+      transform: translateX(5px);
+    }
+
+    /* 不同區段的卡片顏色 */
+    .section-circuits .card-action {
+      background: linear-gradient(135deg, var(--candy-yellow), var(--candy-orange));
+      box-shadow: 0 6px 20px rgba(255, 159, 67, 0.3);
+    }
+
+    .section-components .card-action {
+      background: linear-gradient(135deg, var(--candy-cyan), var(--candy-blue));
+      box-shadow: 0 6px 20px rgba(72, 219, 251, 0.3);
+    }
+
+    .section-arduino .card-action {
+      background: linear-gradient(135deg, var(--candy-purple), var(--candy-pink));
+      box-shadow: 0 6px 20px rgba(165, 94, 234, 0.3);
+    }
+
+    .section-3dprinting .card-action {
+      background: linear-gradient(135deg, var(--candy-cyan), #6366f1);
+      box-shadow: 0 6px 20px rgba(72, 219, 251, 0.3);
+    }
+
+    /* ===== 返回頂部按鈕 ===== */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--candy-pink), var(--candy-purple));
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 12px 35px rgba(255, 107, 157, 0.5);
+    }
+
+    /* ===== 頁尾 ===== */
+    footer {
+      background: linear-gradient(135deg, var(--candy-purple), var(--candy-pink));
+      color: white;
+      text-align: center;
+      padding: 40px 24px;
+      margin-top: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    footer::before {
+      content: '⚡ 🔌 💡 🔋 🤖 ⚡ 🔌 💡 🔋 🤖';
+      position: absolute;
+      top: 15px;
+      left: 0;
+      width: 200%;
+      font-size: 1.5rem;
+      opacity: 0.2;
+      animation: footerScroll 20s linear infinite;
+    }
+
+    @keyframes footerScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .footer-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .footer-text {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    /* ===== 點擊效果 ===== */
+    .click-effect {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      animation: clickPop 0.6s ease-out forwards;
+    }
+
+    @keyframes clickPop {
+      0% { transform: scale(0); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+
+    /* ===== 載入動畫 ===== */
+    .page-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--candy-pink), var(--candy-purple));
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .page-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-icon {
+      font-size: 5rem;
+      animation: loaderBounce 0.8s ease-in-out infinite;
+    }
+
+    .loader-text {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-top: 20px;
+      animation: loaderPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes loaderBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-20px) scale(1.1); }
+    }
+
+    @keyframes loaderPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ===== 響應式設計 ===== */
     @media (max-width: 768px) {
+      body {
+        font-size: 16px;
+      }
+
+      .navbar {
+        padding: 0 16px;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .mobile-menu {
+        display: flex;
+      }
+      
+      .hero {
+        padding: 40px 0 60px;
+      }
+
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+      }
+      
+      .container {
+        padding: 20px 16px;
+      }
+      
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .card-content {
+        gap: 16px;
+      }
+      
+      .card-icon {
+        width: 70px;
+        height: 70px;
+      }
+      
+      .card-icon img {
+        width: 60px;
+        height: 60px;
+      }
+
       .carousel-wrapper {
-        height: 250px;
+        height: 280px;
       }
-      
+
       .carousel-container {
-        margin: 20px 16px;
-        border-radius: 16px;
+        margin: 20px 0;
+        border-radius: 20px;
       }
-      
-      .carousel-overlay {
-        padding: 20px 16px 16px;
+
+      .section-header {
+        padding: 24px;
       }
-      
-      .carousel-title {
+
+      .section-title {
+        font-size: 1.6rem;
+      }
+
+      .section-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+      }
+
+      .mascot {
+        bottom: 80px;
+        right: 15px;
+      }
+
+      .mascot-body {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+      }
+
+      .back-to-top {
+        width: 50px;
+        height: 50px;
+        bottom: 20px;
+        left: 15px;
         font-size: 1.2rem;
       }
-      
-      .carousel-desc {
-        font-size: 0.9rem;
+
+      .float-item {
+        font-size: 1.5rem;
       }
     }
   </style>
 </head>
 <body>
-  <!-- 電路板背景圖案 -->
-  <div class="circuit-pattern"></div>
+  <!-- 載入動畫 -->
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-icon">⚡</div>
+    <div class="loader-text">正在啟動電子世界...</div>
+  </div>
+
+  <!-- 漂浮裝飾 -->
+  <div class="floating-decorations">
+    <span class="float-item">💡</span>
+    <span class="float-item">⚡</span>
+    <span class="float-item">🔌</span>
+    <span class="float-item">🔋</span>
+    <span class="float-item">✨</span>
+    <span class="float-item">🌟</span>
+    <span class="float-item">🤖</span>
+    <span class="float-item">🎨</span>
+  </div>
+
+  <!-- 可愛吉祥物 -->
+  <div class="mascot" id="mascot">
+    <div class="mascot-speech">嗨！點我有驚喜喔！🎉</div>
+    <div class="mascot-body">🤖</div>
+  </div>
+
+  <!-- 返回頂部按鈕 -->
+  <button class="back-to-top" id="backToTop" title="回到頂部">⬆️</button>
   
   <header>
     <nav class="navbar">
@@ -647,24 +1047,38 @@
         <span>創客電子學院</span>
       </a>
       <ul class="nav-links">
-        <li><a href="#circuits" class="nav-link">基礎電路</a></li>
-        <li><a href="#components" class="nav-link">電子元件</a></li>
-        <li><a href="#arduino" class="nav-link">Arduino</a></li>
+        <li><a href="#3d-printing" class="nav-link"><span class="icon-3d-printer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="14" rx="1.5"/><rect x="5" y="15" width="14" height="2" rx="0.5"/><rect x="9" y="6" width="6" height="4" rx="0.5"/><circle cx="12" cy="12" r="1.2"/></svg></span> 3D 列印</a></li>
+        <li><a href="#circuits" class="nav-link">🔌 基礎電路</a></li>
+        <li><a href="#components" class="nav-link">🔧 電子元件</a></li>
+        <li><a href="#arduino" class="nav-link">🤖 Arduino</a></li>
       </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </nav>
   </header>
+
+  <!-- 手機版選單 -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#3d-printing"><span class="icon-3d-printer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="14" rx="1.5"/><rect x="5" y="15" width="14" height="2" rx="0.5"/><rect x="9" y="6" width="6" height="4" rx="0.5"/><circle cx="12" cy="12" r="1.2"/></svg></span> 3D 列印</a>
+    <a href="#circuits">🔌 基礎電路</a>
+    <a href="#components">🔧 電子元件</a>
+    <a href="#arduino">🤖 Arduino</a>
+  </div>
 
   <!-- 英雄區域 -->
   <section class="hero">
     <div class="container">
       <div class="hero-badge">
-        <span>🔥</span>
+        <span>🚀</span>
         <span>從零開始的創客之路</span>
       </div>
       <h1>探索電子世界的無限可能</h1>
       <p>
-        透過互動式學習，掌握電子元件原理，踏上Arduino創客之旅。
-        用最生動的方式，讓複雜的電子概念變得簡單易懂！
+        透過超有趣的互動式學習，掌握電子元件原理，踏上Arduino創客之旅！
+        用最生動的方式，讓複雜的電子概念變得簡單又好玩！
       </p>
       
       <!-- 精彩內容輪播 -->
@@ -674,21 +1088,21 @@
             <div class="carousel-slide">
               <img src="封面圖片/1.jpg" alt="Arduino創客實驗室">
               <div class="carousel-overlay">
-                <div class="carousel-title">Arduino創客實驗室</div>
+                <div class="carousel-title">🔬 Arduino創客實驗室</div>
                 <div class="carousel-desc">動手實作各種有趣的電子專案，從基礎到進階，一步步成為創客高手！</div>
               </div>
             </div>
             <div class="carousel-slide">
               <img src="封面圖片/2.jpg" alt="電子元件探索">
               <div class="carousel-overlay">
-                <div class="carousel-title">電子元件探索</div>
+                <div class="carousel-title">🔍 電子元件探索</div>
                 <div class="carousel-desc">深入了解各種電子元件的工作原理，用生動的比喻讓學習變得簡單有趣。</div>
               </div>
             </div>
             <div class="carousel-slide">
               <img src="封面圖片/3.jpg" alt="創客精神實踐">
               <div class="carousel-overlay">
-                <div class="carousel-title">創客精神實踐</div>
+                <div class="carousel-title">🎨 創客精神實踐</div>
                 <div class="carousel-desc">培養動手做、勇於嘗試的創客精神，讓想像力變成現實中的作品！</div>
               </div>
             </div>
@@ -711,317 +1125,490 @@
   </section>
 
   <div class="container">
-    <!-- 基礎電路系列 -->
-    <section class="section" id="circuits">
+    <!-- 3D 列印 -->
+    <section class="section section-3dprinting" id="3d-printing">
       <div class="section-header">
         <h2 class="section-title">
-          <div class="section-icon">🔌</div>
-          基礎電路系列
+          <div class="section-icon print3d"><span class="icon-3d-printer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="14" rx="1.5"/><rect x="5" y="15" width="14" height="2" rx="0.5"/><rect x="9" y="6" width="6" height="4" rx="0.5"/><circle cx="12" cy="12" r="1.2"/></svg></span></div>
+          3D 列印小學堂
         </h2>
         <p class="section-desc">
-          用生活中的例子，讓小朋友輕鬆理解電路的神奇世界！從水流到電流，從開關到燈泡，一起探索電的奧秘。
+          一層一層疊出實體！認識 3D 列印怎麼運作、可以印什麼，還有安全小提醒。用動畫看懂列印過程，小朋友也能輕鬆理解 🎨
         </p>
       </div>
 
       <div class="grid">
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">💧</div>
+            <div class="card-icon gradient-2"><span class="icon-3d-printer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="14" rx="1.5"/><rect x="5" y="15" width="14" height="2" rx="0.5"/><rect x="9" y="6" width="6" height="4" rx="0.5"/><circle cx="12" cy="12" r="1.2"/></svg></span></div>
+            <div class="card-info">
+              <h3 class="card-title">什麼是 3D 列印？</h3>
+              <p class="card-desc">像疊積木一樣一層一層做出實體！認識列印步驟、可以印什麼，以及安全注意事項。內含可愛動畫示範。</p>
+              <a class="card-action" href="3d-printing/index.html">開始探索</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 基礎電路系列 -->
+    <section class="section section-circuits" id="circuits">
+      <div class="section-header">
+        <h2 class="section-title">
+          <div class="section-icon circuits">🔌</div>
+          基礎電路系列
+        </h2>
+        <p class="section-desc">
+          用生活中的例子，讓小朋友輕鬆理解電路的神奇世界！從水流到電流，從開關到燈泡，一起探索電的奧秘 ⚡
+        </p>
+      </div>
+
+      <div class="grid">
+        <article class="card" onclick="playClickSound()">
+          <div class="card-content">
+            <div class="card-icon gradient-1">💧</div>
             <div class="card-info">
               <h3 class="card-title">電流就像水流</h3>
               <p class="card-desc">用水管和水流的例子，讓小朋友理解電流、電壓和電阻的基本概念。</p>
               <a class="card-action" href="circuits/current-flow.html">開始學習</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">🔋</div>
+            <div class="card-icon gradient-2">🔋</div>
             <div class="card-info">
               <h3 class="card-title">電池的秘密</h3>
               <p class="card-desc">電池為什麼能發電？正極負極有什麼不同？一起來認識電池家族。</p>
               <a class="card-action" href="circuits/battery-power.html">開始學習</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">🔌</div>
+            <div class="card-icon gradient-3">🔌</div>
             <div class="card-info">
               <h3 class="card-title">完整的電路</h3>
               <p class="card-desc">電為什麼要繞一圈？學習串聯、並聯，以及如何讓電流安全地工作。</p>
               <a class="card-action" href="circuits/complete-circuit.html">開始學習</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">⚠️</div>
+            <div class="card-icon gradient-4">⚠️</div>
             <div class="card-info">
               <h3 class="card-title">危險的短路</h3>
               <p class="card-desc">什麼是短路？為什麼會危險？學會安全用電，保護自己和家人。</p>
               <a class="card-action" href="circuits/short-circuit.html">開始學習</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">💡</div>
+            <div class="card-icon gradient-1">💡</div>
             <div class="card-info">
               <h3 class="card-title">開關的魔法</h3>
               <p class="card-desc">一個小小的開關，如何控制整個電路？探索各種開關的神奇功能。</p>
               <a class="card-action" href="circuits/switch-magic.html">開始學習</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">🏠</div>
+            <div class="card-icon gradient-2">🏠</div>
             <div class="card-info">
               <h3 class="card-title">家裡的電路</h3>
               <p class="card-desc">從插座到電燈，認識家中的電路系統，學會安全使用電器設備。</p>
               <a class="card-action" href="circuits/home-circuits.html">開始學習</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
       </div>
     </section>
 
     <!-- 電子元件系列 -->
-    <section class="section" id="components">
+    <section class="section section-components" id="components">
       <div class="section-header">
         <h2 class="section-title">
-          <div class="section-icon">🔧</div>
+          <div class="section-icon components">🔧</div>
           電子元件系列
         </h2>
         <p class="section-desc">
-          認識各種電子元件，學習它們的功能和使用方法。從基礎的電阻到複雜的三極體，每個元件都有它獨特的魅力！
+          認識各種電子元件，學習它們的功能和使用方法。從基礎的電阻到複雜的三極體，每個元件都有它獨特的魅力！🌟
         </p>
       </div>
 
       <div class="grid">
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon"><img src="元件圖片區/麵包板.JPG" alt="麵包板"></div>
+            <div class="card-icon gradient-2"><img src="元件圖片區/麵包板.JPG" alt="麵包板"></div>
             <div class="card-info">
               <h3 class="card-title">麵包板</h3>
               <p class="card-desc">不用烙鐵的拼積木電路板：上/下兩條為橫向電源軌；中間每列直的 5 個洞相通。</p>
               <a class="card-action" href="components/breadboard.html">探索原理</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon"><img src="元件圖片區/杜邦線.jpg" alt="杜邦線"></div>
+            <div class="card-icon gradient-3"><img src="元件圖片區/杜邦線.jpg" alt="杜邦線"></div>
             <div class="card-info">
               <h3 class="card-title">杜邦線</h3>
               <p class="card-desc">像延長線，把兩點接起來讓電流通過。可選擇顏色和接頭類型。</p>
               <a class="card-action" href="components/dupont.html">探索原理</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon"><img src="元件圖片區/電阻.JPG" alt="電阻"></div>
+            <div class="card-icon gradient-1"><img src="元件圖片區/電阻.JPG" alt="電阻"></div>
             <div class="card-info">
               <h3 class="card-title">電阻</h3>
               <p class="card-desc">限制電流，保護元件。透過色碼環讀取電阻值，模擬水流與電阻的關係。</p>
               <a class="card-action" href="components/resistor.html">探索原理</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon"><img src="元件圖片區/三色LED.JPG" alt="三色LED"></div>
+            <div class="card-icon gradient-4"><img src="元件圖片區/三色LED.JPG" alt="三色LED"></div>
             <div class="card-info">
               <h3 class="card-title">三色 LED</h3>
               <p class="card-desc">RGB混色原理與電阻控制亮度的互動教學。紅綠藍三原色混出萬千色彩。</p>
               <a class="card-action" href="components/led.html">探索原理</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon"><img src="元件圖片區/震動馬達.JPG" alt="震動馬達"></div>
+            <div class="card-icon gradient-2"><img src="元件圖片區/震動馬達.JPG" alt="震動馬達"></div>
             <div class="card-info">
               <h3 class="card-title">震動馬達</h3>
               <p class="card-desc">探索震動原理與控制技術。調整強度、頻率，體驗不同震動模式的觸覺反饋。</p>
               <a class="card-action" href="components/vibration-motor.html">探索原理</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon"><img src="元件圖片區/數碼管.JPG" alt="數碼管"></div>
+            <div class="card-icon gradient-3"><img src="元件圖片區/數碼管.JPG" alt="數碼管"></div>
             <div class="card-info">
               <h3 class="card-title">數碼管</h3>
               <p class="card-desc">七段LED組成數字顯示。學習顯示邏輯、電路連接與數字編碼原理。</p>
               <a class="card-action" href="components/seven-segment.html">探索原理</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon"><img src="元件圖片區/蜂鳴器.JPG" alt="蜂鳴器"></div>
+            <div class="card-icon gradient-1"><img src="元件圖片區/蜂鳴器.JPG" alt="蜂鳴器"></div>
             <div class="card-info">
               <h3 class="card-title">蜂鳴器</h3>
               <p class="card-desc">Arduino音效控制教學。學習tone()函數、音階頻率與聲波原理。</p>
               <a class="card-action" href="components/buzzer.html">探索原理</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon"><img src="元件圖片區/二極體.JPG" alt="二極體"></div>
+            <div class="card-icon gradient-4"><img src="元件圖片區/二極體.JPG" alt="二極體"></div>
             <div class="card-info">
               <h3 class="card-title">二極體</h3>
               <p class="card-desc">單向導電元件。學習正反向偏壓、電流流向與整流保護應用。</p>
               <a class="card-action" href="components/diode.html">探索原理</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon"><img src="元件圖片區/三極體.JPG" alt="三極體"></div>
+            <div class="card-icon gradient-2"><img src="元件圖片區/三極體.JPG" alt="三極體"></div>
             <div class="card-info">
               <h3 class="card-title">三極體</h3>
               <p class="card-desc">小電流控制大電流。電流放大開關，智慧控制電路的核心元件。</p>
               <a class="card-action" href="components/transistor.html">探索原理</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon"><img src="元件圖片區/按鈕.JPG" alt="按鈕"></div>
+            <div class="card-icon gradient-3"><img src="元件圖片區/按鈕.JPG" alt="按鈕"></div>
             <div class="card-info">
               <h3 class="card-title">按鈕</h3>
               <p class="card-desc">最基本的開關元件。學習瞬時按鈕與切換按鈕的工作原理和應用。</p>
               <a class="card-action" href="components/button.html">探索原理</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
       </div>
     </section>
 
     <!-- Arduino 教學部分 -->
-    <section class="section" id="arduino">
+    <section class="section section-arduino" id="arduino">
       <div class="section-header">
         <h2 class="section-title">
-          <div class="section-icon">🤖</div>
+          <div class="section-icon arduino">🤖</div>
           Arduino 實作教學
         </h2>
         <p class="section-desc">
-          學會元件後，開始用 Arduino 做出真正的互動專案！從IDE安裝到與ChatGPT協作，讓AI成為你的程式設計夥伴。
+          學會元件後，開始用 Arduino 做出真正的互動專案！從IDE安裝到與ChatGPT協作，讓AI成為你的程式設計夥伴 🚀
         </p>
       </div>
 
       <div class="grid">
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">💻</div>
+            <div class="card-icon gradient-4">💻</div>
             <div class="card-info">
               <h3 class="card-title">Arduino IDE 安裝</h3>
               <p class="card-desc">下載並安裝Arduino開發環境，設定開發板與序列埠連接。</p>
               <a class="card-action" href="arduino/ide-install.html">開始安裝</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">⚙️</div>
+            <div class="card-icon gradient-1">⚙️</div>
             <div class="card-info">
               <h3 class="card-title">IDE 使用教學</h3>
               <p class="card-desc">學習Arduino IDE介面、程式上傳、序列監視器等基本操作。</p>
               <a class="card-action" href="arduino/ide-usage.html">開始學習</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">📌</div>
+            <div class="card-icon gradient-2">📌</div>
             <div class="card-info">
               <h3 class="card-title">接腳原理</h3>
               <p class="card-desc">認識Arduino各種接腳功能：數位、類比、PWM、電源接腳應用。</p>
               <a class="card-action" href="arduino/pin-theory.html">深入了解</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">🤖</div>
+            <div class="card-icon gradient-3">🤖</div>
             <div class="card-info">
               <h3 class="card-title">ChatGPT 協作</h3>
               <p class="card-desc">學習如何與AI協作寫程式，提問技巧與程式除錯方法。</p>
               <a class="card-action" href="arduino/chatgpt-guide.html">AI協作</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">🌈</div>
+            <div class="card-icon gradient-4">🌈</div>
             <div class="card-info">
               <h3 class="card-title">功課一：RGB燈控制</h3>
               <p class="card-desc">按鈕控制RGB LED變色：紅→藍→綠→關閉，循環切換。與AI討論電路連接與程式邏輯。</p>
               <a class="card-action" href="arduino/project1-rgb.html">開始挑戰</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">⏱️</div>
+            <div class="card-icon gradient-1">⏱️</div>
             <div class="card-info">
               <h3 class="card-title">功課二：數碼管倒數</h3>
               <p class="card-desc">按鈕啟動數碼管倒數計時功能。學習時間控制與數字顯示邏輯。</p>
               <a class="card-action" href="arduino/project2-segment.html">開始挑戰</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">🔔</div>
+            <div class="card-icon gradient-2">🔔</div>
             <div class="card-info">
               <h3 class="card-title">功課三：蜂鳴器控制</h3>
               <p class="card-desc">按鈕觸發蜂鳴器發聲。探索音頻控制與頻率調節原理。</p>
               <a class="card-action" href="arduino/project3-buzzer.html">開始挑戰</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
 
-        <article class="card">
+        <article class="card" onclick="playClickSound()">
           <div class="card-content">
-            <div class="card-icon">🔄</div>
+            <div class="card-icon gradient-3">🔄</div>
             <div class="card-info">
               <h3 class="card-title">功課四：震動馬達</h3>
               <p class="card-desc">按鈕控制震動馬達啟動。學習PWM控制與馬達驅動技術。</p>
               <a class="card-action" href="arduino/project4-motor.html">開始挑戰</a>
             </div>
-        </div>
-      </article>
+          </div>
+        </article>
       </div>
     </section>
   </div>
 
+  <!-- 頁尾 -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-title">⚡ 創客電子學院 ⚡</div>
+      <div class="footer-text">讓每個孩子都能成為小小發明家！🚀</div>
+    </div>
+  </footer>
+
+  <!-- 音效 (使用 Web Audio API) -->
   <script>
+    // 創建音效上下文
+    let audioContext;
+    
+    function initAudio() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playClickSound() {
+      initAudio();
+      
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.1);
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.15);
+    }
+
+    function playSuccessSound() {
+      initAudio();
+      
+      const notes = [523, 659, 784]; // C5, E5, G5
+      
+      notes.forEach((freq, index) => {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(freq, audioContext.currentTime + index * 0.1);
+        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime + index * 0.1);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + index * 0.1 + 0.3);
+        
+        oscillator.start(audioContext.currentTime + index * 0.1);
+        oscillator.stop(audioContext.currentTime + index * 0.1 + 0.3);
+      });
+    }
+
+    // 頁面載入動畫（約 0.5 秒後關閉）
+    window.addEventListener('load', function() {
+      setTimeout(() => {
+        document.getElementById('pageLoader').classList.add('hidden');
+        playSuccessSound();
+      }, 500);
+    });
+
+    // 漢堡選單功能
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', function() {
+      this.classList.toggle('active');
+      mobileMenu.classList.toggle('active');
+      playClickSound();
+    });
+
+    // 點擊手機選單項目後關閉選單
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('active');
+      });
+    });
+
+    // 返回頂部按鈕
+    const backToTop = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 500) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+
+    backToTop.addEventListener('click', function() {
+      playClickSound();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // 吉祥物互動
+    const mascot = document.getElementById('mascot');
+    const messages = [
+      '嗨！歡迎來到電子世界！🎉',
+      '今天要學什麼呢？🤔',
+      '電路好好玩！⚡',
+      '一起來做實驗吧！🔬',
+      '你好棒！繼續加油！💪',
+      '有問題可以問老師喔！👋',
+      '創客精神就是動手做！🛠️',
+      'Arduino超酷的！🤖'
+    ];
+
+    mascot.addEventListener('click', function() {
+      playSuccessSound();
+      const speech = this.querySelector('.mascot-speech');
+      const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+      speech.textContent = randomMessage;
+      speech.style.opacity = '1';
+      speech.style.transform = 'translateY(0)';
+      
+      // 讓吉祥物跳動
+      const body = this.querySelector('.mascot-body');
+      body.style.animation = 'none';
+      body.offsetHeight; // 觸發重排
+      body.style.animation = 'mascotBounce 0.5s ease-in-out 3';
+      
+      setTimeout(() => {
+        body.style.animation = 'mascotBounce 2s ease-in-out infinite';
+      }, 1500);
+    });
+
+    // 點擊效果
+    document.addEventListener('click', function(e) {
+      const effect = document.createElement('div');
+      effect.className = 'click-effect';
+      effect.style.left = e.clientX + 'px';
+      effect.style.top = e.clientY + 'px';
+      effect.innerHTML = '✨';
+      effect.style.fontSize = '2rem';
+      document.body.appendChild(effect);
+      
+      setTimeout(() => {
+        effect.remove();
+      }, 600);
+    });
+
     // 輪播控制功能
     document.addEventListener('DOMContentLoaded', function() {
       const carousel = document.getElementById('mainCarousel');
@@ -1031,11 +1618,11 @@
       
       let isPaused = false;
       let currentSlide = 0;
-      let manualControl = false;
       
       // 暫停/播放功能
       pauseBtn.addEventListener('click', function() {
         isPaused = !isPaused;
+        playClickSound();
         
         if (isPaused) {
           carouselTrack.style.animationPlayState = 'paused';
@@ -1074,51 +1661,61 @@
         }
       });
       
-      // 跳轉到指定幻燈片的函數
-      function goToSlide(slideIndex) {
-        currentSlide = slideIndex;
-        manualControl = true;
-        
-        // 停止當前動畫
-        carouselTrack.style.animation = 'none';
-        
-        // 立即跳轉到指定位置
-        const translateValue = -33.333 * slideIndex;
-        carouselTrack.style.transform = `translateX(${translateValue}%)`;
-        
-        // 更新所有指示器狀態
-        indicators.forEach((ind, idx) => {
-          if (idx === slideIndex) {
-            ind.style.background = 'rgba(0, 212, 255, 0.8)';
-            ind.style.transform = 'scale(1.2)';
-            ind.style.animation = 'none';
-          } else {
-            ind.style.background = 'rgba(255, 255, 255, 0.5)';
-            ind.style.transform = 'scale(1)';
-            ind.style.animation = 'none';
-          }
-        });
-        
-        // 2秒後恢復自動輪播
-        setTimeout(() => {
-          if (!isPaused) {
-            manualControl = false;
-            carouselTrack.style.animation = 'carousel 12s infinite';
-            indicators.forEach(ind => {
-              ind.style.animation = 'indicatorCycle 12s infinite';
-            });
-          }
-        }, 2000);
-      }
-      
-      // 點擊指示器跳轉到對應圖片
+      // 點擊指示器跳轉
       indicators.forEach((indicator, index) => {
         indicator.addEventListener('click', function() {
-          goToSlide(index);
+          playClickSound();
+          currentSlide = index;
+          
+          carouselTrack.style.animation = 'none';
+          const translateValue = -33.333 * index;
+          carouselTrack.style.transform = `translateX(${translateValue}%)`;
+          
+          indicators.forEach((ind, idx) => {
+            if (idx === index) {
+              ind.style.background = 'var(--candy-pink)';
+              ind.style.transform = 'scale(1.3)';
+              ind.style.animation = 'none';
+            } else {
+              ind.style.background = 'rgba(255, 255, 255, 0.5)';
+              ind.style.transform = 'scale(1)';
+              ind.style.animation = 'none';
+            }
+          });
+          
+          setTimeout(() => {
+            if (!isPaused) {
+              carouselTrack.style.animation = 'carousel 15s infinite';
+              indicators.forEach(ind => {
+                ind.style.animation = 'indicatorCycle 15s infinite';
+              });
+            }
+          }, 3000);
         });
       });
     });
-  </script>
 
+    // 卡片入場動畫（加快顯示：較短過渡與延遲）
+    const observerOptions = {
+      threshold: 0.05,
+      rootMargin: '0px 0px -30px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.card').forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      card.style.transition = `all 0.3s ease ${index * 0.04}s`;
+      observer.observe(card);
+    });
+  </script>
 </body>
 </html>

@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>開關的魔法 - 基礎電路教學</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #2196F3;
@@ -25,14 +28,15 @@
     }
 
     body {
-      font-family: 'Microsoft YaHei', sans-serif;
+      font-family: 'Nunito', 'Microsoft JhengHei', sans-serif;
       background: var(--background);
       color: var(--text);
-      line-height: 1.6;
+      line-height: 1.7;
+      font-size: 18px;
     }
 
     .header {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary), #1976D2);
       color: white;
       padding: 1rem 0;
       box-shadow: var(--shadow);
@@ -41,38 +45,35 @@
     .nav {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 1rem;
+      padding: 0 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .nav h1 {
-      font-size: 1.5rem;
-    }
+    .nav h1 { font-size: 1.5rem; font-weight: 800; }
 
     .nav a {
       color: white;
       text-decoration: none;
       padding: 0.5rem 1rem;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+      border-radius: 50px;
+      font-weight: 700;
+      transition: all 0.3s;
     }
 
-    .nav a:hover {
-      background: var(--primary-dark);
-    }
+    .nav a:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
 
     .container {
       max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      margin: 0 auto;
+      padding: 0 1.5rem 2rem;
     }
 
     .intro {
       background: var(--card-bg);
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       margin-bottom: 2rem;
       text-align: center;
@@ -81,15 +82,27 @@
     .intro h2 {
       color: var(--primary);
       margin-bottom: 1rem;
-      font-size: 2rem;
+      font-size: 1.6rem;
+      font-weight: 800;
     }
 
     .switch-demo {
       background: var(--card-bg);
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       margin-bottom: 2rem;
+      border: 3px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .switch-demo::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--off), var(--on));
+      border-radius: 20px 20px 0 0;
     }
 
     .virtual-switch {
@@ -112,12 +125,16 @@
       border-radius: 30px;
       position: relative;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.35s ease;
       margin: 1rem;
+      border: 4px solid #999;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.15);
     }
 
     .switch.on {
       background: var(--on);
+      border-color: #2E7D32;
+      box-shadow: 0 0 25px rgba(76,175,80,0.5), inset 0 2px 8px rgba(0,0,0,0.1);
     }
 
     .switch-handle {
@@ -147,15 +164,22 @@
 
     .bulb.on {
       filter: brightness(1.5);
-      text-shadow: 0 0 20px #FFD700;
+      text-shadow: 0 0 25px #FFD700;
+      animation: bulbGlow 0.5s ease-out;
+    }
+    @keyframes bulbGlow {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
     }
 
     .switch-types {
       background: var(--card-bg);
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       margin-bottom: 2rem;
+      border: 3px solid var(--border);
     }
 
     .types-grid {
@@ -168,14 +192,17 @@
     .type-card {
       background: var(--background);
       padding: 2rem;
-      border-radius: 15px;
+      border-radius: 20px;
       text-align: center;
-      transition: transform 0.3s;
+      transition: all 0.3s;
       border-top: 4px solid var(--primary);
+      border: 3px solid transparent;
     }
 
     .type-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-6px);
+      border-color: var(--primary);
+      box-shadow: 0 12px 30px rgba(33,150,243,0.15);
     }
 
     .type-icon {
@@ -186,9 +213,10 @@
     .interactive-panel {
       background: var(--card-bg);
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       margin-bottom: 2rem;
+      border: 3px solid var(--border);
     }
 
     .control-panel {
@@ -201,15 +229,17 @@
     .control-switch {
       background: var(--background);
       padding: 1.5rem;
-      border-radius: 10px;
+      border-radius: 20px;
       text-align: center;
-      border: 2px solid var(--border);
+      border: 3px solid var(--border);
       cursor: pointer;
       transition: all 0.3s;
     }
 
     .control-switch:hover {
       border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(33,150,243,0.15);
     }
 
     .control-switch.active {
@@ -223,20 +253,22 @@
       justify-content: space-between;
       margin-top: 2rem;
       padding: 1rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     .nav-btn {
       background: var(--primary);
       color: white;
-      padding: 0.8rem 1.5rem;
+      padding: 0.9rem 1.5rem;
       text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+      border-radius: 50px;
+      font-weight: 800;
+      font-family: inherit;
+      transition: all 0.3s;
     }
 
-    .nav-btn:hover {
-      background: var(--primary-dark);
-    }
+    .nav-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
     @media (max-width: 768px) {
       .virtual-switch {
@@ -259,9 +291,14 @@
   </div>
 
   <div class="container">
-    <div class="intro">
-      <h2>🎛️ 小小開關，大大功能</h2>
-      <p>一個小小的開關，就能控制整個電路！就像魔法師的魔法棒一樣神奇。讓我們來探索開關的奧秘！</p>
+    <div class="intro" style="background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 50%, #E8F5E9 100%); border: 4px solid var(--on); border-radius: 24px; text-align: center; padding: 2.5rem 2rem; margin-bottom: 2rem;">
+      <div style="font-size: 3.5rem; margin-bottom: 1rem;">🔘 💡</div>
+      <h2 style="color: var(--primary); font-size: 1.75rem; font-weight: 900;">開關的魔法</h2>
+      <p style="font-size: 1.2rem; color: #555; font-weight: 700;">一按就亮、再按就滅！小小開關控制整條電路。</p>
+    </div>
+    <div class="intro" style="border-radius: 20px; border: 3px solid var(--border);">
+      <h2>🎛️ 開關是怎麼工作的？</h2>
+      <p>開關就像電路的「門」：門關上（斷開），電流過不去，燈不亮；門打開（接通），電流通過，燈就亮了。小朋友可以動手按按下面的虛擬開關，馬上看到燈亮燈滅！</p>
     </div>
 
     <div class="switch-demo">

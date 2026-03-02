@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>危險的短路 - 基礎電路教學</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #2196F3;
@@ -26,14 +29,15 @@
     }
 
     body {
-      font-family: 'Microsoft YaHei', sans-serif;
+      font-family: 'Nunito', 'Microsoft JhengHei', sans-serif;
       background: var(--background);
       color: var(--text);
-      line-height: 1.6;
+      line-height: 1.7;
+      font-size: 18px;
     }
 
     .header {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary), #1976D2);
       color: white;
       padding: 1rem 0;
       box-shadow: var(--shadow);
@@ -42,65 +46,90 @@
     .nav {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 1rem;
+      padding: 0 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .nav h1 {
-      font-size: 1.5rem;
-    }
+    .nav h1 { font-size: 1.5rem; font-weight: 800; }
 
     .nav a {
       color: white;
       text-decoration: none;
       padding: 0.5rem 1rem;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+      border-radius: 50px;
+      font-weight: 700;
+      transition: all 0.3s;
     }
 
-    .nav a:hover {
-      background: var(--primary-dark);
-    }
+    .nav a:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
 
     .container {
       max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      margin: 0 auto;
+      padding: 0 1.5rem 2rem;
     }
 
     .intro {
       background: var(--card-bg);
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       margin-bottom: 2rem;
       text-align: center;
+      border: 3px solid rgba(244,67,54,0.15);
     }
 
     .intro h2 {
       color: var(--primary);
       margin-bottom: 1rem;
-      font-size: 2rem;
+      font-size: 1.6rem;
+      font-weight: 800;
     }
 
+    .hero-banner {
+      background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
+      border: 4px solid var(--danger);
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .hero-banner::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, var(--danger), var(--warning)); border-radius: 24px 24px 0 0; }
+    .hero-banner h2 { color: #C62828; font-size: 1.75rem; font-weight: 900; }
+    .hero-banner .one-line { font-size: 1.2rem; color: #555; font-weight: 700; }
     .danger-alert {
       background: linear-gradient(135deg, #FF6B6B, #FF8E53);
       color: white;
       padding: 2rem;
-      border-radius: 15px;
+      border-radius: 20px;
       margin-bottom: 2rem;
       text-align: center;
-      border: 3px solid var(--danger);
+      border: 4px solid var(--danger);
+      animation: alertPulse 2s ease-in-out infinite;
     }
+    @keyframes alertPulse { 0%,100%{ box-shadow: 0 4px 20px rgba(244,67,54,0.3); } 50%{ box-shadow: 0 8px 35px rgba(244,67,54,0.5); } }
+    @keyframes heroFloat { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
 
     .short-circuit-demo {
       background: var(--card-bg);
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       margin-bottom: 2rem;
+      border: 3px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .short-circuit-demo::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--safe), var(--danger));
+      border-radius: 20px 20px 0 0;
     }
 
     .circuit-comparison {
@@ -111,20 +140,24 @@
     }
 
     .normal-circuit {
-      background: #e8f5e8;
-      border: 3px solid var(--safe);
-      border-radius: 15px;
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border: 4px solid var(--safe);
+      border-radius: 20px;
       padding: 2rem;
       text-align: center;
+      transition: transform 0.3s;
     }
+    .normal-circuit:hover { transform: translateY(-6px); }
 
     .short-circuit {
-      background: #ffebee;
-      border: 3px solid var(--danger);
-      border-radius: 15px;
+      background: linear-gradient(135deg, #ffebee, #ffcdd2);
+      border: 4px solid var(--danger);
+      border-radius: 20px;
       padding: 2rem;
       text-align: center;
+      transition: transform 0.3s;
     }
+    .short-circuit:hover { transform: translateY(-6px); }
 
     .circuit-diagram {
       font-size: 1.5rem;
@@ -144,9 +177,10 @@
     .safety-tips {
       background: var(--card-bg);
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       margin-bottom: 2rem;
+      border: 3px solid var(--border);
     }
 
     .tips-grid {
@@ -159,10 +193,12 @@
     .tip-card {
       background: var(--background);
       padding: 1.5rem;
-      border-radius: 15px;
+      border-radius: 20px;
       text-align: center;
       border-top: 4px solid;
+      transition: transform 0.3s;
     }
+    .tip-card:hover { transform: translateY(-6px); }
 
     .tip-card.do {
       border-top-color: var(--safe);
@@ -182,20 +218,21 @@
       justify-content: space-between;
       margin-top: 2rem;
       padding: 1rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     .nav-btn {
       background: var(--primary);
       color: white;
-      padding: 0.8rem 1.5rem;
+      padding: 0.9rem 1.5rem;
       text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+      border-radius: 50px;
+      font-weight: 800;
+      font-family: inherit;
+      transition: all 0.3s;
     }
-
-    .nav-btn:hover {
-      background: var(--primary-dark);
-    }
+    .nav-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
     @media (max-width: 768px) {
       .circuit-comparison {
@@ -218,14 +255,22 @@
   </div>
 
   <div class="container">
-    <div class="intro">
-      <h2>⚡ 什麼是短路？為什麼危險？</h2>
-      <p>短路就像水管破洞一樣，會造成大麻煩！讓我們學習如何避免短路，保護自己和家人的安全。</p>
+    <div class="hero-banner" style="position:relative; overflow:hidden;">
+      <div style="display:flex; justify-content:center; align-items:center; gap:1.5rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+        <div style="width:80px; height:80px; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:2.8rem; background:linear-gradient(135deg,#4CAF50,#388E3C); box-shadow:0 8px 25px rgba(76,175,80,0.4); animation:heroFloat 3s ease-in-out infinite;">✅</div>
+        <span style="font-size:2rem; font-weight:900; color:#555;">vs</span>
+        <div style="width:80px; height:80px; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:2.8rem; background:linear-gradient(135deg,#F44336,#D32F2F); box-shadow:0 8px 25px rgba(244,67,54,0.4); animation:heroFloat 3s ease-in-out infinite 0.5s;">❌</div>
+      </div>
+      <h2>⚠️ 危險的短路</h2>
+      <p class="one-line">電線「抄捷徑」不經過燈泡，電流太大會發熱、很危險！</p>
     </div>
-
+    <div class="intro">
+      <h2>⚡ 什麼是短路？</h2>
+      <p>正常時電會：電池 → 電線 → 燈泡 → 電池。如果正負極被一根電線直接連起來，電就「抄近路」不經過燈泡，電流會變得很大，電線會發燙，可能燒起來。所以要避免短路，保護自己！</p>
+    </div>
     <div class="danger-alert">
-      <h3 style="font-size: 2rem; margin-bottom: 1rem;">🚨 重要安全警告</h3>
-      <p style="font-size: 1.2rem;">短路可能導致火災、爆炸和觸電！絕對不要故意製造短路，要時刻注意用電安全。</p>
+      <h3 style="font-size: 1.5rem; margin-bottom: 0.8rem; font-weight: 900;">🚨 重要：短路可能導致發熱、火災、觸電</h3>
+      <p style="font-size: 1.1rem;">不要故意把正負極接在一起，用電要請大人一起注意安全。</p>
     </div>
 
     <div class="short-circuit-demo">

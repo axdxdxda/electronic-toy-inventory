@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>家裡的電路 - 基礎電路教學</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #2196F3;
@@ -25,14 +28,15 @@
     }
 
     body {
-      font-family: 'Microsoft YaHei', sans-serif;
+      font-family: 'Nunito', 'Microsoft JhengHei', sans-serif;
       background: var(--background);
       color: var(--text);
-      line-height: 1.6;
+      line-height: 1.7;
+      font-size: 18px;
     }
 
     .header {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary), #1976D2);
       color: white;
       padding: 1rem 0;
       box-shadow: var(--shadow);
@@ -41,38 +45,35 @@
     .nav {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 1rem;
+      padding: 0 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .nav h1 {
-      font-size: 1.5rem;
-    }
+    .nav h1 { font-size: 1.5rem; font-weight: 800; }
 
     .nav a {
       color: white;
       text-decoration: none;
       padding: 0.5rem 1rem;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+      border-radius: 50px;
+      font-weight: 700;
+      transition: all 0.3s;
     }
 
-    .nav a:hover {
-      background: var(--primary-dark);
-    }
+    .nav a:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
 
     .container {
       max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      margin: 0 auto;
+      padding: 0 1.5rem 2rem;
     }
 
     .intro {
       background: var(--card-bg);
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       margin-bottom: 2rem;
       text-align: center;
@@ -81,21 +82,33 @@
     .intro h2 {
       color: var(--primary);
       margin-bottom: 1rem;
-      font-size: 2rem;
+      font-size: 1.6rem;
+      font-weight: 800;
     }
 
     .house-diagram {
       background: var(--card-bg);
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       margin-bottom: 2rem;
+      border: 3px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .house-diagram::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--home), var(--primary));
+      border-radius: 20px 20px 0 0;
     }
 
     .house-container {
-      background: linear-gradient(135deg, #87CEEB, #98FB98);
-      border: 3px solid var(--home);
-      border-radius: 20px;
+      background: linear-gradient(135deg, #E3F2FD, #C8E6C9);
+      border: 4px solid var(--home);
+      border-radius: 24px;
       padding: 2rem;
       margin: 2rem 0;
       position: relative;
@@ -104,9 +117,9 @@
 
     .room {
       position: absolute;
-      background: rgba(255,255,255,0.8);
-      border: 2px solid var(--border);
-      border-radius: 10px;
+      background: rgba(255,255,255,0.9);
+      border: 3px solid var(--border);
+      border-radius: 16px;
       padding: 1rem;
       text-align: center;
       cursor: pointer;
@@ -114,8 +127,10 @@
     }
 
     .room:hover {
-      background: rgba(255,255,255,0.95);
-      transform: scale(1.05);
+      background: rgba(255,255,255,0.98);
+      transform: scale(1.08);
+      box-shadow: 0 10px 30px rgba(33,150,243,0.25);
+      border-color: var(--primary);
     }
 
     .room.active {
@@ -175,14 +190,15 @@
     .appliance-card {
       background: var(--background);
       padding: 1.5rem;
-      border-radius: 15px;
+      border-radius: 20px;
       text-align: center;
-      transition: transform 0.3s;
+      transition: all 0.3s;
       border-top: 4px solid;
     }
 
     .appliance-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.1);
     }
 
     .appliance-card.high-power {
@@ -200,9 +216,10 @@
     .safety-section {
       background: var(--card-bg);
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       margin-bottom: 2rem;
+      border: 3px solid var(--border);
     }
 
     .safety-grid {
@@ -215,29 +232,32 @@
     .safety-card {
       background: var(--background);
       padding: 2rem;
-      border-radius: 15px;
+      border-radius: 20px;
       text-align: center;
+      transition: transform 0.3s;
     }
+    .safety-card:hover { transform: translateY(-6px); }
 
     .navigation {
       display: flex;
       justify-content: space-between;
       margin-top: 2rem;
       padding: 1rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     .nav-btn {
       background: var(--primary);
       color: white;
-      padding: 0.8rem 1.5rem;
+      padding: 0.9rem 1.5rem;
       text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+      border-radius: 50px;
+      font-weight: 800;
+      font-family: inherit;
+      transition: all 0.3s;
     }
-
-    .nav-btn:hover {
-      background: var(--primary-dark);
-    }
+    .nav-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
     @media (max-width: 768px) {
       .house-container {
@@ -275,9 +295,14 @@
   </div>
 
   <div class="container">
-    <div class="intro">
-      <h2>🏠 從插座到電燈，探索家中的電路世界</h2>
-      <p>你知道嗎？家裡的每個電器都連接在一個大型的電路系統中！讓我們一起認識家中的電路，學會安全使用電器。</p>
+    <div class="intro" style="background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #C8E6C9 100%); border: 4px solid var(--home); border-radius: 24px; text-align: center; padding: 2.5rem 2rem; margin-bottom: 2rem;">
+      <div style="font-size: 3.5rem; margin-bottom: 1rem;">🏠 ⚡</div>
+      <h2 style="color: var(--primary); font-size: 1.75rem; font-weight: 900;">家裡的電路</h2>
+      <p style="font-size: 1.2rem; color: #555; font-weight: 700;">從插座到電燈，每個房間的電器都連成一個大電路！</p>
+    </div>
+    <div class="intro" style="border-radius: 20px; border: 3px solid var(--border);">
+      <h2>🏠 家裡電路長怎樣？</h2>
+      <p>電從門口的配電箱出來，分到客廳、廚房、房間……每個插座和電燈都是電路的一站。點下面的房間可以看看那裡有哪些電器，親子一起認識最安全！</p>
     </div>
 
     <div class="house-diagram">

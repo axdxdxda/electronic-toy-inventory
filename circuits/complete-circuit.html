@@ -1,27 +1,56 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>完整的電路 - 基礎電路教學（SVG 修正版）</title>
+  <title>完整的電路 - 基礎電路教學</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary:#2196F3; --primary-dark:#1976D2; --secondary:#FFC107;
       --background:#f8f9fa; --text:#333; --border:#e9ecef; --card-bg:#fff;
-      --shadow:0 2px 10px rgba(0,0,0,0.1);
+      --shadow:0 4px 20px rgba(0,0,0,0.08);
       --wire:#2b2d42; --active:#4CAF50; --broken:#F44336; --dim:#bdbdbd;
       --lamp-on:#FFD54F; --lamp-off:#B0BEC5;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Microsoft YaHei', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:var(--background); color:var(--text); line-height:1.6; }
-    .header { background:var(--primary); color:#fff; padding:1rem 0; box-shadow:var(--shadow); }
-    .nav { max-width:1200px; margin:0 auto; padding:0 1rem; display:flex; justify-content:space-between; align-items:center; }
-    .nav h1 { font-size:1.5rem; }
-    .nav a { color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:5px; transition:.2s; }
-    .nav a:hover { background:var(--primary-dark); }
-    .container { max-width:1200px; margin:2rem auto; padding:0 1rem; }
-    .intro,.circuit-basics,.series-parallel,.interactive-demo,.card { background:var(--card-bg); padding:2rem; border-radius:10px; box-shadow:var(--shadow); margin-bottom:2rem; }
-    .intro h2,.section-title { color:var(--primary); text-align:center; margin-bottom:1rem; font-size:2rem; }
+    body { font-family:'Nunito', 'Microsoft JhengHei', sans-serif; background:var(--background); color:var(--text); line-height:1.7; font-size:18px; }
+    .header { background:linear-gradient(135deg, var(--primary), #1976D2); color:#fff; padding:1rem 0; box-shadow:var(--shadow); }
+    .nav { max-width:1200px; margin:0 auto; padding:0 1.5rem; display:flex; justify-content:space-between; align-items:center; }
+    .nav h1 { font-size:1.5rem; font-weight:800; }
+    .nav a { color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:50px; font-weight:700; transition:all .3s; }
+    .nav a:hover { background:rgba(255,255,255,0.2); transform:translateY(-2px); }
+    .container { max-width:1200px; margin:0 auto; padding:0 1.5rem 2rem; }
+
+    .hero-banner {
+      background:linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 50%, #E3F2FD 100%);
+      border:4px solid var(--active);
+      border-radius:24px;
+      padding:2.5rem 2rem;
+      margin-bottom:2rem;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+    .hero-banner::before { content:''; position:absolute; top:0; left:0; right:0; height:6px; background:linear-gradient(90deg, var(--active), var(--primary)); border-radius:24px 24px 0 0; }
+    .hero-loop {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:0.8rem;
+      margin-bottom:1rem;
+      font-size:2.5rem;
+      animation:heroPulse 2s ease-in-out infinite;
+    }
+    @keyframes heroPulse { 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
+    .hero-banner h2 { color:#2E7D32; font-size:1.75rem; font-weight:900; margin-bottom:0.5rem; }
+    .hero-banner .one-line { font-size:1.2rem; color:#555; font-weight:700; }
+
+    .intro,.circuit-basics,.series-parallel,.interactive-demo,.card { background:var(--card-bg); padding:2rem; border-radius:20px; box-shadow:var(--shadow); margin-bottom:2rem; border:3px solid var(--border); }
+    .intro h2,.section-title { color:var(--primary); text-align:center; margin-bottom:1rem; font-size:1.6rem; font-weight:800; }
     .circuit-comparison { display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin:2rem 0; }
     .complete-example { border:3px solid var(--active); border-radius:15px; padding:1rem; background:linear-gradient(135deg,#e8f5e8,#c8e6c9); }
     .incomplete-example { border:3px solid var(--broken); border-radius:15px; padding:1rem; background:linear-gradient(135deg,#ffebee,#ffcdd2); }
@@ -30,6 +59,7 @@
     .demo-controls, .nav-row { display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; }
     .demo-btn, .nav-btn { background:var(--primary); color:#fff; border:none; padding:1rem 1.25rem; border-radius:10px; cursor:pointer; font-size:1rem; transition:.2s; text-decoration:none; display:inline-block; }
     .demo-btn:hover, .nav-btn:hover { background:var(--primary-dark); transform:translateY(-2px); }
+    .demo-btn,.nav-btn { border-radius:50px; font-weight:800; font-family:inherit; }
     .demo-btn.active { background:var(--secondary); color:#000; }
     .status { text-align:center; font-weight:bold; margin-top:.75rem; }
     .navigation { display:flex; justify-content:space-between; margin-top:2rem; padding:1rem 0; }
@@ -64,14 +94,19 @@
   </div>
 
   <div class="container">
+    <div class="hero-banner">
+      <div class="hero-loop">🔋 → 💡 → 🔋</div>
+      <h2>完整的電路</h2>
+      <p class="one-line">電要「繞一圈」才有路可以走，燈才會亮！</p>
+    </div>
     <div class="intro">
       <h2>🔄 電為什麼要繞一圈？</h2>
-      <p>電就像跑操場一樣，需要一個完整的圓圈才能跑起來！讓我們用正確的電路圖來看「什麼是閉合回路」。</p>
+      <p>電流像在跑操場：從電池出發，經過電線、燈泡，再回到電池，形成一個「閉合回路」。路沒接好、中間斷掉，電就過不去，燈就不會亮。小朋友可以想成：一定要有去有回，電才願意工作喔！</p>
     </div>
 
     <!-- 完整 vs 不完整（SVG 取代表情排版） -->
     <div class="circuit-basics">
-      <h3 class="section-title">🔄 什麼是完整的電路？</h3>
+      <h3 class="section-title">🔍 完整電路 vs 斷路：一眼看懂</h3>
 
       <div class="circuit-comparison">
         <!-- 完整 -->

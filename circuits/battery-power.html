@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>電池的秘密 - 基礎電路教學</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #2196F3;
@@ -13,341 +16,322 @@
       --text: #333;
       --border: #e9ecef;
       --card-bg: #fff;
-      --shadow: 0 2px 10px rgba(0,0,0,0.1);
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
       --positive: #4CAF50;
       --negative: #F44336;
       --energy: #FF9800;
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Microsoft YaHei', sans-serif;
+      font-family: 'Nunito', 'Microsoft JhengHei', sans-serif;
       background: var(--background);
       color: var(--text);
-      line-height: 1.6;
+      line-height: 1.7;
+      font-size: 18px;
     }
-
     .header {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary), #1976D2);
       color: white;
       padding: 1rem 0;
       box-shadow: var(--shadow);
     }
-
     .nav {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 1rem;
+      padding: 0 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+    .nav h1 { font-size: 1.5rem; font-weight: 800; }
+    .nav a { color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 50px; font-weight: 700; transition: all 0.3s; }
+    .nav a:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 2rem; }
 
-    .nav h1 {
-      font-size: 1.5rem;
+    .hero-banner {
+      background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 50%, #FFF8E1 100%);
+      border: 4px solid var(--positive);
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
     }
-
-    .nav a {
-      color: white;
-      text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--positive), var(--negative));
+      border-radius: 24px 24px 0 0;
     }
-
-    .nav a:hover {
-      background: var(--primary-dark);
+    .hero-battery {
+      width: 120px;
+      height: 180px;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(180deg, #37474F 0%, #263238 100%);
+      border-radius: 12px;
+      position: relative;
+      border: 4px solid #546E7A;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      animation: batteryPulse 2.5s ease-in-out infinite;
     }
-
-    .container {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+    .hero-battery::before {
+      content: '';
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 18px;
+      background: #546E7A;
+      border-radius: 6px 6px 0 0;
     }
+    .hero-battery .plus { position: absolute; top: 25px; left: 50%; transform: translateX(-50%); width: 24px; height: 24px; background: var(--positive); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1.2rem; }
+    .hero-battery .minus { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); width: 24px; height: 24px; background: var(--negative); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1.2rem; }
+    .hero-battery .fill {
+      position: absolute;
+      bottom: 0;
+      left: 8px;
+      right: 8px;
+      height: 60%;
+      background: linear-gradient(180deg, #81C784, #4CAF50);
+      border-radius: 0 0 6px 6px;
+      animation: fillGlow 2s ease-in-out infinite;
+    }
+    @keyframes batteryPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+    @keyframes fillGlow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+    .hero-banner h2 { color: #2E7D32; font-size: 1.75rem; font-weight: 900; margin-bottom: 0.5rem; }
+    .hero-banner .one-line { font-size: 1.2rem; color: #555; font-weight: 700; }
 
     .intro {
       background: var(--card-bg);
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       margin-bottom: 2rem;
       text-align: center;
+      border: 3px solid rgba(76,175,80,0.2);
     }
+    .intro h2 { color: var(--primary); margin-bottom: 1rem; font-size: 1.6rem; font-weight: 800; }
+    .intro p { color: #555; font-size: 1.1rem; }
 
-    .intro h2 {
-      color: var(--primary);
-      margin-bottom: 1rem;
-      font-size: 2rem;
-    }
-
-    .battery-demo {
+    .section {
       background: var(--card-bg);
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       margin-bottom: 2rem;
-    }
-
-    .battery-visual {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 2rem 0;
-    }
-
-    .battery-container {
+      border: 3px solid var(--border);
       position: relative;
-      width: 200px;
-      height: 100px;
-      background: #333;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 2rem;
+      overflow: hidden;
     }
-
-    .battery-positive {
+    .section::before {
+      content: '';
       position: absolute;
-      right: -10px;
-      top: 30%;
-      width: 20px;
-      height: 40%;
-      background: var(--positive);
-      border-radius: 0 5px 5px 0;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--positive), var(--negative));
+      border-radius: 20px 20px 0 0;
     }
+    .section h3 { color: var(--primary); margin-bottom: 1.5rem; font-size: 1.4rem; font-weight: 800; text-align: center; }
 
-    .battery-label {
-      color: white;
-      font-weight: bold;
-      font-size: 1.2rem;
+    .polarity-demo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
     }
-
-    .terminal {
-      width: 60px;
-      height: 60px;
+    .term {
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 2rem;
-      font-weight: bold;
+      font-weight: 900;
       color: white;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      animation: termFloat 2s ease-in-out infinite;
     }
-
-    .positive-terminal {
-      background: var(--positive);
+    .term.plus { background: linear-gradient(135deg, var(--positive), #388E3C); }
+    .term.minus { background: linear-gradient(135deg, var(--negative), #D32F2F); animation-delay: 0.3s; }
+    .battery-box {
+      width: 180px;
+      height: 100px;
+      background: linear-gradient(180deg, #455A64, #37474F);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 1.5rem;
+      border: 4px solid #546E7A;
+      position: relative;
     }
-
-    .negative-terminal {
-      background: var(--negative);
+    .battery-box::after {
+      content: '';
+      position: absolute;
+      right: -14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 35px;
+      background: #546E7A;
+      border-radius: 0 6px 6px 0;
     }
+    @keyframes termFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .flow-hint {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #FFF8E1;
+      border-radius: 12px;
+      font-weight: 700;
+      color: #F57F17;
+    }
+    .flow-hint span { color: var(--negative); }
+    .flow-hint span.to { color: var(--positive); }
 
     .battery-types {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1.5rem;
       margin: 2rem 0;
     }
-
     .battery-type {
       background: var(--background);
-      padding: 1.5rem;
-      border-radius: 15px;
+      padding: 1.8rem;
+      border-radius: 20px;
       text-align: center;
-      border: 3px solid;
-      transition: transform 0.3s;
+      border: 4px solid transparent;
+      transition: all 0.3s ease;
     }
-
     .battery-type:hover {
-      transform: translateY(-5px);
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     }
-
-    .battery-type.aa {
-      border-color: #FF6B35;
-    }
-
-    .battery-type.phone {
-      border-color: #4ECDC4;
-    }
-
-    .battery-type.car {
-      border-color: #45B7D1;
-    }
-
-    .battery-type.coin {
-      border-color: #96CEB4;
-    }
-
-    .battery-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
+    .battery-type.aa { border-color: #FF6B35; }
+    .battery-type.phone { border-color: #4ECDC4; }
+    .battery-type.car { border-color: #45B7D1; }
+    .battery-type.coin { border-color: #96CEB4; }
+    .battery-icon { font-size: 3rem; margin-bottom: 0.8rem; display: block; }
+    .battery-type h4 { color: var(--primary); margin-bottom: 0.5rem; font-size: 1.2rem; }
+    .battery-type p { color: #555; font-size: 0.95rem; margin: 0.3rem 0; }
 
     .energy-demo {
-      background: var(--card-bg);
+      background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+      border: 4px solid var(--primary);
+      border-radius: 20px;
       padding: 2rem;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
+      margin: 2rem 0;
     }
-
     .energy-bar-container {
-      background: #ddd;
-      height: 30px;
-      border-radius: 15px;
+      background: #CFD8DC;
+      height: 36px;
+      border-radius: 18px;
       overflow: hidden;
-      position: relative;
       margin: 1rem 0;
+      border: 3px solid #90A4AE;
     }
-
     .energy-bar {
       height: 100%;
-      background: linear-gradient(90deg, var(--positive), var(--energy));
-      width: 100%;
-      transition: width 0.5s;
       border-radius: 15px;
+      transition: width 0.5s ease;
     }
-
-    .energy-controls {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin: 2rem 0;
-      flex-wrap: wrap;
-    }
-
+    .energy-controls { display: flex; justify-content: center; gap: 1rem; margin: 1.5rem 0; flex-wrap: wrap; }
     .energy-btn {
       background: var(--primary);
       color: white;
       border: none;
       padding: 1rem 1.5rem;
-      border-radius: 10px;
+      border-radius: 50px;
       cursor: pointer;
       font-size: 1rem;
+      font-weight: 800;
+      font-family: inherit;
       transition: all 0.3s;
     }
+    .energy-btn:hover { background: var(--primary-dark); transform: translateY(-3px); }
 
-    .energy-btn:hover {
-      background: var(--primary-dark);
-      transform: translateY(-2px);
-    }
-
-    .series-parallel-demo {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-    }
-
-    .circuit-demo {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin: 2rem 0;
-    }
-
+    .series-parallel-demo { margin: 2rem 0; }
+    .circuit-demo { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0; }
     .circuit-type {
       background: var(--background);
       padding: 2rem;
-      border-radius: 15px;
+      border-radius: 20px;
       text-align: center;
+      border: 4px solid var(--border);
+      transition: transform 0.3s ease;
     }
+    .circuit-type:hover { transform: translateY(-6px); }
+    .circuit-diagram { margin: 1.5rem 0; font-size: 1.8rem; line-height: 2; font-weight: 800; }
+    .circuit-type h4 { color: var(--primary); margin-bottom: 1rem; }
 
-    .circuit-diagram {
-      margin: 1rem 0;
-      font-size: 1.5rem;
-      line-height: 2;
-    }
-
-    .quiz-section {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-    }
-
+    .quiz-section { margin-top: 2rem; }
     .quiz-question {
-      background: var(--background);
+      background: #f8fafc;
       padding: 1.5rem;
-      border-radius: 10px;
+      border-radius: 16px;
       margin: 1rem 0;
-      border-left: 4px solid var(--primary);
+      border-left: 5px solid var(--primary);
     }
-
-    .quiz-options {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin: 1rem 0;
-    }
-
+    .quiz-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.8rem; margin-top: 1rem; }
     .quiz-option {
       background: white;
-      border: 2px solid var(--border);
+      border: 3px solid var(--border);
       padding: 1rem;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s;
       text-align: center;
+      font-weight: 700;
     }
+    .quiz-option:hover { border-color: var(--primary); transform: translateX(6px); }
+    .quiz-option.correct { background: #d4edda; border-color: #28a745; }
+    .quiz-option.wrong { background: #f8d7da; border-color: #dc3545; }
 
-    .quiz-option:hover {
-      border-color: var(--primary);
-      transform: translateY(-2px);
+    .safety-box {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem 0;
     }
+    .safety-box h3 { text-align: center; margin-bottom: 1.5rem; font-size: 1.4rem; }
+    .safety-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; text-align: center; }
 
-    .quiz-option.correct {
-      background: #d4edda;
-      border-color: #28a745;
-    }
-
-    .quiz-option.wrong {
-      background: #f8d7da;
-      border-color: #dc3545;
-    }
-
-    .navigation {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 2rem;
-      padding: 1rem 0;
-    }
-
+    .navigation { display: flex; justify-content: space-between; margin-top: 2rem; padding: 1rem 0; flex-wrap: wrap; gap: 1rem; }
     .nav-btn {
       background: var(--primary);
       color: white;
-      padding: 0.8rem 1.5rem;
+      padding: 0.9rem 1.5rem;
       text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+      border-radius: 50px;
+      font-weight: 800;
+      transition: all 0.3s;
     }
-
-    .nav-btn:hover {
-      background: var(--primary-dark);
-    }
+    .nav-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
     @media (max-width: 768px) {
-      .battery-visual {
-        flex-direction: column;
-        gap: 2rem;
-      }
-      
-      .circuit-demo {
-        grid-template-columns: 1fr;
-      }
-      
-      .navigation {
-        flex-direction: column;
-        gap: 1rem;
-      }
+      .circuit-demo { grid-template-columns: 1fr; }
+      .polarity-demo { flex-direction: column; }
+      body { font-size: 16px; }
     }
   </style>
 </head>
@@ -360,168 +344,128 @@
   </div>
 
   <div class="container">
+    <div class="hero-banner">
+      <div class="hero-battery">
+        <div class="plus">+</div>
+        <div class="fill"></div>
+        <div class="minus">−</div>
+      </div>
+      <h2>電池的秘密</h2>
+      <p class="one-line">認識正極（+）和負極（−），電才會乖乖流動！</p>
+    </div>
+
     <div class="intro">
       <h2>⚡ 電池為什麼能發電？</h2>
-      <p>電池就像一個神奇的小盒子，能夠儲存電力並提供給我們的設備。讓我們一起探索電池的奧秘！</p>
+      <p>電池就像一個「存電的小倉庫」：有正極（+）和負極（−）。電子從負極出發，經過電線和燈泡，流回正極，形成一圈，燈就亮了！</p>
     </div>
 
-    <div class="battery-demo">
-      <h3 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">🔍 認識電池的正極和負極</h3>
-      
-      <div class="battery-visual">
-        <div class="terminal positive-terminal">+</div>
-        <div class="battery-container">
-          <div class="battery-label">1.5V</div>
-          <div class="battery-positive"></div>
-        </div>
-        <div class="terminal negative-terminal">-</div>
+    <div class="section">
+      <h3>🔍 正極和負極長這樣</h3>
+      <div class="polarity-demo">
+        <div class="term plus">+</div>
+        <div class="battery-box">1.5V</div>
+        <div class="term minus">−</div>
       </div>
-
-      <div style="text-align: center; margin-top: 2rem;">
-        <p><strong style="color: var(--positive);">正極（+）：</strong>電子想要回到這裡</p>
-        <p><strong style="color: var(--negative);">負極（-）：</strong>電子從這裡出發</p>
-        <p>就像溜滑梯一樣，電子從高的地方（負極）滑到低的地方（正極）！</p>
+      <div class="flow-hint">
+        電子從 <span>負極（−）</span> 出發 → 經過電線、燈泡 → 流回 <span class="to">正極（+）</span><br>
+        就像溜滑梯：從高的地方滑到低的地方！
       </div>
     </div>
 
-    <div class="battery-demo">
-      <h3 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">🏠 生活中的電池家族</h3>
-      
+    <div class="section">
+      <h3>🏠 生活中的電池家族</h3>
       <div class="battery-types">
         <div class="battery-type aa">
-          <div class="battery-icon">🔋</div>
-          <h4>AA電池</h4>
-          <p><strong>電壓：</strong>1.5V</p>
-          <p><strong>用途：</strong>遙控器、玩具、手電筒</p>
-          <p>最常見的電池，圓圓的很可愛！</p>
+          <span class="battery-icon">🔋</span>
+          <h4>AA 電池</h4>
+          <p><strong>1.5V</strong> · 遙控器、玩具、手電筒</p>
+          <p>最常見，圓圓的很可愛！</p>
         </div>
-
         <div class="battery-type phone">
-          <div class="battery-icon">📱</div>
+          <span class="battery-icon">📱</span>
           <h4>手機電池</h4>
-          <p><strong>電壓：</strong>3.7V</p>
-          <p><strong>用途：</strong>智慧型手機、平板</p>
-          <p>充電電池，可以重複使用！</p>
+          <p><strong>3.7V</strong> · 手機、平板</p>
+          <p>可以充電，重複使用！</p>
         </div>
-
         <div class="battery-type car">
-          <div class="battery-icon">🚗</div>
+          <span class="battery-icon">🚗</span>
           <h4>汽車電池</h4>
-          <p><strong>電壓：</strong>12V</p>
-          <p><strong>用途：</strong>啟動汽車引擎</p>
-          <p>超大電池，力氣很大！</p>
+          <p><strong>12V</strong> · 啟動引擎</p>
+          <p>超大顆，力氣很大！</p>
         </div>
-
         <div class="battery-type coin">
-          <div class="battery-icon">🪙</div>
+          <span class="battery-icon">🪙</span>
           <h4>鈕扣電池</h4>
-          <p><strong>電壓：</strong>3V</p>
-          <p><strong>用途：</strong>手錶、遙控器</p>
+          <p><strong>3V</strong> · 手錶、小遙控器</p>
           <p>小小的但很耐用！</p>
         </div>
       </div>
     </div>
 
-    <div class="energy-demo">
-      <h3 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">⚡ 電池能量示範</h3>
-      
-      <div style="text-align: center; margin-bottom: 2rem;">
-        <h4>電池電力：<span id="batteryLevel">100%</span></h4>
+    <div class="section">
+      <h3>⚡ 電池能量體驗</h3>
+      <div style="text-align: center;">
+        <h4>電池電力：<span id="batteryLevel">100</span>%</h4>
         <div class="energy-bar-container">
-          <div class="energy-bar" id="energyBar"></div>
+          <div class="energy-bar" id="energyBar" style="width:100%; background: linear-gradient(90deg, var(--positive), var(--energy));"></div>
         </div>
-        <p id="batteryStatus">電池滿電，準備為設備提供電力！</p>
+        <p id="batteryStatus" style="font-weight: 700; color: #555;">電池滿電，可以供電給設備！</p>
       </div>
-
       <div class="energy-controls">
-        <button class="energy-btn" onclick="useBattery('flashlight')">🔦 使用手電筒</button>
-        <button class="energy-btn" onclick="useBattery('radio')">📻 聽收音機</button>
-        <button class="energy-btn" onclick="useBattery('toy')">🚗 玩遙控車</button>
+        <button class="energy-btn" onclick="useBattery('flashlight')">🔦 手電筒</button>
+        <button class="energy-btn" onclick="useBattery('radio')">📻 收音機</button>
+        <button class="energy-btn" onclick="useBattery('toy')">🚗 遙控車</button>
         <button class="energy-btn" onclick="chargeBattery()">🔌 充電</button>
       </div>
     </div>
 
-    <div class="series-parallel-demo">
-      <h3 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">🔗 電池的串聯和並聯</h3>
-      
+    <div class="section">
+      <h3>🔗 串聯 vs 並聯</h3>
       <div class="circuit-demo">
         <div class="circuit-type">
           <h4>串聯：電壓相加</h4>
-          <div class="circuit-diagram">
-            🔋➕🔋 = 💪<br>
-            1.5V + 1.5V = 3V
-          </div>
-          <p>就像兩個人合力推車，力氣會變大！電壓會相加，讓燈泡更亮。</p>
+          <div class="circuit-diagram">🔋➕🔋 ＝ 💪<br>1.5V + 1.5V ＝ 3V</div>
+          <p>兩顆電池頭尾相接，就像兩個人一起推車，力氣變大！燈會更亮。</p>
         </div>
-
         <div class="circuit-type">
-          <h4>並聯：時間變長</h4>
-          <div class="circuit-diagram">
-            🔋<br>
-            ↕️<br>
-            🔋 = ⏰
-          </div>
-          <p>就像兩個人輪流推車，可以推更久！電壓不變，但電池壽命變長。</p>
+          <h4>並聯：用更久</h4>
+          <div class="circuit-diagram">🔋↕️🔋 ＝ ⏰</div>
+          <p>兩顆電池並排接，電壓一樣，但可以撐更久，像輪流推車！</p>
         </div>
       </div>
     </div>
 
-    <div class="quiz-section">
-      <h3 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">🧠 小測驗：電池知識大考驗</h3>
-      
+    <div class="section quiz-section">
+      <h3>🧠 小測驗</h3>
       <div class="quiz-question">
-        <h4>🤔 問題：兩個1.5V的電池串聯，總電壓是多少？</h4>
+        <h4>兩顆 1.5V 電池串聯，總電壓是？</h4>
         <div class="quiz-options">
-          <div class="quiz-option" onclick="answerQuiz(this, false, '1.5V')">1.5V</div>
-          <div class="quiz-option" onclick="answerQuiz(this, true, '3V')">3V</div>
-          <div class="quiz-option" onclick="answerQuiz(this, false, '0.75V')">0.75V</div>
-          <div class="quiz-option" onclick="answerQuiz(this, false, '6V')">6V</div>
+          <div class="quiz-option" onclick="answerQuiz(this, false)">1.5V</div>
+          <div class="quiz-option" onclick="answerQuiz(this, true)">3V</div>
+          <div class="quiz-option" onclick="answerQuiz(this, false)">0.75V</div>
+          <div class="quiz-option" onclick="answerQuiz(this, false)">6V</div>
         </div>
         <div id="quiz1Result" style="margin-top: 1rem; font-weight: bold;"></div>
       </div>
-
       <div class="quiz-question">
-        <h4>🤔 問題：電池的正極用什麼符號表示？</h4>
+        <h4>正極用什麼符號表示？</h4>
         <div class="quiz-options">
-          <div class="quiz-option" onclick="answerQuiz2(this, true, '+')">+ (加號)</div>
-          <div class="quiz-option" onclick="answerQuiz2(this, false, '-')">- (減號)</div>
-          <div class="quiz-option" onclick="answerQuiz2(this, false, '×')">× (乘號)</div>
-          <div class="quiz-option" onclick="answerQuiz2(this, false, '÷')">÷ (除號)</div>
+          <div class="quiz-option" onclick="answerQuiz2(this, true)">+</div>
+          <div class="quiz-option" onclick="answerQuiz2(this, false)">−</div>
+          <div class="quiz-option" onclick="answerQuiz2(this, false)">×</div>
+          <div class="quiz-option" onclick="answerQuiz2(this, false)">÷</div>
         </div>
         <div id="quiz2Result" style="margin-top: 1rem; font-weight: bold;"></div>
       </div>
-
-      <div class="quiz-question">
-        <h4>🤔 問題：為什麼手機電池可以重複使用？</h4>
-        <div class="quiz-options">
-          <div class="quiz-option" onclick="answerQuiz3(this, false)">因為比較大</div>
-          <div class="quiz-option" onclick="answerQuiz3(this, true)">因為是充電電池</div>
-          <div class="quiz-option" onclick="answerQuiz3(this, false)">因為比較貴</div>
-          <div class="quiz-option" onclick="answerQuiz3(this, false)">因為是新的</div>
-        </div>
-        <div id="quiz3Result" style="margin-top: 1rem; font-weight: bold;"></div>
-      </div>
     </div>
 
-    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px; padding: 2rem; margin: 2rem 0; text-align: center;">
+    <div class="safety-box">
       <h3>🔋 電池安全小提醒</h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
-        <div>
-          <div style="font-size: 2rem;">🚫</div>
-          <p>不要把電池丟進火裡</p>
-        </div>
-        <div>
-          <div style="font-size: 2rem;">🔄</div>
-          <p>正負極不要接反</p>
-        </div>
-        <div>
-          <div style="font-size: 2rem;">♻️</div>
-          <p>廢電池要回收</p>
-        </div>
-        <div>
-          <div style="font-size: 2rem;">👶</div>
-          <p>小電池要放好，避免小朋友誤食</p>
-        </div>
+      <div class="safety-grid">
+        <div>🚫 不要丟進火裡</div>
+        <div>🔄 正負極別接反</div>
+        <div>♻️ 廢電池要回收</div>
+        <div>👶 小電池收好，避免誤食</div>
       </div>
     </div>
 
@@ -533,146 +477,38 @@
 
   <script>
     let batteryPower = 100;
-
     function updateBatteryDisplay() {
       const bar = document.getElementById('energyBar');
       const level = document.getElementById('batteryLevel');
       const status = document.getElementById('batteryStatus');
-      
       bar.style.width = batteryPower + '%';
-      level.textContent = batteryPower + '%';
-      
-      if (batteryPower > 75) {
-        status.textContent = '電池滿電，準備為設備提供電力！';
-        bar.style.background = 'linear-gradient(90deg, var(--positive), var(--energy))';
-      } else if (batteryPower > 50) {
-        status.textContent = '電池電力良好，可以繼續使用。';
-        bar.style.background = 'linear-gradient(90deg, #FFC107, var(--energy))';
-      } else if (batteryPower > 25) {
-        status.textContent = '電池電力偏低，考慮充電。';
-        bar.style.background = 'linear-gradient(90deg, #FF9800, #FF5722)';
-      } else if (batteryPower > 0) {
-        status.textContent = '電池即將耗盡，請立即充電！';
-        bar.style.background = '#F44336';
-      } else {
-        status.textContent = '電池已完全耗盡，設備無法使用。';
-        bar.style.background = '#666';
-      }
+      level.textContent = batteryPower;
+      if (batteryPower > 75) { status.textContent = '電池滿電，可以供電給設備！'; bar.style.background = 'linear-gradient(90deg, var(--positive), var(--energy))'; }
+      else if (batteryPower > 50) { status.textContent = '電力還夠，繼續用沒問題。'; bar.style.background = 'linear-gradient(90deg, #FFC107, var(--energy))'; }
+      else if (batteryPower > 25) { status.textContent = '電力偏低，考慮充電喔！'; bar.style.background = 'linear-gradient(90deg, #FF9800, #FF5722)'; }
+      else if (batteryPower > 0) { status.textContent = '快沒電了，請充電！'; bar.style.background = '#F44336'; }
+      else { status.textContent = '沒電了，設備無法使用。'; bar.style.background = '#666'; }
     }
-
     function useBattery(device) {
-      if (batteryPower <= 0) {
-        alert('電池沒電了！請先充電再使用設備。');
-        return;
-      }
-      
-      let consumption = 0;
-      let message = '';
-      
-      switch(device) {
-        case 'flashlight':
-          consumption = 15;
-          message = '🔦 手電筒亮起！消耗了15%的電力。';
-          break;
-        case 'radio':
-          consumption = 10;
-          message = '📻 收音機播放音樂！消耗了10%的電力。';
-          break;
-        case 'toy':
-          consumption = 20;
-          message = '🚗 遙控車跑起來了！消耗了20%的電力。';
-          break;
-      }
-      
+      if (batteryPower <= 0) { alert('電池沒電了！請先充電。'); return; }
+      const consumption = { flashlight: 15, radio: 10, toy: 20 }[device];
       batteryPower = Math.max(0, batteryPower - consumption);
       updateBatteryDisplay();
-      
-      // 顯示消息
-      const tempDiv = document.createElement('div');
-      tempDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--primary); color: white; padding: 1rem 2rem; border-radius: 10px; z-index: 1000; font-size: 1.2rem;';
-      tempDiv.textContent = message;
-      document.body.appendChild(tempDiv);
-      
-      setTimeout(() => {
-        document.body.removeChild(tempDiv);
-      }, 2000);
     }
-
     function chargeBattery() {
       batteryPower = Math.min(100, batteryPower + 25);
       updateBatteryDisplay();
-      
-      const tempDiv = document.createElement('div');
-      tempDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--positive); color: white; padding: 1rem 2rem; border-radius: 10px; z-index: 1000; font-size: 1.2rem;';
-      tempDiv.textContent = '🔌 充電中...電池電力恢復了25%！';
-      document.body.appendChild(tempDiv);
-      
-      setTimeout(() => {
-        document.body.removeChild(tempDiv);
-      }, 2000);
     }
-
-    function answerQuiz(element, isCorrect, answer) {
-      const options = element.parentNode.querySelectorAll('.quiz-option');
-      const result = document.getElementById('quiz1Result');
-      
-      options.forEach(opt => {
-        opt.style.pointerEvents = 'none';
-        if (opt === element) {
-          if (isCorrect) {
-            opt.classList.add('correct');
-            result.innerHTML = '✅ 正確！串聯時電壓會相加：1.5V + 1.5V = 3V';
-            result.style.color = '#28a745';
-          } else {
-            opt.classList.add('wrong');
-            result.innerHTML = '❌ 不對喔！想想看，兩個人合力推車時，力氣會怎麼樣？';
-            result.style.color = '#dc3545';
-          }
-        }
-      });
+    function answerQuiz(el, ok) {
+      el.parentNode.querySelectorAll('.quiz-option').forEach(o => { o.style.pointerEvents = 'none'; if (o === el) o.classList.add(ok ? 'correct' : 'wrong'); });
+      document.getElementById('quiz1Result').innerHTML = ok ? '✅ 正確！串聯電壓相加：1.5+1.5=3V' : '❌ 再想想～兩個人合力推車，力氣會？';
+      document.getElementById('quiz1Result').style.color = ok ? '#28a745' : '#dc3545';
     }
-
-    function answerQuiz2(element, isCorrect, answer) {
-      const options = element.parentNode.querySelectorAll('.quiz-option');
-      const result = document.getElementById('quiz2Result');
-      
-      options.forEach(opt => {
-        opt.style.pointerEvents = 'none';
-        if (opt === element) {
-          if (isCorrect) {
-            opt.classList.add('correct');
-            result.innerHTML = '✅ 正確！正極用 + 符號表示，就像數學的加號一樣！';
-            result.style.color = '#28a745';
-          } else {
-            opt.classList.add('wrong');
-            result.innerHTML = '❌ 再想想看！正極是正數，應該用什麼符號？';
-            result.style.color = '#dc3545';
-          }
-        }
-      });
+    function answerQuiz2(el, ok) {
+      el.parentNode.querySelectorAll('.quiz-option').forEach(o => { o.style.pointerEvents = 'none'; if (o === el) o.classList.add(ok ? 'correct' : 'wrong'); });
+      document.getElementById('quiz2Result').innerHTML = ok ? '✅ 正確！正極是 +' : '❌ 正極是正數，用什麼符號？';
+      document.getElementById('quiz2Result').style.color = ok ? '#28a745' : '#dc3545';
     }
-
-    function answerQuiz3(element, isCorrect) {
-      const options = element.parentNode.querySelectorAll('.quiz-option');
-      const result = document.getElementById('quiz3Result');
-      
-      options.forEach(opt => {
-        opt.style.pointerEvents = 'none';
-        if (opt === element) {
-          if (isCorrect) {
-            opt.classList.add('correct');
-            result.innerHTML = '✅ 正確！充電電池可以重複充電和放電，很環保！';
-            result.style.color = '#28a745';
-          } else {
-            opt.classList.add('wrong');
-            result.innerHTML = '❌ 不對！手機電池特別的地方是什麼？';
-            result.style.color = '#dc3545';
-          }
-        }
-      });
-    }
-
-    // 初始化電池顯示
     updateBatteryDisplay();
   </script>
 </body>
