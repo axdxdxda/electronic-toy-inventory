@@ -218,6 +218,60 @@
       background: var(--primary-dark);
     }
 
+    .dupont-kit {
+      background: var(--card-bg);
+      padding: 1.5rem 1.75rem;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      border: 2px solid #b3e5fc;
+    }
+    .dupont-kit h3 {
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+      font-size: 1.35rem;
+    }
+    .dupont-summary {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #0277bd;
+      line-height: 1.65;
+    }
+    .dupont-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+      font-size: 0.92rem;
+    }
+    .dupont-table th,
+    .dupont-table td {
+      border: 1px solid #cfd8dc;
+      padding: 0.55rem 0.65rem;
+      text-align: center;
+    }
+    .dupont-table th {
+      background: #006064;
+      color: #fff;
+      font-weight: 700;
+    }
+    .dupont-table tbody tr:nth-child(even) { background: #eceff1; }
+    .dupont-img-wrap {
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+    .dupont-img-wrap img {
+      max-width: min(100%, 920px);
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .dupont-caption {
+      font-size: 0.82rem;
+      color: #757575;
+      margin-top: 0.45rem;
+    }
+
     @media (max-width: 768px) {
       .navigation {
         flex-direction: column;
@@ -230,7 +284,7 @@
     }
   </style>
 </head>
-<body>
+<body data-cabinet-modal-url="../parts-cabinet.html">
   <div class="header">
     <div class="nav">
       <h1>🌈 功課一：RGB燈控制</h1>
@@ -242,6 +296,26 @@
     <div class="intro">
       <h2>🎯 第一個Arduino挑戰</h2>
       <p>學會用按鈕控制RGB LED，體驗硬體與軟體的完美結合！</p>
+    </div>
+
+    <div class="dupont-kit">
+      <h3>🔌 本功課所需杜邦線</h3>
+      <p class="dupont-summary">接麵包板與 Arduino 請依下表準備杜邦線（可對照收納櫃 <strong>C1</strong>、<strong>C2</strong> 等杜邦線格位）。上方為數量表，下方為<strong>接線圖</strong>。</p>
+      <table class="dupont-table">
+        <thead>
+          <tr><th>顏色</th><th>長度</th><th>規格</th><th>數量</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>黑</td><td>10 cm</td><td>公公</td><td>3</td></tr>
+          <tr><td>藍</td><td>15 cm</td><td>公公</td><td>2</td></tr>
+          <tr><td>橘</td><td>15 cm</td><td>公公</td><td>1</td></tr>
+          <tr><td>綠</td><td>15 cm</td><td>公公</td><td>1</td></tr>
+        </tbody>
+      </table>
+      <div class="dupont-img-wrap">
+        <img src="../功課數量區/彩色按鈕燈_接線圖.png" alt="功課一彩色按鈕燈：電路接線圖">
+        <p class="dupont-caption">圖：功課一（彩色按鈕燈／RGB）接線圖</p>
+      </div>
     </div>
 
     <div class="challenge-box">
@@ -518,5 +592,7 @@
       });
     });
   </script>
+  <link rel="stylesheet" href="../assets/parts-cabinet-modal.css">
+  <script src="../assets/parts-cabinet-modal.js" defer></script>
 </body>
 </html>

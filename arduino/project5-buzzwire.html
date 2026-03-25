@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>功課五：電流急急棒 - 電子元件教學</title>
+  <style>
+    :root {
+      --primary: #E91E63;
+      --primary-dark: #C2185B;
+      --secondary: #FFC107;
+      --background: #f8f9fa;
+      --text: #333;
+      --border: #e9ecef;
+      --card-bg: #fff;
+      --shadow: 0 2px 10px rgba(0,0,0,0.1);
+      --accent: #FF5722;
+      --success: #4CAF50;
+      --danger: #f44336;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Microsoft YaHei', sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      padding: 1rem 0;
+      box-shadow: var(--shadow);
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav h1 {
+      font-size: 1.5rem;
+    }
+
+    .nav a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .nav a:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .intro {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .intro h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 2rem;
+    }
+
+    .challenge-box {
+      background: linear-gradient(135deg, #E91E63 0%, #FF5722 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .challenge-box h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .game-rules {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      border-left: 5px solid var(--primary);
+    }
+
+    .game-rules h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .game-rules ol {
+      padding-left: 1.5rem;
+    }
+
+    .game-rules ol li {
+      margin-bottom: 0.8rem;
+      font-size: 1.05rem;
+    }
+
+    .wiring-section {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .wiring-section h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .pin-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+
+    .pin-table th, .pin-table td {
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .pin-table th {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      font-weight: 700;
+    }
+
+    .pin-table tr:nth-child(even) {
+      background: #fce4ec;
+    }
+
+    .pin-table tr:hover {
+      background: #f8bbd0;
+    }
+
+    .ai-section {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      border: 2px solid #10A37F;
+    }
+
+    .ai-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      color: #10A37F;
+    }
+
+    .question-template {
+      background: #f0f9ff;
+      border: 1px solid #e0f2fe;
+      border-radius: 5px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-family: monospace;
+      white-space: pre-wrap;
+      line-height: 1.8;
+    }
+
+    .code-section {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .code-block {
+      background: #2d3748;
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      white-space: pre-wrap;
+      line-height: 1.8;
+    }
+
+    .copy-btn {
+      background: var(--secondary);
+      color: #333;
+      border: none;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .copy-btn:hover {
+      background: #ffd54f;
+    }
+
+    .code-block .string { color: #ffa07a; }
+    .code-block .comment { color: #68d391; }
+    .code-block .keyword { color: #fbb6ce; }
+    .code-block .function { color: #90cdf4; }
+
+    .hint-box {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 5px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    .success-box {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      border-radius: 5px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    .danger-box {
+      background: #ffeef0;
+      border: 1px solid #f5c6cb;
+      border-radius: 5px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    .state-diagram {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .state-flow {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      padding: 0.5rem 0;
+    }
+
+    .state-box {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      border: 2px solid #2196F3;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      min-width: 140px;
+      flex-shrink: 0;
+      transition: transform 0.3s;
+    }
+
+    .state-box:hover {
+      transform: translateY(-5px);
+    }
+
+    .state-box.idle { border-color: #9E9E9E; background: linear-gradient(135deg, #f5f5f5, #e0e0e0); }
+    .state-box.running { border-color: #2196F3; background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
+    .state-box.success { border-color: #4CAF50; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
+    .state-box.fail { border-color: #f44336; background: linear-gradient(135deg, #ffebee, #ffcdd2); }
+
+    .state-box .state-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .state-box .state-name { font-weight: 700; font-size: 1.1rem; }
+    .state-box .state-desc { font-size: 0.85rem; color: #555; margin-top: 0.3rem; }
+
+    .arrow {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .branch-outcomes {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .branch-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .branch-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .branch-label.goal { color: #4CAF50; }
+    .branch-label.obstacle { color: #f44336; }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding: 1rem 0;
+    }
+
+    .nav-btn {
+      background: var(--primary);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .nav-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .dupont-kit {
+      background: var(--card-bg);
+      padding: 1.5rem 1.75rem;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      border: 2px solid #b3e5fc;
+    }
+    .dupont-kit h3 {
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+      font-size: 1.35rem;
+    }
+    .dupont-summary {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #0277bd;
+      line-height: 1.65;
+    }
+    .dupont-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+      font-size: 0.92rem;
+    }
+    .dupont-table th,
+    .dupont-table td {
+      border: 1px solid #cfd8dc;
+      padding: 0.55rem 0.65rem;
+      text-align: center;
+    }
+    .dupont-table th {
+      background: #006064;
+      color: #fff;
+      font-weight: 700;
+    }
+    .dupont-table tbody tr:nth-child(even) { background: #eceff1; }
+    .dupont-img-wrap {
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+    .dupont-img-wrap img {
+      max-width: min(100%, 920px);
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .dupont-caption {
+      font-size: 0.82rem;
+      color: #757575;
+      margin-top: 0.45rem;
+    }
+
+    @media (max-width: 768px) {
+      .navigation {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .state-flow {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .state-flow > .arrow {
+        transform: rotate(90deg);
+      }
+
+      .branch-outcomes {
+        flex-direction: row;
+        gap: 1.5rem;
+        justify-content: center;
+      }
+
+      .branch-row .arrow {
+        transform: rotate(90deg);
+      }
+
+      .pin-table {
+        font-size: 0.85rem;
+      }
+
+      .pin-table th, .pin-table td {
+        padding: 0.5rem;
+      }
+
+      .code-section h4 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body data-cabinet-modal-url="../parts-cabinet.html#buzzwire-photos">
+  <div class="header">
+    <div class="nav">
+      <h1>⚡ 功課五：電流急急棒</h1>
+      <a href="../index.html">🏠 返回首頁</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="intro">
+      <h2>⚡ 電流急急棒遊戲</h2>
+      <p>打造一個刺激的電流急急棒遊戲！手持金屬環沿著彎曲的金屬線前進，碰到就會警報大響！</p>
+      <p style="margin-top:14px;">
+        <a class="nav-btn cabinet-modal-link" href="../parts-cabinet.html#buzzwire-photos" style="display:inline-flex;align-items:center;gap:6px;">📷 收納櫃＋零件實照（視窗內開啟）</a>
+        <a href="../parts-cabinet.html#buzzwire-photos" target="_blank" rel="noopener noreferrer" style="margin-left:12px;font-size:0.88rem;font-weight:700;color:#c2185b;text-decoration:underline;text-underline-offset:3px;">另開新分頁 ↗</a>
+      </p>
+    </div>
+
+    <div class="dupont-kit">
+      <h3>🔌 本功課所需杜邦線</h3>
+      <p class="dupont-summary">電流急急棒專案接線請依下表準備（多為公母線連接 Arduino 與麵包板）。上方為數量表，下方為<strong>接線圖</strong>。</p>
+      <table class="dupont-table">
+        <thead>
+          <tr><th>顏色</th><th>長度</th><th>規格</th><th>數量</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>白</td><td>30 cm</td><td>公母</td><td>3</td></tr>
+          <tr><td>灰</td><td>30 cm</td><td>公母</td><td>1</td></tr>
+          <tr><td>白</td><td>20 cm</td><td>公母</td><td>1</td></tr>
+        </tbody>
+      </table>
+      <div class="dupont-img-wrap">
+        <img src="../功課數量區/電流急急棒_接線圖.png" alt="功課五電流急急棒：電路接線圖">
+        <p class="dupont-caption">圖：功課五（電流急急棒）接線圖</p>
+      </div>
+    </div>
+
+    <div class="challenge-box">
+      <h3>🎯 遊戲挑戰</h3>
+      <p>製作一個電流急急棒遊戲機！結合按鈕、RGB LED、數碼管計時器、蜂鳴器和震動馬達：</p>
+      <p><strong>按下按鈕開始 → 計時器啟動 → 小心前進 → 碰到警報！→ 到達終點成功！</strong></p>
+    </div>
+
+    <div class="game-rules">
+      <h3>📜 遊戲規則</h3>
+      <ol>
+        <li>🟢 按下<strong>按鈕</strong>開始遊戲，藍燈亮起，計時開始</li>
+        <li>⏱️ <strong>數碼管</strong>即時顯示經過的秒數</li>
+        <li>🏆 手持金屬環到達<strong>終點線</strong>（D8），綠燈亮起 → 挑戰成功！</li>
+        <li>💥 途中碰到<strong>障礙線</strong>（D10），紅燈亮起 + 蜂鳴器響 + 馬達震動 → 挑戰失敗！</li>
+        <li>🔄 隨時按下按鈕可<strong>重新開始</strong>遊戲</li>
+      </ol>
+    </div>
+
+    <div class="state-diagram">
+      <h3 style="color: var(--primary); margin-bottom: 1rem;">🔄 遊戲狀態流程</h3>
+      <p>這個遊戲使用「狀態機」邏輯來控制：</p>
+      <div class="state-flow">
+        <div class="state-box idle">
+          <div class="state-icon">⏸️</div>
+          <div class="state-name">IDLE 待命</div>
+          <div class="state-desc">等待按鈕<br>數碼管顯示 00:00</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="state-box running">
+          <div class="state-icon">🏃</div>
+          <div class="state-name">RUNNING 進行中</div>
+          <div class="state-desc">藍燈亮起<br>計時器運轉</div>
+        </div>
+        <div class="branch-outcomes">
+          <div class="branch-row">
+            <div class="arrow">→</div>
+            <span class="branch-label goal">D8 終點</span>
+          </div>
+          <div class="branch-row">
+            <div class="arrow">→</div>
+            <span class="branch-label obstacle">D10 障礙</span>
+          </div>
+        </div>
+        <div class="state-box success">
+          <div class="state-icon">🏆</div>
+          <div class="state-name">成功！</div>
+          <div class="state-desc">觸碰終點線<br>綠燈亮起</div>
+        </div>
+        <div class="state-box fail">
+          <div class="state-icon">💥</div>
+          <div class="state-name">失敗！</div>
+          <div class="state-desc">碰到障礙線<br>紅燈 + 警報</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wiring-section">
+      <h3>🔌 接線對照表</h3>
+      <p>這個專案需要用到多個元件，請按照以下表格仔細接線：</p>
+      <table class="pin-table">
+        <thead>
+          <tr>
+            <th>Arduino 接腳</th>
+            <th>連接元件</th>
+            <th>說明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>D2</td><td>按鈕</td><td>啟動 / 重新開始遊戲</td></tr>
+          <tr><td>D3</td><td>紅色 LED</td><td>碰到障礙時亮起</td></tr>
+          <tr><td>D4</td><td>藍色 LED</td><td>遊戲開始時亮起（程式碼中為 bluePin）</td></tr>
+          <tr><td>D5</td><td>綠色 LED</td><td>到達終點時亮起</td></tr>
+          <tr><td>D6</td><td>TM1637 DIO</td><td>數碼管資料線</td></tr>
+          <tr><td>D7</td><td>TM1637 CLK</td><td>數碼管時鐘線</td></tr>
+          <tr><td>D8</td><td>終點線</td><td>金屬環到達終點的感測</td></tr>
+          <tr><td>D9</td><td>震動馬達</td><td>碰到障礙時震動警報</td></tr>
+          <tr><td>D10</td><td>障礙線</td><td>金屬環碰到彎曲線的感測</td></tr>
+          <tr><td>D11</td><td>蜂鳴器</td><td>碰到障礙時聲音警報</td></tr>
+        </tbody>
+      </table>
+
+      <div class="hint-box">
+        <h4>💡 急急棒製作小提示</h4>
+        <ul>
+          <li><strong>障礙線</strong>：用粗鐵絲（或銅線）彎成蜿蜒的路徑，一端接 GND，另一端接 D10</li>
+          <li><strong>手持環</strong>：用鐵絲彎成小圈，套在障礙線上，接 GND</li>
+          <li><strong>終點線</strong>：在路徑尾端放置一小段金屬，一端接 D8</li>
+          <li>D8 和 D10 使用 <code>INPUT_PULLUP</code>，平時為 HIGH，接觸（接地）時變 LOW</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ai-section">
+      <div class="ai-header">
+        <span style="font-size: 2rem;">🤖</span>
+        <h3>與ChatGPT協作</h3>
+      </div>
+
+      <p>你可以試著問ChatGPT這些問題來獲得幫助：</p>
+
+      <div class="question-template">我想用Arduino製作一個「電流急急棒」遊戲機。
+
+功能需求：
+1. 按下按鈕開始遊戲，藍燈亮起，數碼管開始計時
+2. 玩家手持金屬環沿著彎曲金屬線前進
+3. 碰到障礙線（D10）→ 紅燈亮起 + 蜂鳴器響 + 馬達震動 0.5秒
+4. 到達終點線（D8）→ 綠燈亮起，遊戲成功
+5. 數碼管即時顯示經過的秒數
+6. 按鈕可隨時重新開始
+
+硬體接線：
+- 按鈕：D2（INPUT_PULLUP）
+- 紅色LED：D3
+- 藍色LED：D4
+- 綠色LED：D5
+- TM1637 DIO：D6
+- TM1637 CLK：D7
+- 終點線：D8（INPUT_PULLUP）
+- 震動馬達：D9
+- 障礙線：D10（INPUT_PULLUP）
+- 蜂鳴器：D11
+
+請幫我寫Arduino程式碼，使用狀態機設計，並加上詳細註解。</div>
+
+      <div class="hint-box">
+        <h4>💡 提問技巧</h4>
+        <ul>
+          <li>說明遊戲的完整規則和流程</li>
+          <li>告訴AI你使用了哪些感測接腳（終點線、障礙線）</li>
+          <li>詢問什麼是「狀態機」以及為什麼要用它</li>
+          <li>如果警報不夠明顯，可以請AI加入更多提示效果</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="code-section">
+      <h3>📝 程式碼詳細解說</h3>
+      <p>讓我們一步步了解這個電流急急棒遊戲的程式碼！</p>
+
+      <h4 style="color: var(--primary); margin-top: 2rem;">📚 第一部分：引入函式庫與腳位定義</h4>
+      <p>使用 TM1637 函式庫來控制數碼管，定義所有元件的接腳</p>
+      <div class="code-block">
+<span class="keyword">#include</span> <span class="string">&lt;TM1637Display.h&gt;</span>
+
+<span class="comment">// 腳位定義</span>
+<span class="keyword">const int</span> buttonPin   = 2;
+<span class="keyword">const int</span> redPin      = 3;
+<span class="keyword">const int</span> bluePin     = 4;
+<span class="keyword">const int</span> greenPin    = 5;
+<span class="keyword">const int</span> displayDIO  = 6;
+<span class="keyword">const int</span> displayCLK  = 7;
+<span class="keyword">const int</span> goalPin     = 8;   <span class="comment">// 終點線</span>
+<span class="keyword">const int</span> obstaclePin = 10;  <span class="comment">// 障礙線</span>
+<span class="keyword">const int</span> motorPin    = 9;
+<span class="keyword">const int</span> buzzerPin   = 11;
+      </div>
+
+      <h4 style="color: var(--primary); margin-top: 2rem;">🎮 第二部分：狀態機設計</h4>
+      <p>使用 <code>enum</code>（列舉）定義遊戲的三種狀態，讓程式邏輯更清晰</p>
+      <div class="code-block">
+TM1637Display display(displayCLK, displayDIO);
+
+<span class="comment">// 遊戲有三種狀態：待命、進行中、已停止</span>
+<span class="keyword">enum</span> GameState { IDLE, RUNNING, STOPPED };
+GameState state = IDLE;
+
+<span class="keyword">unsigned long</span> startTime = 0;
+<span class="keyword">float</span> elapsed = 0;
+<span class="keyword">bool</span> buttonPressed = <span class="keyword">false</span>;
+<span class="keyword">bool</span> gameStopped = <span class="keyword">false</span>;
+      </div>
+
+      <div class="hint-box">
+        <h4>🧠 什麼是狀態機？</h4>
+        <p>狀態機就像一個「遊戲規則管理員」！它定義了遊戲可能的幾種狀態，以及每種狀態下該做什麼：</p>
+        <ul>
+          <li><strong>IDLE（待命）</strong>：什麼都不做，等待玩家按下按鈕</li>
+          <li><strong>RUNNING（進行中）</strong>：計時器在跑，隨時偵測是否碰到障礙或到達終點</li>
+          <li><strong>STOPPED（已停止）</strong>：遊戲結束（成功或失敗），等待重新開始</li>
+        </ul>
+        <p>有了狀態機，程式就不會亂！比如在 IDLE 狀態時，碰到障礙線不會觸發警報。</p>
+      </div>
+
+      <h4 style="color: var(--primary); margin-top: 2rem;">⏱️ 第三部分：防彈跳與顯示更新</h4>
+      <p>按鈕防彈跳和數碼管的更新頻率控制</p>
+      <div class="code-block">
+<span class="comment">// 防彈跳用</span>
+<span class="keyword">unsigned long</span> lastButtonTime = 0;
+<span class="keyword">const unsigned long</span> debounceDelay = 50;
+
+<span class="comment">// 顯示更新用</span>
+<span class="keyword">unsigned long</span> lastDisplayTime = 0;
+<span class="keyword">const unsigned long</span> displayInterval = 100;  <span class="comment">// 每 100ms 更新一次顯示</span>
+      </div>
+
+      <div class="hint-box">
+        <h4>💡 為什麼需要控制顯示更新頻率？</h4>
+        <p>如果每次 loop() 都更新數碼管，會產生<strong>閃爍</strong>的問題。設定每 100ms 才更新一次（每秒 10 次），既能即時顯示，又不會閃爍。這就是 <code>millis()</code> 計時法的好處！</p>
+      </div>
+
+      <h4 style="color: var(--primary); margin-top: 2rem;">⚙️ 第四部分：setup 開機設定</h4>
+      <p>初始化所有接腳和元件</p>
+      <div class="code-block">
+<span class="keyword">void</span> <span class="function">setup</span>() {
+  Serial.begin(9600);
+
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+  pinMode(goalPin, INPUT_PULLUP);      <span class="comment">// 終點線用內建上拉電阻</span>
+  pinMode(obstaclePin, INPUT_PULLUP);  <span class="comment">// 障礙線用內建上拉電阻</span>
+  pinMode(motorPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+
+  display.setBrightness(0x0f);
+  display.showNumberDecEx(0, 0b01000000, <span class="keyword">true</span>);
+
+  <span class="function">setRGB</span>(LOW, LOW, LOW);
+  digitalWrite(motorPin, LOW);
+  digitalWrite(buzzerPin, LOW);
+
+  Serial.println(<span class="string">"系統啟動，等待按鈕"</span>);
+}
+      </div>
+
+      <div class="hint-box">
+        <h4>🔑 INPUT_PULLUP 的重要性</h4>
+        <p>終點線（D8）和障礙線（D10）都設為 <code>INPUT_PULLUP</code>：</p>
+        <ul>
+          <li>平時電壓被「拉高」到 HIGH（沒碰到）</li>
+          <li>金屬環碰到時，接通 GND，變成 LOW（觸發！）</li>
+          <li>不需要外接電阻，Arduino 內建的就夠了</li>
+        </ul>
+      </div>
+
+      <h4 style="color: var(--primary); margin-top: 2rem;">🔄 第五部分：loop 主迴圈</h4>
+      <p>遊戲的核心邏輯都在這裡！</p>
+      <div class="code-block">
+<span class="keyword">void</span> <span class="function">loop</span>() {
+  <span class="comment">// 即時偵測 D8、D10</span>
+  <span class="keyword">int</span> goalState = digitalRead(goalPin);
+  <span class="keyword">int</span> obstacleState = digitalRead(obstaclePin);
+
+  <span class="comment">// 按鈕偵測 + 防彈跳</span>
+  <span class="keyword">if</span> (digitalRead(buttonPin) == LOW) {
+    <span class="keyword">if</span> (millis() - lastButtonTime > debounceDelay) {
+      <span class="keyword">if</span> (!buttonPressed) {
+        buttonPressed = <span class="keyword">true</span>;
+        <span class="function">handleButtonPress</span>();
+      }
+      lastButtonTime = millis();
+    }
+  } <span class="keyword">else</span> {
+    buttonPressed = <span class="keyword">false</span>;
+  }
+
+  <span class="comment">// 遊戲進行中</span>
+  <span class="keyword">if</span> (state == RUNNING && !gameStopped) {
+    <span class="comment">// 即時偵測是否觸發</span>
+    <span class="keyword">if</span> (goalState == LOW) {
+      gameStopped = <span class="keyword">true</span>;
+      <span class="function">setRGB</span>(LOW, HIGH, LOW);  <span class="comment">// 綠燈</span>
+      Serial.println(<span class="string">"終點觸發 → 遊戲成功"</span>);
+    }
+    <span class="keyword">if</span> (obstacleState == LOW) {
+      gameStopped = <span class="keyword">true</span>;
+      <span class="function">setRGB</span>(HIGH, LOW, LOW);  <span class="comment">// 紅燈</span>
+      Serial.println(<span class="string">"碰到障礙 → 遊戲失敗"</span>);
+      <span class="function">triggerAlarm</span>();
+    }
+
+    <span class="comment">// 每 100ms 更新一次顯示</span>
+    <span class="keyword">if</span> (millis() - lastDisplayTime >= displayInterval) {
+      elapsed = (millis() - startTime) / 1000.0;
+      <span class="keyword">int</span> displayValue = (<span class="keyword">int</span>)(elapsed + 0.05);
+      display.showNumberDecEx(displayValue, 0b01000000, <span class="keyword">true</span>);
+      lastDisplayTime = millis();
+    }
+  }
+
+  <span class="keyword">if</span> (state == IDLE) {
+    display.showNumberDecEx(0, 0b01000000, <span class="keyword">true</span>);
+  }
+}
+      </div>
+
+      <div class="danger-box">
+        <h4>⚠️ 為什麼不用 delay()？</h4>
+        <p>在這個遊戲中，我們<strong>不能</strong>用 <code>delay()</code> 來計時！因為：</p>
+        <ul>
+          <li><code>delay()</code> 會讓 Arduino「暫停」，暫停期間<strong>無法偵測</strong>金屬環碰到障礙</li>
+          <li>使用 <code>millis()</code> 可以在計時的<strong>同時</strong>持續偵測所有感測器</li>
+          <li>這叫做「非阻塞式程式設計」，是遊戲開發的基本技巧！</li>
+        </ul>
+      </div>
+
+      <h4 style="color: var(--primary); margin-top: 2rem;">🎮 第六部分：按鈕處理函式</h4>
+      <p>按下按鈕時重置所有狀態，開始新一局</p>
+      <div class="code-block">
+<span class="keyword">void</span> <span class="function">handleButtonPress</span>() {
+  state = RUNNING;
+  gameStopped = <span class="keyword">false</span>;
+  startTime = millis();
+  elapsed = 0;
+  <span class="function">setRGB</span>(LOW, LOW, HIGH);   <span class="comment">// 藍燈亮起</span>
+  digitalWrite(motorPin, LOW);
+  digitalWrite(buzzerPin, LOW);
+  Serial.println(<span class="string">"遊戲開始，計時中..."</span>);
+}
+      </div>
+
+      <h4 style="color: var(--primary); margin-top: 2rem;">💡 第七部分：輔助函式</h4>
+      <p>RGB 燈控制與警報觸發</p>
+      <div class="code-block">
+<span class="comment">// --- 控制RGB燈 ---</span>
+<span class="keyword">void</span> <span class="function">setRGB</span>(<span class="keyword">bool</span> r, <span class="keyword">bool</span> g, <span class="keyword">bool</span> b) {
+  digitalWrite(redPin, r);
+  digitalWrite(greenPin, g);
+  digitalWrite(bluePin, b);
+}
+
+<span class="comment">// --- 警報觸發（馬達 + 蜂鳴器 0.5秒）---</span>
+<span class="keyword">void</span> <span class="function">triggerAlarm</span>() {
+  digitalWrite(motorPin, HIGH);
+  digitalWrite(buzzerPin, HIGH);
+  delay(500);
+  digitalWrite(motorPin, LOW);
+  digitalWrite(buzzerPin, LOW);
+  Serial.println(<span class="string">"警報觸發 (馬達 + 蜂鳴器 0.5秒)"</span>);
+}
+      </div>
+
+      <div class="hint-box">
+        <h4>🔔 triggerAlarm 的設計考量</h4>
+        <p>這裡用了 <code>delay(500)</code>，因為遊戲已經結束（<code>gameStopped = true</code>），不需要再偵測感測器了。0.5 秒的警報既能讓玩家明確感受到「碰到了！」，又不會太長讓人不耐煩。</p>
+      </div>
+
+      <h4 style="color: var(--primary); margin-top: 2rem;">📋 完整程式碼</h4>
+      <details>
+        <summary style="cursor: pointer; font-weight: bold; color: var(--primary); background: var(--background); padding: 1rem; border-radius: 5px;">點擊展開完整程式碼</summary>
+
+        <div class="code-block" style="margin-top: 1rem;">
+<span class="keyword">#include</span> <span class="string">&lt;TM1637Display.h&gt;</span>
+
+<span class="comment">// 腳位定義</span>
+<span class="keyword">const int</span> buttonPin   = 2;
+<span class="keyword">const int</span> redPin      = 3;
+<span class="keyword">const int</span> bluePin     = 4;
+<span class="keyword">const int</span> greenPin    = 5;
+<span class="keyword">const int</span> displayDIO  = 6;
+<span class="keyword">const int</span> displayCLK  = 7;
+<span class="keyword">const int</span> goalPin     = 8;   <span class="comment">// 終點線</span>
+<span class="keyword">const int</span> obstaclePin = 10;  <span class="comment">// 障礙線</span>
+<span class="keyword">const int</span> motorPin    = 9;
+<span class="keyword">const int</span> buzzerPin   = 11;
+
+TM1637Display display(displayCLK, displayDIO);
+
+<span class="keyword">enum</span> GameState { IDLE, RUNNING, STOPPED };
+GameState state = IDLE;
+
+<span class="keyword">unsigned long</span> startTime = 0;
+<span class="keyword">float</span> elapsed = 0;
+<span class="keyword">bool</span> buttonPressed = <span class="keyword">false</span>;
+<span class="keyword">bool</span> gameStopped = <span class="keyword">false</span>;
+
+<span class="comment">// 防彈跳用</span>
+<span class="keyword">unsigned long</span> lastButtonTime = 0;
+<span class="keyword">const unsigned long</span> debounceDelay = 50;
+
+<span class="comment">// 顯示更新用</span>
+<span class="keyword">unsigned long</span> lastDisplayTime = 0;
+<span class="keyword">const unsigned long</span> displayInterval = 100;
+
+<span class="keyword">void</span> <span class="function">setup</span>() {
+  Serial.begin(9600);
+
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+  pinMode(goalPin, INPUT_PULLUP);
+  pinMode(obstaclePin, INPUT_PULLUP);
+  pinMode(motorPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+
+  display.setBrightness(0x0f);
+  display.showNumberDecEx(0, 0b01000000, <span class="keyword">true</span>);
+
+  <span class="function">setRGB</span>(LOW, LOW, LOW);
+  digitalWrite(motorPin, LOW);
+  digitalWrite(buzzerPin, LOW);
+
+  Serial.println(<span class="string">"系統啟動，等待按鈕"</span>);
+}
+
+<span class="keyword">void</span> <span class="function">loop</span>() {
+  <span class="keyword">int</span> goalState = digitalRead(goalPin);
+  <span class="keyword">int</span> obstacleState = digitalRead(obstaclePin);
+
+  <span class="keyword">if</span> (digitalRead(buttonPin) == LOW) {
+    <span class="keyword">if</span> (millis() - lastButtonTime > debounceDelay) {
+      <span class="keyword">if</span> (!buttonPressed) {
+        buttonPressed = <span class="keyword">true</span>;
+        <span class="function">handleButtonPress</span>();
+      }
+      lastButtonTime = millis();
+    }
+  } <span class="keyword">else</span> {
+    buttonPressed = <span class="keyword">false</span>;
+  }
+
+  <span class="keyword">if</span> (state == RUNNING && !gameStopped) {
+    <span class="keyword">if</span> (goalState == LOW) {
+      gameStopped = <span class="keyword">true</span>;
+      <span class="function">setRGB</span>(LOW, HIGH, LOW);
+      Serial.println(<span class="string">"終點觸發 → 遊戲成功"</span>);
+    }
+    <span class="keyword">if</span> (obstacleState == LOW) {
+      gameStopped = <span class="keyword">true</span>;
+      <span class="function">setRGB</span>(HIGH, LOW, LOW);
+      Serial.println(<span class="string">"碰到障礙 → 遊戲失敗"</span>);
+      <span class="function">triggerAlarm</span>();
+    }
+
+    <span class="keyword">if</span> (millis() - lastDisplayTime >= displayInterval) {
+      elapsed = (millis() - startTime) / 1000.0;
+      <span class="keyword">int</span> displayValue = (<span class="keyword">int</span>)(elapsed + 0.05);
+      display.showNumberDecEx(displayValue, 0b01000000, <span class="keyword">true</span>);
+      lastDisplayTime = millis();
+    }
+  }
+
+  <span class="keyword">if</span> (state == IDLE) {
+    display.showNumberDecEx(0, 0b01000000, <span class="keyword">true</span>);
+  }
+}
+
+<span class="keyword">void</span> <span class="function">handleButtonPress</span>() {
+  state = RUNNING;
+  gameStopped = <span class="keyword">false</span>;
+  startTime = millis();
+  elapsed = 0;
+  <span class="function">setRGB</span>(LOW, LOW, HIGH);
+  digitalWrite(motorPin, LOW);
+  digitalWrite(buzzerPin, LOW);
+  Serial.println(<span class="string">"遊戲開始，計時中..."</span>);
+}
+
+<span class="keyword">void</span> <span class="function">setRGB</span>(<span class="keyword">bool</span> r, <span class="keyword">bool</span> g, <span class="keyword">bool</span> b) {
+  digitalWrite(redPin, r);
+  digitalWrite(greenPin, g);
+  digitalWrite(bluePin, b);
+}
+
+<span class="keyword">void</span> <span class="function">triggerAlarm</span>() {
+  digitalWrite(motorPin, HIGH);
+  digitalWrite(buzzerPin, HIGH);
+  delay(500);
+  digitalWrite(motorPin, LOW);
+  digitalWrite(buzzerPin, LOW);
+  Serial.println(<span class="string">"警報觸發 (馬達 + 蜂鳴器 0.5秒)"</span>);
+}
+        </div>
+      </details>
+    </div>
+
+    <div class="success-box">
+      <h4>🎉 功課五學習重點</h4>
+      <p>完成電流急急棒後，你學會了：</p>
+      <ul>
+        <li>✅ <strong>狀態機設計</strong>：用 enum 管理遊戲的不同階段</li>
+        <li>✅ <strong>非阻塞計時</strong>：用 millis() 取代 delay()，即時偵測感測器</li>
+        <li>✅ <strong>防彈跳處理</strong>：用時間差過濾按鈕雜訊</li>
+        <li>✅ <strong>多感測器即時偵測</strong>：同時監控終點線和障礙線</li>
+        <li>✅ <strong>多元件警報系統</strong>：蜂鳴器 + 震動馬達的組合回饋</li>
+        <li>✅ <strong>計時器顯示</strong>：數碼管即時更新經過秒數</li>
+      </ul>
+
+      <p><strong>🎓 到目前為止你完成的學習路程：</strong></p>
+      <ul>
+        <li>✅ Arduino IDE 安裝與使用</li>
+        <li>✅ 接腳原理與電路基礎</li>
+        <li>✅ ChatGPT 協作程式設計</li>
+        <li>✅ <strong>功課一</strong>：RGB LED 顏色控制</li>
+        <li>✅ <strong>功課二</strong>：數碼管顯示與倒數</li>
+        <li>✅ <strong>功課三</strong>：蜂鳴器音效控制</li>
+        <li>✅ <strong>功課四</strong>：震動馬達與完整整合</li>
+        <li>✅ <strong>功課五</strong>：電流急急棒遊戲（狀態機 + 即時偵測）</li>
+      </ul>
+
+      <p><strong>🚀 進階挑戰：</strong></p>
+      <ul>
+        <li>加入「最佳紀錄」功能，記錄最快通關時間</li>
+        <li>增加難度等級（不同速度的警報閃爍）</li>
+        <li>碰到障礙不直接結束，改為累計扣分</li>
+        <li>加入倒數計時模式（限時通關）</li>
+        <li>用 EEPROM 永久儲存最高分數</li>
+      </ul>
+    </div>
+
+    <div class="navigation">
+      <a href="project4-motor.html" class="nav-btn">⬅️ 上一個功課：震動馬達</a>
+      <a href="../index.html" class="nav-btn">🏠 返回首頁 ➡️</a>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.code-block').forEach(function (block) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'copy-btn';
+        btn.textContent = '📋 一鍵複製';
+        btn.addEventListener('click', function () {
+          var text = block.innerText.replace(/\u00A0/g, ' ');
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+              var old = btn.textContent;
+              btn.textContent = '✅ 已複製';
+              setTimeout(function () { btn.textContent = old; }, 1500);
+            }).catch(function () {
+              alert('複製失敗，請手動選取文字。');
+            });
+          } else {
+            alert('此瀏覽器不支援自動複製，請手動選取文字。');
+          }
+        });
+        block.parentNode.insertBefore(btn, block);
+      });
+    });
+  </script>
+  <link rel="stylesheet" href="../assets/parts-cabinet-modal.css">
+  <script src="../assets/parts-cabinet-modal.js" defer></script>
+</body>
+</html>

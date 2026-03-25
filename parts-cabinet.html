@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>零件收納櫃導覽｜創客電子學院</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --candy-pink: #FF6B9D;
+      --candy-orange: #FF9F43;
+      --candy-yellow: #FECA57;
+      --candy-green: #5CD85A;
+      --candy-cyan: #48DBFB;
+      --candy-blue: #54A0FF;
+      --candy-purple: #A55EEA;
+      --bg: #FFF9F0;
+      --card: rgba(255, 255, 255, 0.96);
+      --text: #2D3436;
+      --muted: #636E72;
+      --shadow: 0 8px 32px rgba(255, 107, 157, 0.12);
+      --plastic-light: #f8f9fa;
+      --plastic-mid: #e9ecef;
+      --plastic-dark: #ced4da;
+      --frame: #6c757d;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 107, 157, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(72, 219, 251, 0.08) 0%, transparent 40%),
+        linear-gradient(180deg, #FFF9F0 0%, #FFEFDB 100%);
+      background-attachment: fixed;
+    }
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 3px solid var(--candy-pink);
+      padding: 14px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .header-inner h1 {
+      font-size: clamp(1.15rem, 4vw, 1.5rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--candy-pink), var(--candy-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .back-home {
+      font-weight: 800;
+      color: var(--candy-blue);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(84, 160, 255, 0.15), rgba(165, 94, 234, 0.12));
+      border: 2px solid transparent;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .back-home:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 24px 18px 48px; }
+
+    .intro {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      border: 2px solid rgba(255, 200, 150, 0.35);
+    }
+    .intro h2 { font-size: 1.35rem; margin-bottom: 10px; }
+    .intro p { color: var(--muted); font-size: 1.02rem; }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin-top: 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+    .legend span {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #fff;
+      border: 2px solid #eee;
+    }
+    .legend .L-A { border-color: #90CAF9; background: #E3F2FD; }
+    .legend .L-B { border-color: #A5D6A7; background: #E8F5E9; }
+    .legend .L-C { border-color: #FFE082; background: #FFF8E1; }
+    .legend .L-D { border-color: #CE93D8; background: #F3E5F5; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 22px;
+    }
+    .toolbar label { font-weight: 800; color: var(--muted); padding-top: 10px; }
+    .search-wrap { flex: 1; min-width: 200px; max-width: 440px; }
+    .search-wrap input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 2px solid rgba(255, 107, 157, 0.25);
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .search-wrap input:focus {
+      outline: none;
+      border-color: var(--candy-pink);
+      box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.2);
+    }
+    .hint-text { font-size: 0.88rem; color: var(--muted); margin-top: 6px; }
+
+    /* ===== 主版面：櫃體 + 詳情 ===== */
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) minmax(300px, 380px);
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ===== 擬真收納櫃外框 ===== */
+    .cabinet-outer {
+      position: relative;
+      border-radius: 20px;
+      padding: 18px 16px 22px;
+      background:
+        linear-gradient(145deg, #8d9196 0%, #5a5f66 40%, #4a4e54 100%);
+      box-shadow:
+        0 20px 50px rgba(0,0,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.15),
+        inset 0 -2px 8px rgba(0,0,0,0.3);
+    }
+    .cabinet-outer::before {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border-radius: 14px;
+      border: 2px solid rgba(0,0,0,0.2);
+      pointer-events: none;
+    }
+    .cabinet-title {
+      text-align: center;
+      color: #fff;
+      font-weight: 900;
+      font-size: 1rem;
+      letter-spacing: 0.06em;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .cabinet-inner {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(180deg, #2d3136 0%, #1e2124 100%);
+      border-radius: 12px;
+      padding: 12px 10px;
+      box-shadow: inset 0 4px 16px rgba(0,0,0,0.5);
+    }
+    .direction-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.78rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .direction-arrow span { font-size: 1.2rem; }
+
+    /* 單一層（抽屜滑軌區） */
+    .drawer-tier {
+      margin-bottom: 10px;
+      transition: opacity 0.25s ease;
+    }
+    .drawer-tier:last-child { margin-bottom: 0; }
+    .drawer-tier.dimmed {
+      opacity: 0.42;
+      filter: grayscale(0.2);
+    }
+    .tier-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      padding-left: 4px;
+    }
+    .tier-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #fff;
+      font-size: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .tier-A .tier-badge { background: linear-gradient(135deg, #42A5F5, #1565C0); }
+    .tier-B .tier-badge { background: linear-gradient(135deg, #66BB6A, #2E7D32); }
+    .tier-C .tier-badge { background: linear-gradient(135deg, #FFCA28, #F57F17); }
+    .tier-D .tier-badge { background: linear-gradient(135deg, #AB47BC, #6A1B9A); }
+    .tier-text {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .drawer-rail {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 8px;
+      background: linear-gradient(180deg, #3d4248, #2a2e32);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* 擬真抽屜門片 */
+    .drawer-face {
+      position: relative;
+      min-height: 100px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 2px solid #b8bcc0;
+      background:
+        linear-gradient(180deg, #ffffff 0%, #e8eaed 12%, #d8dce2 50%, #c5cad1 88%, #aeb4bd 100%);
+      box-shadow:
+        0 4px 0 #9aa0a8,
+        0 6px 12px rgba(0,0,0,0.35),
+        inset 0 2px 0 rgba(255,255,255,0.85),
+        inset 0 -8px 16px rgba(0,0,0,0.06);
+      transition: transform 0.18s ease, box-shadow 0.18s, border-color 0.18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .drawer-face:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 6px 0 #9aa0a8,
+        0 10px 20px rgba(0,0,0,0.28),
+        inset 0 2px 0 rgba(255,255,255,0.9),
+        inset 0 -8px 16px rgba(0,0,0,0.05);
+    }
+    .drawer-face:active {
+      transform: translateY(2px);
+      box-shadow:
+        0 2px 0 #9aa0a8,
+        0 4px 8px rgba(0,0,0,0.35),
+        inset 0 3px 8px rgba(0,0,0,0.12);
+    }
+    .drawer-face.selected {
+      border-color: var(--candy-pink);
+      box-shadow:
+        0 4px 0 #c2185b,
+        0 0 0 3px rgba(255, 107, 157, 0.45),
+        0 8px 24px rgba(255, 107, 157, 0.35),
+        inset 0 2px 0 rgba(255,255,255,0.95);
+      z-index: 2;
+    }
+    /* 從零件清單點進來：櫃門加強提示（靜態，避免搜尋重繪時動畫重播） */
+    .drawer-face.part-focus {
+      border-color: #ff6f00;
+      box-shadow:
+        0 4px 0 #e65100,
+        0 0 0 4px rgba(255, 152, 0, 0.55),
+        0 0 28px rgba(255, 193, 7, 0.65),
+        inset 0 2px 0 rgba(255,255,255,0.95);
+      transform: translateY(-2px);
+    }
+    /* 從零件點進來時：其餘櫃門／層變淡，凸顯所在櫃 */
+    #drawerStack.has-part-focus .drawer-face:not(.selected) {
+      opacity: 0.34;
+      filter: grayscale(0.25);
+      transform: scale(0.98);
+    }
+    #drawerStack.has-part-focus .drawer-tier:not(.tier-has-selection) {
+      opacity: 0.4;
+      filter: grayscale(0.2);
+    }
+    #drawerStack.has-part-focus .drawer-tier.tier-has-selection {
+      position: relative;
+      z-index: 1;
+    }
+    .slot-chunk.is-target {
+      background: linear-gradient(180deg, #fffde7, #ffecb3) !important;
+      border: 2px solid #f57c00 !important;
+      color: #e65100 !important;
+      font-size: 0.72rem !important;
+      transform: scale(1.12);
+      box-shadow: 0 0 14px rgba(255, 152, 0, 0.55);
+      z-index: 2;
+    }
+    /* 櫃體上方：標示目前零件所在 */
+    .cabinet-callout {
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      line-height: 1.45;
+      color: #4a148c;
+      background: linear-gradient(135deg, #fff9c4 0%, #ffe082 50%, #ffcc80 100%);
+      border: 3px solid #ff8f00;
+      box-shadow: 0 6px 20px rgba(255, 152, 0, 0.35);
+      text-align: center;
+    }
+    .cabinet-callout strong { color: #bf360c; font-size: 1.05em; }
+    .cabinet-callout[hidden] { display: none !important; }
+    .drawer-face.search-hit {
+      animation: hitPulse 1.2s ease-in-out infinite;
+      border-color: var(--candy-yellow);
+    }
+    @keyframes hitPulse {
+      0%, 100% { box-shadow: 0 4px 0 #9aa0a8, 0 0 0 0 rgba(254, 202, 87, 0); }
+      50% { box-shadow: 0 4px 0 #9aa0a8, 0 0 0 6px rgba(254, 202, 87, 0.5); }
+    }
+    .drawer-face.dimmed { opacity: 0.38; filter: grayscale(0.15); pointer-events: auto; }
+
+    .drawer-code {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-weight: 900;
+      font-size: 1.05rem;
+      color: #37474f;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.7);
+      letter-spacing: 0.02em;
+    }
+    /* 把手 */
+    .drawer-handle {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 42%;
+      max-width: 56px;
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, #cfd4da, #9fa6af);
+      box-shadow:
+        inset 0 2px 3px rgba(255,255,255,0.5),
+        0 2px 3px rgba(0,0,0,0.25);
+    }
+    /* 櫃內分格視覺 */
+    .drawer-slots-preview {
+      position: absolute;
+      top: 36px;
+      left: 8px;
+      right: 8px;
+      bottom: 32px;
+      display: flex;
+      gap: 4px;
+    }
+    .slot-chunk {
+      flex: 1;
+      border-radius: 4px;
+      background: rgba(0,0,0,0.06);
+      border: 1px dashed rgba(0,0,0,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 900;
+      color: rgba(55, 71, 79, 0.65);
+    }
+
+    /* ===== 詳情面板 ===== */
+    .detail-panel {
+      position: sticky;
+      top: 88px;
+      background: var(--card);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 3px solid rgba(255, 200, 150, 0.4);
+      min-height: 200px;
+    }
+    .detail-panel h3 {
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .detail-code {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 14px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--candy-pink), var(--candy-purple));
+      color: #fff;
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+    .detail-placeholder {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 1.02rem;
+      line-height: 1.7;
+    }
+    .detail-slot-block {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 14px;
+      background: #fafafa;
+      border: 2px solid #eee;
+    }
+    .detail-slot-block.detail-slot-picked {
+      border-color: #ff8f00;
+      background: linear-gradient(180deg, #fffde7, #fff8e1);
+      box-shadow: 0 0 0 4px rgba(255, 159, 67, 0.4);
+    }
+    .detail-slot-block h4 {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+    .part-list { list-style: none; }
+    .part-list li {
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .part-list li:last-child { border-bottom: none; }
+    .part-name { flex: 1; }
+    .part-qty {
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--candy-pink), var(--candy-purple));
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+    }
+    .empty-slot { color: var(--muted); font-weight: 600; font-style: italic; font-size: 0.95rem; }
+
+    /* 手機底部抽屜詳情 */
+    @media (max-width: 900px) {
+      .detail-panel {
+        position: static;
+        order: 2;
+      }
+      .cabinet-wrap { order: 1; }
+    }
+
+    /* ===== 完整文字清單（摺疊） ===== */
+    .accordion {
+      margin-top: 28px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 200, 150, 0.35);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .accordion-btn {
+      width: 100%;
+      padding: 16px 20px;
+      font-family: inherit;
+      font-weight: 900;
+      font-size: 1.05rem;
+      text-align: left;
+      border: none;
+      background: linear-gradient(135deg, rgba(255, 107, 157, 0.12), rgba(165, 94, 234, 0.1));
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .accordion-btn::after { content: '▼'; font-size: 0.75rem; transition: transform 0.25s; }
+    .accordion.open .accordion-btn::after { transform: rotate(-180deg); }
+    .accordion-body { display: none; padding: 0 16px 20px; }
+    .accordion.open .accordion-body { display: block; }
+
+    .tower { display: flex; flex-direction: column; gap: 16px; }
+    .layer {
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px;
+      border: 2px solid #eee;
+    }
+    .layer.dimmed { opacity: 0.4; }
+    .layer.highlight { border-color: var(--candy-yellow); box-shadow: 0 0 0 3px rgba(254, 202, 87, 0.4); }
+    .layer-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 2px dashed #eee;
+    }
+    .layer-title { font-size: 1.05rem; font-weight: 900; display: flex; align-items: center; gap: 8px; }
+    .layer-badge {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; color: #fff; font-size: 1rem;
+    }
+    .layer-A .layer-badge { background: linear-gradient(135deg, #42A5F5, #1E88E5); }
+    .layer-B .layer-badge { background: linear-gradient(135deg, #66BB6A, #43A047); }
+    .layer-C .layer-badge { background: linear-gradient(135deg, #FFCA28, #FFA000); }
+    .layer-D .layer-badge { background: linear-gradient(135deg, #AB47BC, #8E24AA); }
+    .layer-sub { font-size: 0.85rem; color: var(--muted); font-weight: 700; }
+    .cabinets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    @media (max-width: 600px) { .cabinets { grid-template-columns: 1fr; } }
+    .cabinet-mini {
+      border-radius: 12px;
+      border: 2px solid #e0e0e0;
+      overflow: hidden;
+      font-size: 0.88rem;
+    }
+    .cabinet-mini.match { border-color: var(--candy-pink); }
+    .cabinet-mini-head {
+      padding: 6px 8px;
+      font-weight: 900;
+      text-align: center;
+      color: #fff;
+      font-size: 0.85rem;
+    }
+    .layer-A .cabinet-mini-head { background: #2196F3; }
+    .layer-B .cabinet-mini-head { background: #4CAF50; }
+    .layer-C .cabinet-mini-head { background: #F9A825; }
+    .layer-D .cabinet-mini-head { background: #9C27B0; }
+    .cabinet-mini-body { padding: 8px; background: #fafafa; }
+    .cabinet-mini .slot-label { font-size: 0.7rem; color: var(--muted); font-weight: 800; margin-bottom: 4px; }
+
+    /* ===== 電流急急棒 · 零件實照 ===== */
+    #buzzwire-photos { scroll-margin-top: 88px; }
+
+    .buzzwire-section {
+      margin-top: 32px;
+      background: var(--card);
+      border-radius: 22px;
+      padding: 22px 20px 28px;
+      box-shadow: var(--shadow);
+      border: 3px solid rgba(72, 219, 251, 0.35);
+    }
+    .buzzwire-section h2 {
+      font-size: 1.28rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .buzzwire-section .sub {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.98rem;
+      margin-bottom: 18px;
+      line-height: 1.55;
+    }
+    .photo-count {
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--candy-cyan), var(--candy-blue));
+      color: #fff;
+    }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .photo-card {
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 3px solid rgba(0,0,0,0.06);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .photo-card:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(72, 219, 251, 0.2); }
+    .photo-card.hidden { display: none; }
+    .photo-card.search-hit-card { border-color: var(--candy-pink); box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.25); }
+    .photo-thumb {
+      position: relative;
+      aspect-ratio: 4/3;
+      background: linear-gradient(180deg, #f1f3f5, #e9ecef);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-thumb img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      padding: 8px;
+    }
+    .photo-thumb .ph { font-size: 2.5rem; opacity: 0.3; }
+    .badge-fallback {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      font-size: 0.62rem;
+      font-weight: 900;
+      padding: 4px 7px;
+      border-radius: 8px;
+      background: rgba(84, 160, 255, 0.92);
+      color: #fff;
+    }
+    .photo-card-body { padding: 12px 14px 16px; }
+    .photo-card-body.is-locatable {
+      cursor: pointer;
+      border-top: 2px dashed transparent;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .photo-card-body.is-locatable:hover {
+      background: linear-gradient(180deg, rgba(255, 248, 225, 0.95), rgba(255, 236, 179, 0.5));
+      border-top-color: rgba(255, 152, 0, 0.45);
+    }
+    .photo-card-hint {
+      margin-top: 8px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #e65100;
+    }
+    .photo-card-name {
+      font-size: 1.02rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+    .photo-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--muted);
+    }
+    .photo-meta span {
+      background: #f8f9fa;
+      padding: 3px 8px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+    .photo-meta .plc { color: #1565c0; background: #e3f2fd; border-color: #bbdefb; }
+    .photo-goto {
+      margin-top: 10px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--candy-blue);
+      cursor: pointer;
+      text-decoration: underline;
+      border: none;
+      background: none;
+      font-family: inherit;
+      padding: 0;
+    }
+    .photo-goto:hover { color: var(--candy-purple); }
+    .buzzwire-missing {
+      padding: 16px;
+      font-weight: 800;
+      color: var(--muted);
+      background: #fff8e6;
+      border-radius: 14px;
+      border: 2px dashed #ffe082;
+    }
+
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0,0,0,0.88);
+      padding: 20px;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: min(96vw, 880px);
+      max-height: 76vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .lightbox-cap { color: #fff; font-weight: 800; text-align: center; max-width: 560px; font-size: 0.95rem; }
+    .lightbox-close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      width: 46px;
+      height: 46px;
+      border: none;
+      border-radius: 50%;
+      background: #fff;
+      font-size: 1.4rem;
+      font-weight: 900;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    footer {
+      text-align: center;
+      padding: 28px 16px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <h1>🗄️ 零件收納櫃導覽</h1>
+      <a class="back-home" href="index.html">🏠 返回首頁</a>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <section class="intro">
+      <h2>親子一起找零件！</h2>
+      <p>
+        下方是<strong>擬真收納櫃示意圖</strong>：由上到下為 A→B→C→D 四層，每層有 3 個櫃門（可點開查看內容）。
+        <strong>點一下櫃門</strong>，右側會顯示該櫃的格位與零件清單；搜尋會同時篩選櫃門與下方<strong>電流急急棒零件實照</strong>。
+        實照來自 Excel 內嵌圖，可點圖放大；若櫃位為 A1～D3 格式，可<strong>點零件說明區</strong>或按「在櫃上開啟」，左側櫃圖會<strong>高亮該櫃與細部格</strong>。
+      </p>
+      <div class="legend">
+        <span class="L-A">A 層：最上層</span>
+        <span class="L-B">B 層：第 2 層</span>
+        <span class="L-C">C 層：第 3 層</span>
+        <span class="L-D">D 層：最下層</span>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <label for="q">🔍 搜尋</label>
+      <div class="search-wrap">
+        <input type="search" id="q" placeholder="Arduino、杜邦線、麵包板…" autocomplete="off" aria-label="搜尋零件">
+        <p class="hint-text">符合的櫃門<strong>黃色閃爍</strong>；下方實照卡片會<strong>粉紅框</strong>。點櫃門可看該櫃清單；點<strong>零件卡片下方說明區</strong>會在櫃圖上標示位置。</p>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <div class="cabinet-wrap">
+        <div class="cabinet-outer" id="cabinetVisual" aria-label="收納櫃互動圖">
+          <div class="cabinet-title">零件收納盒 · 四層 × 三櫃</div>
+          <div class="cabinet-inner">
+            <div class="direction-arrow"><span>▲</span> 上（A 層）<span>▼</span> 下（D 層）</div>
+            <div id="cabinetCallout" class="cabinet-callout" role="status" aria-live="polite" hidden></div>
+            <div id="drawerStack"></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="detail-panel" id="detailPanel" aria-live="polite">
+        <h3><span class="detail-code" id="detailCode" style="display:none;"></span><span id="detailTitle">請點選一個櫃門</span></h3>
+        <div class="detail-placeholder" id="detailBody">
+          點左側<strong>白色櫃門</strong>，這裡會顯示「細部位置」與零件名稱、數量，對照實體收納盒最直覺！
+        </div>
+      </aside>
+    </div>
+
+    <section class="buzzwire-section" id="buzzwire-photos" aria-label="電流急急棒零件實照">
+      <h2>⚡ 電流急急棒 · 零件實照對照 <span class="photo-count" id="photoCount">—</span></h2>
+      <p class="sub">
+        與上方<strong>同一個搜尋框</strong>連動。圖片由「電流急急棒零件清單_完整版」Excel 匯出；更新時請執行 <code>scripts/extract_buzzwire_xlsx.py</code>。
+      </p>
+      <div id="photoGrid" class="photo-grid"></div>
+      <div id="photoMissing" class="buzzwire-missing" style="display:none;">
+        尚未載入零件照片資料。請用<strong>本機伺服器</strong>開啟本頁（勿用 file://），並確認已執行擷取腳本產生 <code>assets/buzzwire-parts-data.js</code>。
+      </div>
+    </section>
+
+    <div class="accordion" id="textAccordion">
+      <button type="button" class="accordion-btn" id="accordionToggle" aria-expanded="false">
+        📋 展開完整文字清單（無障礙／列印用）
+      </button>
+      <div class="accordion-body">
+        <div class="tower" id="tower"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    收納：分類_已完成_v2.xlsx（標籤彙總）｜實照：電流急急棒零件清單_完整版.xlsx｜創客電子學院
+  </footer>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="放大圖片">
+    <button type="button" class="lightbox-close" id="lbClose" aria-label="關閉">×</button>
+    <img src="" alt="" id="lbImg">
+    <p class="lightbox-cap" id="lbCap"></p>
+  </div>
+
+  <script src="assets/buzzwire-parts-data.js"></script>
+  <script>
+    const RAW_ROWS = [
+      ["A1", 1, "A1\nArduino-1"],
+      ["A2", 1, "A2\nMicro USB to USB(1.5M)-1"],
+      ["A3", 1, "A3\n螺絲起子-1"],
+      ["B1", 1, "B1\nrgb_LED-1\n機械按鈕-1\n蜂鳴器(有源)-1"],
+      ["B1", 2, "B1\n數碼管模組-1"],
+      ["B2", 1, "B2\n三極體-1"],
+      ["B2", 2, "B2\n二極體-1"],
+      ["B3", 1, "B3\n電阻五環210歐姆正負1%-3"],
+      ["B3", 2, "B3\n電阻四環1K歐姆正負5%-1"],
+      ["C1", 1, "C1\n10cm(公公)-7"],
+      ["C1", 2, "C1\n15cm(公公)-6"],
+      ["C2", 1, "C2\n20m(公母)-5"],
+      ["C2", 2, "C2\n30cm(公母)-6"],
+      ["C3", 1, "C3\n30cm(公公)-2\n震動馬達-1"],
+      ["D1", 1, "D1\n螺絲-6"],
+      ["D1", 2, "D1\n電線保護套-1"],
+      ["D2", 1, "D2\n麵包板(大)-1\n麵包板(小)-1"],
+      ["D3", 1, "D3\n手柄-1\n手柄上殼-1\n按鈕-1\n數碼管蓋子-1\n熊爸-1\n終點勾-1\n鐵絲-1\n鐵絲勾-1"]
+    ];
+
+    const LAYER_NAMES = {
+      A: "最上層",
+      B: "第 2 層",
+      C: "第 3 層",
+      D: "最下層"
+    };
+
+    /** 櫃 1／2／3 對應左／中／右（面對收納盒） */
+    const CAB_SIDE = { 1: "左側", 2: "中間", 3: "右側" };
+
+    let selected = null; // { layer, cab, slot: number|null, source: 'drawer'|'part' }
+
+    function parseSlotFromPart(slot) {
+      if (slot == null || slot === "" || String(slot).trim() === "無") return null;
+      var n = parseInt(String(slot).trim(), 10);
+      return Number.isFinite(n) && n > 0 ? n : null;
+    }
+
+    function parsePartLine(line) {
+      const idx = line.lastIndexOf("-");
+      if (idx > 0 && /^\d+$/.test(line.slice(idx + 1).trim())) {
+        return { name: line.slice(0, idx).trim(), qty: line.slice(idx + 1).trim() };
+      }
+      return { name: line.trim(), qty: "" };
+    }
+
+    function parseLabel(text) {
+      const lines = String(text).split(/\n/).map((l) => l.trim()).filter(Boolean);
+      const items = [];
+      for (const line of lines) {
+        if (/^[ABCD][123]$/.test(line)) continue;
+        items.push(parsePartLine(line));
+      }
+      return items;
+    }
+
+    function buildStructure() {
+      const layers = {};
+      for (const L of ["A", "B", "C", "D"]) {
+        layers[L] = { 1: {}, 2: {}, 3: {} };
+      }
+      for (const [pos, slotNum, label] of RAW_ROWS) {
+        const layer = pos[0];
+        const cab = parseInt(pos[1], 10);
+        if (!layers[layer] || !layers[layer][cab]) continue;
+        const slot = slotNum;
+        if (!layers[layer][cab][slot]) layers[layer][cab][slot] = [];
+        layers[layer][cab][slot].push(...parseLabel(label));
+      }
+      return layers;
+    }
+
+    const STRUCTURE = buildStructure();
+
+    function slotNumbersForCabinet(layer, cab) {
+      const slots = STRUCTURE[layer][cab];
+      return Object.keys(slots)
+        .map(Number)
+        .filter((n) => !Number.isNaN(n))
+        .sort((a, b) => a - b);
+    }
+
+    function getBuzzwireParts() {
+      return window.BUZZWIRE_PARTS_DATA && window.BUZZWIRE_PARTS_DATA.parts
+        ? window.BUZZWIRE_PARTS_DATA.parts
+        : [];
+    }
+
+    function parseCabinetLocation(loc) {
+      var m = String(loc || "")
+        .trim()
+        .match(/^([ABCD])([123])$/i);
+      if (!m) return null;
+      return { layer: m[1].toUpperCase(), cab: parseInt(m[2], 10) };
+    }
+
+    /** 電流急急棒清單中，是否有零件放在此櫃且符合搜尋 */
+    function buzzwireMatchesCabinet(layer, cab, q) {
+      if (!q) return false;
+      var code = layer + String(cab);
+      var parts = getBuzzwireParts();
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        if (String(p.location || "").trim().toUpperCase() !== code) continue;
+        var hay = (
+          (p.name || "") +
+          (p.qty != null ? p.qty : "") +
+          (p.location || "") +
+          (p.slot != null ? p.slot : "")
+        ).toLowerCase();
+        if (hay.indexOf(q) !== -1) return true;
+      }
+      return false;
+    }
+
+    function cabinetMatchesSearch(layer, cab, q) {
+      if (!q) return false;
+      var slots = STRUCTURE[layer][cab];
+      for (var sn of Object.keys(slots)) {
+        for (var p of slots[sn]) {
+          if ((p.name + p.qty).toLowerCase().indexOf(q) !== -1) return true;
+        }
+      }
+      return buzzwireMatchesCabinet(layer, cab, q);
+    }
+
+    function layerMatchesSearch(layer, q) {
+      if (!q) return false;
+      for (const cab of [1, 2, 3]) {
+        if (cabinetMatchesSearch(layer, cab, q)) return true;
+      }
+      return false;
+    }
+
+    function updateCabinetCallout() {
+      var el = document.getElementById("cabinetCallout");
+      if (!el) return;
+      if (!selected || selected.source !== "part") {
+        el.setAttribute("hidden", "");
+        el.innerHTML = "";
+        return;
+      }
+      el.removeAttribute("hidden");
+      var code = selected.layer + selected.cab;
+      var side = CAB_SIDE[selected.cab] || "第 " + selected.cab + " 櫃";
+      var line =
+        "此零件在櫃位 <strong>" +
+        code +
+        "</strong>（" +
+        LAYER_NAMES[selected.layer] +
+        " · <strong>" +
+        side +
+        "櫃</strong>）";
+      if (selected.slot != null) {
+        line += " · 細部 <strong>第 " + selected.slot + " 格</strong>";
+      }
+      el.innerHTML = "📍 " + line;
+    }
+
+    function selectCabinet(layer, cab, opts) {
+      opts = opts || {};
+      var fromPart = opts.source === "part";
+      selected = {
+        layer: layer,
+        cab: cab,
+        slot: fromPart ? parseSlotFromPart(opts.slot) : null,
+        source: fromPart ? "part" : "drawer"
+      };
+      updateCabinetCallout();
+      renderDrawerStack();
+      renderDetailPanel();
+    }
+
+    function renderDetailPanel() {
+      const codeEl = document.getElementById("detailCode");
+      const titleEl = document.getElementById("detailTitle");
+      const bodyEl = document.getElementById("detailBody");
+
+      if (!selected) {
+        codeEl.style.display = "none";
+        titleEl.textContent = "請點選一個櫃門";
+        bodyEl.className = "detail-placeholder";
+        bodyEl.innerHTML =
+          "點左側<strong>白色櫃門</strong>，這裡會顯示「細部位置」與零件名稱、數量，對照實體收納盒最直覺！";
+        return;
+      }
+
+      const { layer, cab } = selected;
+      const code = layer + cab;
+      codeEl.style.display = "inline-flex";
+      codeEl.textContent = code;
+      titleEl.textContent = LAYER_NAMES[layer] + " · 第 " + cab + " 櫃";
+
+      const slotNums = slotNumbersForCabinet(layer, cab);
+      const data = STRUCTURE[layer][cab];
+      bodyEl.className = "";
+      bodyEl.innerHTML = "";
+
+      if (slotNums.length === 0) {
+        const p = document.createElement("p");
+        p.className = "empty-slot";
+        p.textContent = "本櫃在清單中尚無登記。";
+        bodyEl.appendChild(p);
+        return;
+      }
+
+      for (const sn of slotNums) {
+        const parts = data[sn] || [];
+        const block = document.createElement("div");
+        block.className = "detail-slot-block";
+        if (
+          selected.source === "part" &&
+          selected.slot != null &&
+          Number(sn) === selected.slot
+        ) {
+          block.classList.add("detail-slot-picked");
+        }
+        const h4 = document.createElement("h4");
+        h4.textContent = "細部位置 " + sn + "（第 " + sn + " 格）";
+        block.appendChild(h4);
+
+        if (!parts.length) {
+          const p = document.createElement("p");
+          p.className = "empty-slot";
+          p.textContent = "此格目前無登記零件。";
+          block.appendChild(p);
+        } else {
+          const ul = document.createElement("ul");
+          ul.className = "part-list";
+          for (const p of parts) {
+            const li = document.createElement("li");
+            const nm = document.createElement("span");
+            nm.className = "part-name";
+            nm.textContent = p.name;
+            li.appendChild(nm);
+            if (p.qty) {
+              const qty = document.createElement("span");
+              qty.className = "part-qty";
+              qty.textContent = "×" + p.qty;
+              li.appendChild(qty);
+            }
+            ul.appendChild(li);
+          }
+          block.appendChild(ul);
+        }
+        bodyEl.appendChild(block);
+      }
+    }
+
+    function renderDrawerStack() {
+      const q = (document.getElementById("q").value || "").trim().toLowerCase();
+      const stack = document.getElementById("drawerStack");
+      stack.innerHTML = "";
+      stack.classList.toggle(
+        "has-part-focus",
+        !!(selected && selected.source === "part")
+      );
+
+      for (const L of ["A", "B", "C", "D"]) {
+        const tier = document.createElement("div");
+        tier.className = "drawer-tier tier-" + L;
+        if (q && !layerMatchesSearch(L, q)) tier.classList.add("dimmed");
+        if (
+          selected &&
+          selected.source === "part" &&
+          selected.layer === L
+        ) {
+          tier.classList.add("tier-has-selection");
+        }
+
+        const label = document.createElement("div");
+        label.className = "tier-label";
+        label.innerHTML =
+          '<span class="tier-badge">' + L + '</span>' +
+          '<span class="tier-text">' + L + " 層 · " + LAYER_NAMES[L] + "</span>";
+        tier.appendChild(label);
+
+        const rail = document.createElement("div");
+        rail.className = "drawer-rail";
+
+        for (const cab of [1, 2, 3]) {
+          const face = document.createElement("button");
+          face.type = "button";
+          face.className = "drawer-face";
+          face.dataset.layer = L;
+          face.dataset.cab = String(cab);
+          face.setAttribute("aria-label", "櫃 " + L + cab + "，點擊查看內容");
+
+          if (q && cabinetMatchesSearch(L, cab, q)) face.classList.add("search-hit");
+          const isSelected = selected && selected.layer === L && selected.cab === cab;
+          if (
+            q &&
+            !cabinetMatchesSearch(L, cab, q) &&
+            layerMatchesSearch(L, q) &&
+            !isSelected
+          ) {
+            face.classList.add("dimmed");
+          }
+          if (q && !layerMatchesSearch(L, q)) face.classList.add("dimmed");
+
+          if (selected && selected.layer === L && selected.cab === cab) {
+            face.classList.add("selected");
+            if (selected.source === "part") face.classList.add("part-focus");
+          }
+
+          const code = document.createElement("span");
+          code.className = "drawer-code";
+          code.textContent = L + cab;
+          face.appendChild(code);
+
+          const slotsPrev = document.createElement("div");
+          slotsPrev.className = "drawer-slots-preview";
+          const slotNums = slotNumbersForCabinet(L, cab);
+          if (slotNums.length === 0) {
+            const ch = document.createElement("div");
+            ch.className = "slot-chunk";
+            ch.textContent = "—";
+            ch.style.flex = "1";
+            slotsPrev.appendChild(ch);
+          } else {
+            for (const sn of slotNums) {
+              const ch = document.createElement("div");
+              ch.className = "slot-chunk";
+              ch.textContent = String(sn);
+              if (
+                selected &&
+                selected.source === "part" &&
+                selected.layer === L &&
+                selected.cab === cab &&
+                selected.slot != null &&
+                Number(sn) === selected.slot
+              ) {
+                ch.classList.add("is-target");
+                ch.setAttribute("title", "此零件在這一格");
+              }
+              slotsPrev.appendChild(ch);
+            }
+          }
+          face.appendChild(slotsPrev);
+
+          const handle = document.createElement("div");
+          handle.className = "drawer-handle";
+          handle.setAttribute("aria-hidden", "true");
+          face.appendChild(handle);
+
+          face.addEventListener("click", function () {
+            selectCabinet(L, cab, { source: "drawer" });
+          });
+
+          rail.appendChild(face);
+        }
+
+        tier.appendChild(rail);
+        stack.appendChild(tier);
+      }
+    }
+
+    function renderTextList() {
+      const q = (document.getElementById("q").value || "").trim().toLowerCase();
+      const tower = document.getElementById("tower");
+      tower.innerHTML = "";
+
+      for (const L of ["A", "B", "C", "D"]) {
+        const layerEl = document.createElement("section");
+        layerEl.className = "layer layer-" + L;
+        if (q && !layerMatchesSearch(L, q)) layerEl.classList.add("dimmed");
+        if (q && layerMatchesSearch(L, q)) layerEl.classList.add("highlight");
+
+        const head = document.createElement("div");
+        head.className = "layer-head";
+        head.innerHTML =
+          '<div class="layer-title">' +
+          '<span class="layer-badge">' + L + "</span>" +
+          "<span>" + L + " 層（" + LAYER_NAMES[L] + "）</span></div>" +
+          '<div class="layer-sub">' + L + "1 · " + L + "2 · " + L + "3</div>";
+        layerEl.appendChild(head);
+
+        const grid = document.createElement("div");
+        grid.className = "cabinets";
+
+        for (const cab of [1, 2, 3]) {
+          const mini = document.createElement("div");
+          mini.className = "cabinet-mini";
+          if (q && cabinetMatchesSearch(L, cab, q)) mini.classList.add("match");
+
+          const mh = document.createElement("div");
+          mh.className = "cabinet-mini-head";
+          mh.textContent = L + cab;
+          mini.appendChild(mh);
+
+          const mb = document.createElement("div");
+          mb.className = "cabinet-mini-body";
+          const slotNums = slotNumbersForCabinet(L, cab);
+          const data = STRUCTURE[L][cab];
+
+          if (slotNums.length === 0) {
+            const p = document.createElement("p");
+            p.className = "empty-slot";
+            p.textContent = "尚無登記";
+            mb.appendChild(p);
+          } else {
+            for (const sn of slotNums) {
+              const parts = data[sn] || [];
+              const sl = document.createElement("div");
+              sl.className = "slot-label";
+              sl.textContent = "格 " + sn;
+              mb.appendChild(sl);
+              if (!parts.length) {
+                const p = document.createElement("p");
+                p.className = "empty-slot";
+                p.textContent = "無零件";
+                mb.appendChild(p);
+              } else {
+                const ul = document.createElement("ul");
+                ul.className = "part-list";
+                for (const p of parts) {
+                  const li = document.createElement("li");
+                  li.innerHTML =
+                    '<span class="part-name">' +
+                    p.name +
+                    "</span>" +
+                    (p.qty ? '<span class="part-qty">×' + p.qty + "</span>" : "");
+                  ul.appendChild(li);
+                }
+                mb.appendChild(ul);
+              }
+            }
+          }
+          mini.appendChild(mb);
+          grid.appendChild(mini);
+        }
+
+        layerEl.appendChild(grid);
+        tower.appendChild(layerEl);
+      }
+    }
+
+    function renderBuzzwirePhotos() {
+      var grid = document.getElementById("photoGrid");
+      var missing = document.getElementById("photoMissing");
+      var countEl = document.getElementById("photoCount");
+      var parts = getBuzzwireParts();
+      var q = (document.getElementById("q").value || "").trim().toLowerCase();
+
+      if (!parts.length) {
+        grid.innerHTML = "";
+        missing.style.display = "block";
+        countEl.textContent = "0 項";
+        return;
+      }
+      missing.style.display = "none";
+
+      if (!grid.dataset.built) {
+        grid.innerHTML = "";
+        parts.forEach(function (p) {
+          var card = document.createElement("article");
+          card.className = "photo-card";
+          card.dataset.search = (
+            (p.name || "") +
+            (p.qty != null ? p.qty : "") +
+            (p.location || "") +
+            (p.slot != null ? p.slot : "")
+          ).toLowerCase();
+
+          var loc = parseCabinetLocation(p.location);
+
+          var tw = document.createElement("div");
+          tw.className = "photo-thumb";
+          tw.setAttribute("role", "button");
+          tw.setAttribute("tabindex", "0");
+          tw.setAttribute("aria-label", "放大「" + (p.name || "") + "」");
+
+          if (p.image) {
+            var img = document.createElement("img");
+            img.src = p.image;
+            img.alt = p.name || "零件";
+            img.loading = "lazy";
+            img.onerror = function () {
+              tw.innerHTML = '<span class="ph" aria-hidden="true">📷</span>';
+            };
+            tw.appendChild(img);
+          } else {
+            tw.innerHTML = '<span class="ph" aria-hidden="true">📷</span>';
+          }
+          if (p.imageSource === "fallback") {
+            var bf = document.createElement("span");
+            bf.className = "badge-fallback";
+            bf.textContent = "示意圖";
+            tw.appendChild(bf);
+          }
+
+          function openLb() {
+            if (!p.image) return;
+            document.getElementById("lbImg").src = p.image;
+            document.getElementById("lbImg").alt = p.name || "";
+            document.getElementById("lbCap").textContent =
+              (p.name || "") +
+              " · 數量 " +
+              (p.qty != null ? p.qty : "—") +
+              " · 櫃位 " +
+              (p.location || "—") +
+              " · 細部 " +
+              (p.slot != null ? p.slot : "—");
+            document.getElementById("lightbox").classList.add("open");
+            document.getElementById("lbClose").focus();
+          }
+          tw.addEventListener("click", openLb);
+          tw.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              openLb();
+            }
+          });
+
+          var body = document.createElement("div");
+          body.className = "photo-card-body";
+          if (loc) body.classList.add("is-locatable");
+
+          var nameEl = document.createElement("div");
+          nameEl.className = "photo-card-name";
+          nameEl.textContent = p.name || "";
+          body.appendChild(nameEl);
+
+          var meta = document.createElement("div");
+          meta.className = "photo-meta";
+          meta.innerHTML =
+            "<span>數量：" +
+            (p.qty != null ? String(p.qty) : "—") +
+            '</span><span class="plc">櫃位：' +
+            (p.location != null ? String(p.location) : "—") +
+            "</span><span>細部：" +
+            (p.slot != null ? String(p.slot) : "—") +
+            "</span>";
+          body.appendChild(meta);
+
+          function goHighlightOnCabinet() {
+            selectCabinet(loc.layer, loc.cab, { source: "part", slot: p.slot });
+            document
+              .getElementById("cabinetVisual")
+              .scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+
+          if (loc) {
+            var hint = document.createElement("p");
+            hint.className = "photo-card-hint";
+            hint.textContent = "👆 點此區可在左側櫃圖標示位置";
+            body.appendChild(hint);
+
+            body.addEventListener("click", function (e) {
+              if (e.target.closest("button.photo-goto")) return;
+              goHighlightOnCabinet();
+            });
+
+            var btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "photo-goto";
+            btn.textContent = "→ 在收納櫃上開啟 " + p.location;
+            btn.addEventListener("click", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              goHighlightOnCabinet();
+            });
+            body.appendChild(btn);
+          }
+
+          card.appendChild(tw);
+          card.appendChild(body);
+          grid.appendChild(card);
+        });
+        grid.dataset.built = "1";
+      }
+
+      var cards = grid.querySelectorAll(".photo-card");
+      var n = 0;
+      cards.forEach(function (card) {
+        var ok = !q || card.dataset.search.indexOf(q) !== -1;
+        card.classList.toggle("hidden", !ok);
+        card.classList.toggle("search-hit-card", ok && q.length > 0);
+        if (ok) n++;
+      });
+      countEl.textContent = n + " 項顯示";
+    }
+
+    function render() {
+      renderDrawerStack();
+      renderTextList();
+      renderDetailPanel();
+      renderBuzzwirePhotos();
+    }
+
+    document.getElementById("q").addEventListener("input", function () {
+      window.requestAnimationFrame(render);
+    });
+
+    document.getElementById("accordionToggle").addEventListener("click", function () {
+      const acc = document.getElementById("textAccordion");
+      const open = !acc.classList.contains("open");
+      acc.classList.toggle("open", open);
+      this.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    document.getElementById("lbClose").addEventListener("click", function () {
+      document.getElementById("lightbox").classList.remove("open");
+      document.getElementById("lbImg").src = "";
+    });
+    document.getElementById("lightbox").addEventListener("click", function (e) {
+      if (e.target.id === "lightbox") document.getElementById("lightbox").classList.remove("open");
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") document.getElementById("lightbox").classList.remove("open");
+    });
+
+    render();
+
+    if (location.hash === "#buzzwire-photos") {
+      setTimeout(function () {
+        var el = document.getElementById("buzzwire-photos");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
+    }
+  </script>
+</body>
+</html>
