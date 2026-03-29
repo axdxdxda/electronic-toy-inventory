@@ -432,13 +432,13 @@
         <div class="canvas-info">
           <h4>🔍 你正在看 FDM 列印</h4>
           <p>🔴 <strong>紅色噴頭</strong>會加熱到約 200°C，把塑膠絲融化後擠出來。</p>
-          <p>🔵 <strong>藍色線條</strong>就是正在印的材料，一層一層疊成多啦A夢的形狀。</p>
+          <p>🎨 <strong>彩色像素格</strong>一格一格印出來：藍色是身體、白色是臉和肚子、紅色是鼻子和領子、黃色是鈴鐺！</p>
           <p>⬜ <strong>灰色平台</strong>（熱床）會加熱，讓第一層黏得牢牢的。</p>
           <p>🟡 <strong>黃色線</strong>是還沒融化的塑膠絲（線材），從上方送進噴頭。</p>
 
           <div class="status-panel">
             <span class="label">目前層數</span>
-            <span class="value" id="layerCount">0 / 16</span>
+            <span class="value" id="layerCount">0 / 32</span>
             <span class="label">噴頭溫度</span>
             <span class="value" id="nozzleTemp">200°C</span>
             <span class="label">熱床溫度</span>
@@ -669,47 +669,86 @@
     const W = canvas.width;
     const H = canvas.height;
 
-    const TOTAL_LAYERS = 16;
-    const BED_Y = H - 50;
-    const BED_LEFT = 60;
-    const BED_RIGHT = W - 60;
+    // ── 像素格常數 ────────────────────────────────────────────────────
+    const PIXEL_SIZE = 8;
+    const COLS = 28;
+    const ROWS = 32;
+    const TOTAL_LAYERS = ROWS;
+
+    const BED_Y     = H - 50;
+    const OBJ_W     = COLS * PIXEL_SIZE;            // 224px
+    const OBJ_LEFT  = Math.round((W - OBJ_W) / 2); // 88px
+    const OBJ_RIGHT = OBJ_LEFT + OBJ_W;            // 312px
+    const BED_LEFT  = OBJ_LEFT - 40;               // 48px
+    const BED_RIGHT = OBJ_RIGHT + 40;              // 352px
     const BED_WIDTH = BED_RIGHT - BED_LEFT;
-    const LAYER_H = 6;
-    const NOZZLE_W = 14;
-    const NOZZLE_H = 20;
+    const NOZZLE_W  = 14;
+    const NOZZLE_H  = 20;
 
-    const CENTER_X = (BED_LEFT + BED_RIGHT) / 2;
-    // 多啦A夢側面輪廓：由下往上每層寬度（腳→身體→圓頭）
-    const DORAEMON_WIDTHS = [18, 28, 48, 62, 68, 70, 70, 66, 58, 48, 58, 76, 82, 76, 52, 28];
-    const layerShapes = DORAEMON_WIDTHS.map(w => ({
-      left: Math.round(CENTER_X - w / 2),
-      right: Math.round(CENTER_X + w / 2)
-    }));
+    // 顏色對應：1=藍 2=白 3=紅 4=黑 5=黃
+    const PIXEL_COLORS = {
+      1: '#00AEEF', // 哆啦A夢藍（身體／頭部）
+      2: '#FFFFFF', // 白色（臉、肚子）
+      3: '#E8001C', // 紅色（鼻子、領子）
+      4: '#1A1A1A', // 黑色（眼睛、鬍鬚、嘴巴）
+      5: '#FFD700', // 黃色（鈴鐺）
+    };
 
-    let nozzleX = layerShapes[0].left;
-    let currentLayer = 0;
-    let direction = 1;
-    let printedLayers = [];
-    let printing = true;
-    let speed = 3;
-    let animId;
-    let cooldown = 0;
-    let finished = false;
-
-    // 多啦A夢藍色系
-    const layerColors = [
-      '#4A90D9','#5BA3E8','#6BB5F0','#7AC4F5',
-      '#4A90D9','#5BA3E8','#6BB5F0','#7AC4F5',
-      '#4A90D9','#5BA3E8','#6BB5F0','#7AC4F5',
-      '#4A90D9','#5BA3E8','#6BB5F0','#7AC4F5'
+    // ── 哆啦A夢像素畫（第0列=頭頂，第31列=腳底）28 欄 × 32 列 ───────
+    const DORAEMON_GRID = [
+      [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0], // 0 頭頂
+      [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0], // 1
+      [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0], // 2
+      [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0], // 3
+      [0,0,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,0,0], // 4 白色臉開始
+      [0,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,0], // 5
+      [0,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,0], // 6
+      [0,1,1,1,2,2,4,4,2,2,2,2,2,2,2,2,2,2,2,4,4,2,2,2,1,1,1,0], // 7 眼睛
+      [0,1,1,1,2,2,4,4,2,2,2,2,2,2,2,2,2,2,2,4,4,2,2,2,1,1,1,0], // 8
+      [0,1,1,2,2,2,2,2,2,2,2,2,3,3,3,2,2,2,2,2,2,2,2,2,2,1,1,0], // 9 紅鼻子
+      [0,1,1,2,2,2,2,2,2,2,2,2,3,3,3,2,2,2,2,2,2,2,2,2,2,1,1,0], // 10
+      [0,1,2,4,2,2,2,2,4,2,2,2,2,2,2,2,4,2,2,2,2,4,2,2,2,2,1,0], // 11 鬍鬚
+      [0,1,4,2,2,2,2,4,2,2,2,2,2,2,2,2,2,4,2,2,2,2,4,2,2,2,1,0], // 12
+      [0,1,1,2,2,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,2,2,2,1,1,1,0,0], // 13 嘴巴
+      [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0], // 14 下巴
+      [0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,0,0,0,0,0], // 15 紅領子
+      [0,0,1,1,1,1,0,0,0,5,5,5,5,5,5,5,5,5,0,0,0,1,1,1,1,0,0,0], // 16 鈴鐺＋身體側
+      [0,0,1,1,1,1,0,0,0,5,5,5,4,5,5,5,5,5,0,0,0,1,1,1,1,0,0,0], // 17 鈴鐺孔
+      [0,0,1,1,1,1,0,0,0,5,5,5,5,5,5,5,5,5,0,0,0,1,1,1,1,0,0,0], // 18
+      [0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0,0,0], // 19 身體＋白肚子
+      [0,0,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,0,0], // 20
+      [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,0,0], // 21 手臂延伸
+      [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,0,0], // 22
+      [0,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0,0,0], // 23
+      [0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,0,0,0,0], // 24
+      [0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,1,1,1,1,1,1,1,0,0,0,0,0], // 25 下腹部
+      [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0], // 26
+      [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0], // 27 臀部
+      [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0], // 28 腿
+      [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0], // 29
+      [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0], // 30 腳掌
+      [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0], // 31 腳底
     ];
 
+    // 列印順序：從底（row31）往上（row0）
+    const PRINT_LAYERS = [...DORAEMON_GRID].reverse();
+
+    // ── 動畫狀態 ──────────────────────────────────────────────────────
+    let layersDone   = 0;        // 已完整印完的層數
+    let currentLayer = 0;        // 正在印的層（0=最底層）
+    let nozzleX      = OBJ_LEFT;
+    let direction    = 1;        // 1=由左→右，-1=由右→左
+    let printing     = true;
+    let finished     = false;
+    let cooldown     = 0;
+    let speed        = 4;        // 每幀移動的 canvas 像素數
+
+    // ── 繪圖輔助函式 ──────────────────────────────────────────────────
     function drawFrame() {
       ctx.fillStyle = '#374151';
       ctx.fillRect(20, 10, W - 40, 18);
       ctx.fillRect(20, 10, 18, H - 30);
       ctx.fillRect(W - 38, 10, 18, H - 30);
-
       ctx.fillStyle = '#4b5563';
       ctx.fillRect(38, 16, 6, H - 46);
       ctx.fillRect(W - 44, 16, 6, H - 46);
@@ -723,75 +762,69 @@
       ctx.beginPath();
       ctx.roundRect(BED_LEFT, BED_Y, BED_WIDTH, 14, 4);
       ctx.fill();
-
       ctx.fillStyle = '#ef4444';
       ctx.globalAlpha = 0.15 + Math.sin(Date.now() / 400) * 0.05;
       ctx.fillRect(BED_LEFT + 4, BED_Y + 2, BED_WIDTH - 8, 10);
       ctx.globalAlpha = 1;
-
       ctx.fillStyle = '#4b5563';
       ctx.fillRect(BED_LEFT - 8, BED_Y + 14, BED_WIDTH + 16, 8);
     }
 
-    function drawPrintedLayers() {
-      for (let i = 0; i < printedLayers.length; i++) {
-        const ly = printedLayers[i];
-        const y = BED_Y - (i + 1) * LAYER_H;
-        const col = layerColors[i % layerColors.length];
+    function drawOnePixel(ci, li, color) {
+      const x = OBJ_LEFT + ci * PIXEL_SIZE;
+      const y = BED_Y - (li + 1) * PIXEL_SIZE;
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, PIXEL_SIZE, PIXEL_SIZE);
+      ctx.strokeStyle = 'rgba(0,0,0,0.10)';
+      ctx.lineWidth = 0.5;
+      ctx.strokeRect(x, y, PIXEL_SIZE, PIXEL_SIZE);
+    }
 
-        ctx.fillStyle = col;
-        ctx.globalAlpha = 0.9;
-        ctx.beginPath();
-        ctx.roundRect(ly.left, y, ly.right - ly.left, LAYER_H, 2);
-        ctx.fill();
-
-        ctx.fillStyle = 'rgba(255,255,255,0.15)';
-        ctx.fillRect(ly.left, y, ly.right - ly.left, 2);
-        ctx.globalAlpha = 1;
+    function drawPrintedPixels() {
+      // 已完成的層
+      for (let li = 0; li < layersDone; li++) {
+        const row = PRINT_LAYERS[li];
+        for (let ci = 0; ci < COLS; ci++) {
+          if (row[ci] > 0) drawOnePixel(ci, li, PIXEL_COLORS[row[ci]]);
+        }
       }
-
-      if (currentLayer < TOTAL_LAYERS && printing) {
-        const y = BED_Y - (currentLayer + 1) * LAYER_H;
-        const col = layerColors[currentLayer % layerColors.length];
-        const L = layerShapes[currentLayer].left;
-        const R = layerShapes[currentLayer].right;
-        if (direction === 1 && nozzleX > L) {
-          ctx.fillStyle = col;
-          ctx.globalAlpha = 0.9;
-          ctx.beginPath();
-          ctx.roundRect(L, y, nozzleX - L, LAYER_H, 2);
-          ctx.fill();
-          ctx.globalAlpha = 1;
-        } else if (direction === -1 && nozzleX < R) {
-          ctx.fillStyle = col;
-          ctx.globalAlpha = 0.9;
-          ctx.beginPath();
-          ctx.roundRect(nozzleX, y, R - nozzleX, LAYER_H, 2);
-          ctx.fill();
-          ctx.fillStyle = col;
-          ctx.beginPath();
-          ctx.roundRect(L, y, R - L, LAYER_H, 2);
-          ctx.fill();
-          ctx.globalAlpha = 1;
+      // 目前正在印的層（噴頭掃過的部分）
+      if (printing && currentLayer < ROWS) {
+        const row = PRINT_LAYERS[currentLayer];
+        for (let ci = 0; ci < COLS; ci++) {
+          const pxLeft  = OBJ_LEFT + ci * PIXEL_SIZE;
+          const pxRight = pxLeft + PIXEL_SIZE;
+          const passed  = direction === 1 ? nozzleX > pxLeft : nozzleX < pxRight;
+          if (passed && row[ci] > 0) {
+            drawOnePixel(ci, currentLayer, PIXEL_COLORS[row[ci]]);
+          }
         }
       }
     }
 
-    function nozzleY() {
-      return BED_Y - (currentLayer + 1) * LAYER_H - NOZZLE_H + 2;
+    function nozzleTipY() {
+      const layer = Math.min(currentLayer, ROWS - 1);
+      return BED_Y - (layer + 1) * PIXEL_SIZE - NOZZLE_H + 2;
+    }
+
+    // 噴頭目前位置對應的像素顏色（噴出的材料顏色）
+    function currentDropColor() {
+      if (!printing || currentLayer >= ROWS) return null;
+      const ci = Math.max(0, Math.min(COLS - 1,
+        Math.floor((nozzleX - OBJ_LEFT) / PIXEL_SIZE)));
+      const v = PRINT_LAYERS[currentLayer][ci];
+      return v > 0 ? PIXEL_COLORS[v] : null;
     }
 
     function drawNozzle() {
-      const ny = nozzleY();
+      const ny = nozzleTipY();
       const nx = nozzleX;
 
       ctx.fillStyle = '#d1d5db';
       ctx.fillRect(nx - 3, 28, 6, ny - 28);
 
-      ctx.fillStyle = '#fbbf24';
+      const spoolX = W / 2 + 60, spoolY = 36;
       ctx.globalAlpha = 0.8;
-      const spoolX = W / 2 + 60;
-      const spoolY = 36;
       ctx.beginPath();
       ctx.moveTo(spoolX, spoolY);
       ctx.lineTo(nx, ny);
@@ -801,19 +834,13 @@
       ctx.globalAlpha = 1;
 
       ctx.fillStyle = '#fbbf24';
-      ctx.beginPath();
-      ctx.arc(spoolX, spoolY, 12, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(spoolX, spoolY, 12, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = '#92400e';
-      ctx.beginPath();
-      ctx.arc(spoolX, spoolY, 5, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(spoolX, spoolY, 5, 0, Math.PI * 2); ctx.fill();
 
-      const grad = ctx.createLinearGradient(nx - NOZZLE_W/2, ny, nx + NOZZLE_W/2, ny);
-      grad.addColorStop(0, '#6b7280');
-      grad.addColorStop(0.5, '#9ca3af');
-      grad.addColorStop(1, '#6b7280');
-      ctx.fillStyle = grad;
+      const g = ctx.createLinearGradient(nx - NOZZLE_W/2, ny, nx + NOZZLE_W/2, ny);
+      g.addColorStop(0, '#6b7280'); g.addColorStop(0.5, '#9ca3af'); g.addColorStop(1, '#6b7280');
+      ctx.fillStyle = g;
       ctx.beginPath();
       ctx.roundRect(nx - NOZZLE_W/2, ny, NOZZLE_W, NOZZLE_H - 6, 3);
       ctx.fill();
@@ -824,23 +851,23 @@
       ctx.lineTo(nx + NOZZLE_W/2, ny + NOZZLE_H - 6);
       ctx.lineTo(nx + 3, ny + NOZZLE_H);
       ctx.lineTo(nx - 3, ny + NOZZLE_H);
-      ctx.closePath();
-      ctx.fill();
+      ctx.closePath(); ctx.fill();
 
-      if (printing && currentLayer < TOTAL_LAYERS) {
-        ctx.fillStyle = layerColors[currentLayer % layerColors.length];
-        ctx.globalAlpha = 0.7 + Math.sin(Date.now() / 100) * 0.3;
-        ctx.beginPath();
-        ctx.arc(nx, ny + NOZZLE_H + 2, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-
+      if (printing && currentLayer < ROWS) {
+        // 擠出的材料小圓滴（顏色隨目前像素改變）
+        const dropColor = currentDropColor();
+        if (dropColor) {
+          ctx.fillStyle = dropColor;
+          ctx.globalAlpha = 0.75 + Math.sin(Date.now() / 80) * 0.25;
+          ctx.beginPath();
+          ctx.arc(nx, ny + NOZZLE_H + 3, 4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
         ctx.shadowColor = '#ef4444';
         ctx.shadowBlur = 8 + Math.sin(Date.now() / 200) * 4;
         ctx.fillStyle = '#fca5a5';
-        ctx.beginPath();
-        ctx.arc(nx, ny + NOZZLE_H - 3, 2, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(nx, ny + NOZZLE_H - 3, 2, 0, Math.PI * 2); ctx.fill();
         ctx.shadowBlur = 0;
       }
     }
@@ -850,92 +877,76 @@
       ctx.font = '600 11px Nunito, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText('FDM 3D Printer', W / 2, H - 10);
-
       if (finished) {
         ctx.fillStyle = '#22c55e';
-        ctx.font = '800 16px Nunito, sans-serif';
-        ctx.fillText('✅ 多啦A夢列印完成！', W / 2, H - 28);
+        ctx.font = '800 15px Nunito, sans-serif';
+        ctx.fillText('✅ 哆啦A夢列印完成！', W / 2, H - 28);
       }
     }
 
     function updateStatus() {
-      document.getElementById('layerCount').textContent =
-        `${Math.min(currentLayer + (printing && currentLayer < TOTAL_LAYERS ? 1 : 0), TOTAL_LAYERS)} / ${TOTAL_LAYERS}`;
+      const shown = Math.min(
+        layersDone + (printing && currentLayer < ROWS ? 1 : 0), ROWS);
+      document.getElementById('layerCount').textContent = `${shown} / ${ROWS}`;
       document.getElementById('printStatus').textContent =
         finished ? '✅ 完成！' : (printing ? '列印中...' : '暫停');
     }
 
+    // ── 主動畫迴圈 ────────────────────────────────────────────────────
     function animate() {
       ctx.clearRect(0, 0, W, H);
-
       ctx.fillStyle = '#0f172a';
-      ctx.beginPath();
-      ctx.roundRect(0, 0, W, H, 12);
-      ctx.fill();
+      ctx.beginPath(); ctx.roundRect(0, 0, W, H, 12); ctx.fill();
 
       drawFrame();
       drawBed();
-      drawPrintedLayers();
+      drawPrintedPixels();
       drawNozzle();
       drawLabels();
       updateStatus();
 
-      if (printing && currentLayer < TOTAL_LAYERS) {
-        const L = layerShapes[currentLayer].left;
-        const R = layerShapes[currentLayer].right;
+      if (printing && currentLayer < ROWS) {
         nozzleX += speed * direction;
 
-        if (direction === 1 && nozzleX >= R) {
-          nozzleX = R;
-          printedLayers.push({ left: L, right: R });
+        if (direction === 1 && nozzleX >= OBJ_RIGHT) {
+          nozzleX = OBJ_RIGHT;
+          layersDone++;
           currentLayer++;
           direction = -1;
-          if (currentLayer >= TOTAL_LAYERS) {
-            finished = true;
-            cooldown = 180;
-          } else {
-            nozzleX = layerShapes[currentLayer].right;
-          }
-        } else if (direction === -1 && nozzleX <= L) {
-          nozzleX = L;
-          printedLayers.push({ left: L, right: R });
+          if (currentLayer >= ROWS) { finished = true; cooldown = 200; }
+          else nozzleX = OBJ_RIGHT;
+        } else if (direction === -1 && nozzleX <= OBJ_LEFT) {
+          nozzleX = OBJ_LEFT;
+          layersDone++;
           currentLayer++;
           direction = 1;
-          if (currentLayer >= TOTAL_LAYERS) {
-            finished = true;
-            cooldown = 180;
-          } else {
-            nozzleX = layerShapes[currentLayer].left;
-          }
+          if (currentLayer >= ROWS) { finished = true; cooldown = 200; }
+          else nozzleX = OBJ_LEFT;
         }
       }
 
       if (finished) {
         cooldown--;
-        if (cooldown <= 0) {
-          resetPrint();
-        }
+        if (cooldown <= 0) resetPrint();
       }
 
-      animId = requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
     }
 
     function resetPrint() {
-      nozzleX = layerShapes[0].left;
       currentLayer = 0;
-      direction = 1;
-      printedLayers = [];
-      printing = true;
-      finished = false;
-      cooldown = 0;
+      layersDone   = 0;
+      nozzleX      = OBJ_LEFT;
+      direction    = 1;
+      printing     = true;
+      finished     = false;
+      cooldown     = 0;
     }
 
-    document.getElementById('btnRestart').addEventListener('click', () => {
-      resetPrint();
-    });
+    document.getElementById('btnRestart').addEventListener('click', resetPrint);
 
     let speedLevel = 0;
-    const speeds = [3, 6, 10];
+    const speeds      = [4, 8, 14];
     const speedLabels = ['⚡ 加速', '⚡⚡ 更快', '🐢 正常速'];
     document.getElementById('btnSpeed').addEventListener('click', () => {
       speedLevel = (speedLevel + 1) % speeds.length;
