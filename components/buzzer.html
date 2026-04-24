@@ -299,9 +299,11 @@
     .note-btn:hover{border-color:var(--primary);background:var(--secondary)}
     .note-btn.active{background:var(--primary);color:white;border-color:var(--primary)}
 
-    .note-name{display:block;font-size:16px;margin-bottom:4px}
+    .note-solfege{display:block;font-size:18px;font-weight:800;margin-bottom:2px}
+    .note-name{display:block;font-size:12px;color:var(--muted);margin-bottom:2px}
+    .note-btn.active .note-name{color:rgba(255,255,255,0.75)}
     .note-freq{display:block;font-size:11px;color:var(--muted)}
-    .note-btn.active .note-freq{color:rgba(255,255,255,0.8)}
+    .note-btn.active .note-freq{color:rgba(255,255,255,0.7)}
 
     /* Arduino Code */
     .arduino-code{
@@ -522,30 +524,37 @@
             <h4>音階選擇</h4>
             <div class="note-buttons" id="noteButtons">
               <div class="note-btn" data-freq="262">
+                <span class="note-solfege">Do</span>
                 <span class="note-name">C</span>
                 <span class="note-freq">262Hz</span>
               </div>
               <div class="note-btn" data-freq="294">
+                <span class="note-solfege">Re</span>
                 <span class="note-name">D</span>
                 <span class="note-freq">294Hz</span>
               </div>
               <div class="note-btn" data-freq="330">
+                <span class="note-solfege">Mi</span>
                 <span class="note-name">E</span>
                 <span class="note-freq">330Hz</span>
               </div>
               <div class="note-btn" data-freq="349">
+                <span class="note-solfege">Fa</span>
                 <span class="note-name">F</span>
                 <span class="note-freq">349Hz</span>
               </div>
               <div class="note-btn" data-freq="392">
+                <span class="note-solfege">Sol</span>
                 <span class="note-name">G</span>
                 <span class="note-freq">392Hz</span>
               </div>
               <div class="note-btn" data-freq="440">
+                <span class="note-solfege">La</span>
                 <span class="note-name">A</span>
                 <span class="note-freq">440Hz</span>
               </div>
               <div class="note-btn" data-freq="494">
+                <span class="note-solfege">Si</span>
                 <span class="note-name">B</span>
                 <span class="note-freq">494Hz</span>
               </div>
@@ -608,27 +617,6 @@
             <p>• frequency: 頻率 (Hz)</p>
             <p>• duration: 持續時間 (ms，可選)</p>
           </div>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <h4>📊 音階頻率對照表</h4>
-        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px;font-size:12px;text-align:center">
-          <div style="font-weight:bold;padding:8px;background:var(--primary);color:white;border-radius:4px">C (Do)</div>
-          <div style="font-weight:bold;padding:8px;background:var(--primary);color:white;border-radius:4px">D (Re)</div>
-          <div style="font-weight:bold;padding:8px;background:var(--primary);color:white;border-radius:4px">E (Mi)</div>
-          <div style="font-weight:bold;padding:8px;background:var(--primary);color:white;border-radius:4px">F (Fa)</div>
-          <div style="font-weight:bold;padding:8px;background:var(--primary);color:white;border-radius:4px">G (Sol)</div>
-          <div style="font-weight:bold;padding:8px;background:var(--primary);color:white;border-radius:4px">A (La)</div>
-          <div style="font-weight:bold;padding:8px;background:var(--primary);color:white;border-radius:4px">B (Si)</div>
-          
-          <div style="padding:8px;background:var(--surface);border-radius:4px">262 Hz</div>
-          <div style="padding:8px;background:var(--surface);border-radius:4px">294 Hz</div>
-          <div style="padding:8px;background:var(--surface);border-radius:4px">330 Hz</div>
-          <div style="padding:8px;background:var(--surface);border-radius:4px">349 Hz</div>
-          <div style="padding:8px;background:var(--surface);border-radius:4px">392 Hz</div>
-          <div style="padding:8px;background:var(--surface);border-radius:4px">440 Hz</div>
-          <div style="padding:8px;background:var(--surface);border-radius:4px">494 Hz</div>
         </div>
       </div>
 
