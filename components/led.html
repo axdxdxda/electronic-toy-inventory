@@ -312,9 +312,9 @@
   <div class="cb-inner">
     <span class="cb-badge" id="cbBadge">🏆 挑戰進行中</span>
     <div class="cb-content">
-      <div id="cbTask">用下面的 RGB 滑桿，調出和目標色塊<strong>一樣的顏色</strong>！目標是「黃色 🌕」，黃色 = 紅色 + 綠色混合！</div>
-      <div id="cbHint">💡 黃色 = 紅色全開 + 綠色開到 200 以上 + 藍色關掉！</div>
-      <div id="cbWin" style="display:none">🎉 調出黃色了！請裉手告訴老師！✋</div>
+      <div id="cbTask">用上方的 <strong>RGB 滑桿</strong>，把 LED 調成<strong>黃色 🌕</strong>！<br>步驟：① 紅色（R）拉到最右 → ② 綠色（G）拉到 200 以上 → ③ 藍色（B）關掉（拉到 0）</div>
+      <div id="cbHint">💡 黃色 = 紅色全開（255）+ 綠色大開（≥180）+ 藍色全關（≤40）！</div>
+      <div id="cbWin" style="display:none">🎉 黃色調出來了！請舉手告訴老師！✋</div>
     </div>
     <button class="cb-close" onclick="closeBanner()" title="關閉提示">✕</button>
   </div>
@@ -446,6 +446,7 @@
 
       // State
       let currentRGB = { r: 255, g: 255, b: 255 };
+      window.challengeRGB = currentRGB; // 供挑戰偵測用（同一物件參考）
       let selectedResistance = 0;
       let brightnessMultiplier = 1.0;
 
@@ -616,30 +617,13 @@
   <div class="card">
     <div class="challenge-trigger">
       <div style="font-size:2rem;margin-bottom:.5rem">🌈</div>
-      <h3>調出目標顏色！</h3>
-      <p>準備好了嗎？調出黃色 🌕！</p>
+      <h3>調出黃色！</h3>
+      <p>準備好了嗎？按下按鈕，用上方的 RGB 滑桿把 LED 調成黃色 🌕！</p>
       <button id="startChallengeBtn" class="start-challenge-btn" onclick="startChallenge()">🚀 開始挑戰</button>
-      <div id="challengeContent" style="display:none;text-align:left;margin-top:1.5rem">
-        <div style="background:white;border-radius:12px;padding:1rem;display:flex;align-items:center;gap:16px;margin-bottom:1rem">
-          <div>目標顏色：</div>
-          <div style="width:60px;height:60px;border-radius:12px;background:#FFD700;border:3px solid #ddd;box-shadow:0 4px 12px rgba(255,215,0,.4)"></div>
-          <div style="font-size:.9rem;color:#666">紅:255 / 綠:215 / 藍:0</div>
-        </div>
-        <div style="background:white;border-radius:12px;padding:1rem 1.5rem;margin-bottom:1rem">
-          <div class="c-slider-row"><label>🔴</label><input type="range" id="cR" min="0" max="255" value="128" oninput="updateChal()"><span id="cRv" style="width:36px;text-align:right;font-weight:700">128</span></div>
-          <div class="c-slider-row"><label>🟢</label><input type="range" id="cG" min="0" max="255" value="128" oninput="updateChal()"><span id="cGv" style="width:36px;text-align:right;font-weight:700">128</span></div>
-          <div class="c-slider-row"><label>🔵</label><input type="range" id="cB" min="0" max="255" value="128" oninput="updateChal()"><span id="cBv" style="width:36px;text-align:right;font-weight:700">128</span></div>
-          <div style="display:flex;align-items:center;gap:16px;margin-top:12px">
-            <span>你的顏色：</span>
-            <div id="cPreview" style="width:60px;height:60px;border-radius:12px;background:rgb(128,128,128);border:3px solid #ddd;transition:background .1s"></div>
-            <span id="cFeedback" style="font-size:1rem;font-weight:700;color:#888"></span>
-          </div>
-        </div>
-      </div>
       <div class="c-success" id="cs4">
         <div style="font-size:2.5rem;margin-bottom:.4rem">🎉🎁🎉</div>
-        <h4>挑戰成功！調出黃色了！</h4>
-        <p>老師要來發礼物了！請裉手告訴老師！✋</p>
+        <h4>挑戰成功！黃色調出來了！</h4>
+        <p>老師要來發禮物了！請舉手告訴老師！✋</p>
       </div>
     </div>
   </div>
@@ -655,8 +639,13 @@ function startChallenge(){
   banner.classList.add("active");
   setTimeout(function(){document.body.style.paddingTop=banner.offsetHeight+"px";},420);
   window.scrollTo({top:0,behavior:"smooth"});
-  document.getElementById('challengeContent').style.display='block';
-
+  var iv=setInterval(function(){
+    if(challengeDone){clearInterval(iv);return;}
+    var rgb=window.challengeRGB;
+    if(rgb&&rgb.r>=220&&rgb.g>=180&&rgb.b<=40){
+      clearInterval(iv);showSuccess();
+    }
+  },500);
 }
 function showSuccess(){
   if(challengeDone)return;
@@ -681,25 +670,6 @@ function closeBanner(){
     challengeStarted=false;
     var btn=document.getElementById("startChallengeBtn");
     btn.disabled=false;btn.textContent="🚀 開始挑戰";
-    document.getElementById('challengeContent').style.display='none';
-  }
-}
-var chalDone4=false;
-function updateChal(){
-  var r=parseInt(document.getElementById('cR').value);
-  var g=parseInt(document.getElementById('cG').value);
-  var b=parseInt(document.getElementById('cB').value);
-  document.getElementById('cRv').textContent=r;
-  document.getElementById('cGv').textContent=g;
-  document.getElementById('cBv').textContent=b;
-  document.getElementById('cPreview').style.background='rgb('+r+','+g+','+b+')';
-  if(!chalDone4&&r>=220&&g>=180&&b<=40){
-    chalDone4=true;
-    document.getElementById('cFeedback').textContent='✅ 對了！';
-    if(challengeStarted)showSuccess();
-  } else if(!chalDone4){
-    var diff=Math.abs(r-255)+Math.abs(g-215)+Math.abs(b-0);
-    document.getElementById('cFeedback').textContent=diff<100?'很接近了！🔥':'繼續調看看～';
   }
 }
 </script>
