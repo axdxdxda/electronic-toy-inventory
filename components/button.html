@@ -496,7 +496,7 @@
     <div class="cb-content">
       <div id="cbTask">瞬時按鈕是「按住才亮」，但<strong>切換按鈕</strong>按一下就能保持亮著！步驟：① 選擇「切換按鈕」模式 → ② 點擊一次按鈕 → ③ 讓 LED 保持亮著！</div>
       <div id="cbHint">💡 切換按鈕不用一直按住，按一下就會保持亮著！</div>
-      <div id="cbWin" style="display:none">🎉 切換按鈕學會了！請裉手告訴老師！✋</div>
+      <div id="cbWin" style="display:none">🎉 切換按鈕學會了！請舉手告訴老師！✋</div>
     </div>
     <button class="cb-close" onclick="closeBanner()" title="關閉提示">✕</button>
   </div>
@@ -694,7 +694,8 @@
           typeButtons.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           buttonType = btn.dataset.type;
-          
+          window.currentButtonType = buttonType; // 供挑戰偵測用
+
           // 重置狀態
           isPressed = false;
           toggleState = false;
@@ -767,6 +768,7 @@
 
       // 更新顯示狀態
       function updateDisplay() {
+        window.currentToggleState = toggleState; // 供挑戰偵測用
         const isOn = buttonType === 'momentary' ? isPressed : toggleState;
         
         if (isOn) {
@@ -834,25 +836,10 @@
       <h3>切換按鈕挑戰！</h3>
       <p>準備好了嗎？讓切換按鈕保持 LED 亮著！</p>
       <button id="startChallengeBtn" class="start-challenge-btn" onclick="startChallenge()">🚀 開始挑戰</button>
-      <div id="challengeContent" style="display:none;text-align:left;margin-top:1.5rem">
-        <div style="background:white;border-radius:12px;padding:1rem 1.5rem;margin-bottom:1rem">
-          <p style="font-weight:700;margin-bottom:.8rem">任務進度：</p>
-          <div style="display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;align-items:center;gap:12px">
-              <div id="c10s1" style="width:28px;height:28px;border-radius:50%;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;transition:all .3s">1</div>
-              <span id="c10t1" style="color:#888">切換到「切換按鈕」模式</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:12px">
-              <div id="c10s2" style="width:28px;height:28px;border-radius:50%;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;transition:all .3s">2</div>
-              <span id="c10t2" style="color:#888">按一下按鈕，讓 LED 保持亮著</span>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="c-success" id="cs10">
         <div style="font-size:2.5rem;margin-bottom:.4rem">🎉🎁🎉</div>
         <h4>挑戰成功！切換按鈕學會了！</h4>
-        <p>老師要來發礼物了！請裉手告訴老師！✋</p>
+        <p>老師要來發禮物了！請舉手告訴老師！✋</p>
       </div>
     </div>
   </div>
@@ -868,25 +855,11 @@ function startChallenge(){
   banner.classList.add("active");
   setTimeout(function(){document.body.style.paddingTop=banner.offsetHeight+"px";},420);
   window.scrollTo({top:0,behavior:"smooth"});
-  document.getElementById('challengeContent').style.display='block';
-  var step1=false,step2=false;
   var iv=setInterval(function(){
     if(challengeDone){clearInterval(iv);return;}
-    var isToggle=typeof buttonType!=='undefined'&&buttonType==='toggle';
-    var ledOn=typeof toggleState!=='undefined'&&toggleState;
-    var s1=document.getElementById('c10s1'),s2=document.getElementById('c10s2');
-    var t1=document.getElementById('c10t1'),t2=document.getElementById('c10t2');
-    if(isToggle&&!step1){
-      step1=true;
-      s1.style.background='#4CAF50';s1.style.color='white';s1.textContent='✓';
-      t1.style.color='#2E7D32';t1.textContent='✅ 已切換到切換按鈕模式！';
+    if(window.currentButtonType==='toggle'&&window.currentToggleState){
+      clearInterval(iv);showSuccess();
     }
-    if(isToggle&&ledOn&&!step2){
-      step2=true;
-      s2.style.background='#4CAF50';s2.style.color='white';s2.textContent='✓';
-      t2.style.color='#2E7D32';t2.textContent='✅ LED 保持亮著了！';
-    }
-    if(step1&&step2){clearInterval(iv);showSuccess();}
   },300);
 }
 function showSuccess(){
@@ -912,10 +885,8 @@ function closeBanner(){
     challengeStarted=false;
     var btn=document.getElementById("startChallengeBtn");
     btn.disabled=false;btn.textContent="🚀 開始挑戰";
-    document.getElementById('challengeContent').style.display='none';
   }
 }
-
 </script>
 
 

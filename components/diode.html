@@ -700,7 +700,7 @@
     <div class="cb-content">
       <div id="cbTask">二極體像「單行道」，只有一個方向能讓電流通過。請選擇正確的接法，讓 <strong>LED 燈亮起來</strong>！</div>
       <div id="cbHint">💡 按下上方「正向接法」按鈕，看看 LED 有沒有亮！</div>
-      <div id="cbWin" style="display:none">🎉 電流找到路了！請裉手告訴老師！✋</div>
+      <div id="cbWin" style="display:none">🎉 電流找到路了！請舉手告訴老師！✋</div>
     </div>
     <button class="cb-close" onclick="closeBanner()" title="關閉提示">✕</button>
   </div>
@@ -841,14 +841,15 @@
       window.testDirection = function(direction) {
         // 重置所有按鈕
         controlButtons.forEach(btn => btn.classList.remove('active'));
-        
+
         // 啟用選中的按鈕
         const selectedBtn = document.querySelector(`.control-btn.${direction}`);
         if (selectedBtn) {
           selectedBtn.classList.add('active');
         }
-        
+
         currentState = direction;
+        window.currentDiodeState = direction; // 供挑戰偵測用
         updateCircuit();
       };
 
@@ -856,6 +857,7 @@
       window.resetCircuit = function() {
         controlButtons.forEach(btn => btn.classList.remove('active'));
         currentState = 'initial';
+        window.currentDiodeState = 'initial'; // 供挑戰偵測用
         updateCircuit();
       };
 
@@ -921,20 +923,10 @@
       <h3>讓電流通過！</h3>
       <p>準備好了嗎？找出正確接法讓 LED 亮起來！</p>
       <button id="startChallengeBtn" class="start-challenge-btn" onclick="startChallenge()">🚀 開始挑戰</button>
-      <div id="challengeContent" style="display:none;text-align:left;margin-top:1.5rem">
-        <div style="background:white;border-radius:12px;padding:1rem 1.5rem;margin-bottom:1rem">
-          <p style="font-weight:700;margin-bottom:.8rem">小測驗：哪種接法讓電流通過？</p>
-          <div class="c-options">
-            <button class="c-opt" onclick="checkDiode(this,true)">✅ 正向接法（陽極接正極）</button>
-            <button class="c-opt" onclick="checkDiode(this,false)">❌ 反向接法（陽極接負極）</button>
-          </div>
-          <p id="c8Fb" style="font-size:1rem;font-weight:700;min-height:1.4rem;color:#888"></p>
-        </div>
-      </div>
       <div class="c-success" id="cs8">
         <div style="font-size:2.5rem;margin-bottom:.4rem">🎉🎁🎉</div>
         <h4>挑戰成功！電流找到路了！</h4>
-        <p>老師要來發礼物了！請裉手告訴老師！✋</p>
+        <p>老師要來發禮物了！請舉手告訴老師！✋</p>
       </div>
     </div>
   </div>
@@ -950,12 +942,9 @@ function startChallenge(){
   banner.classList.add("active");
   setTimeout(function(){document.body.style.paddingTop=banner.offsetHeight+"px";},420);
   window.scrollTo({top:0,behavior:"smooth"});
-  document.getElementById('challengeContent').style.display='block';
   var iv=setInterval(function(){
     if(challengeDone){clearInterval(iv);return;}
-    if(typeof currentState!=='undefined'&&currentState==='forward'){
-      clearInterval(iv);showSuccess();
-    }
+    if(window.currentDiodeState==='forward'){clearInterval(iv);showSuccess();}
   },400);
 }
 function showSuccess(){
@@ -981,23 +970,6 @@ function closeBanner(){
     challengeStarted=false;
     var btn=document.getElementById("startChallengeBtn");
     btn.disabled=false;btn.textContent="🚀 開始挑戰";
-    document.getElementById('challengeContent').style.display='none';
-  }
-}
-function checkDiode(el,correct){
-  var fb=document.getElementById('c8Fb');
-  document.querySelectorAll('.c-opt').forEach(function(b){b.classList.remove('correct','wrong');});
-  if(correct){
-    el.classList.add('correct');
-    fb.style.color='#2E7D32';
-    fb.textContent='✅ 答對了！正向接法讓電流通過，LED 才會亮！';
-    var btn=document.querySelector('[onclick*="forward"]');
-    if(btn)btn.click();
-    setTimeout(function(){if(challengeStarted)showSuccess();},600);
-  } else {
-    el.classList.add('wrong');
-    fb.style.color='#c62828';
-    fb.textContent='❌ 反向接法電流無法通過！試試正向接法～';
   }
 }
 </script>
