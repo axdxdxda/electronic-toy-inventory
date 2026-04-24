@@ -157,9 +157,9 @@
   <div class="cb-inner">
     <span class="cb-badge" id="cbBadge">🏆 挑戰進行中</span>
     <div class="cb-content">
-      <div id="cbTask">用<strong>紅色杜邦線</strong>接出任意一條線！<br>步驟：① 點選紅色色塊 → ② 點擊上方麵包板的一個洞 → ③ 再點另一個洞，完成連線！</div>
-      <div id="cbHint">💡 線接好後會出現彩色連線，紅色代表電源正極！</div>
-      <div id="cbWin" style="display:none">🎉 挑戰成功！電路連起來了！請裉手告訴老師！✋</div>
+      <div id="cbTask">選擇<strong>黑色杜邦線</strong>，將下半部訊號區的任一洞，連接到下方電源軌的<strong>負極（-）</strong>！<br>步驟：① 點選黑色色塊 → ② 點擊下半部（訊號）任一洞 → ③ 點擊下方電源的負極（-）洞</div>
+      <div id="cbHint">💡 接好後會出現黑色連線，黑色代表電源負極（GND）！</div>
+      <div id="cbWin" style="display:none">🎉 挑戰成功！負極接地完成！請舉手告訴老師！✋</div>
     </div>
     <button class="cb-close" onclick="closeBanner()" title="關閉提示">✕</button>
   </div>
@@ -199,9 +199,9 @@
           <div class="labels">
             <div class="label-item top">上方<br>（電源）</div>
             <div class="label-separator"></div>
-            <div class="label-item mid-upper">上半<br>（信號）</div>
+            <div class="label-item mid-upper">上半<br>（訊號）</div>
             <div class="label-separator"></div>
-            <div class="label-item mid-lower">下半<br>（信號）</div>
+            <div class="label-item mid-lower">下半<br>（訊號）</div>
             <div class="label-separator"></div>
             <div class="label-item bottom">下方<br>（電源）</div>
           </div>
@@ -255,6 +255,7 @@
   </div>
 
   <script>
+    var wires = []; // 全域宣告，供 challenge 偵測用
     // Dupont wire system
     (function(){
       const COLS = 10;
@@ -270,7 +271,7 @@
 
       let currentColor = '#ff0000';
       let selectedHole = null;
-      let wires = [];
+      wires = []; // 使用全域 wires（在 IIFE 外宣告）
 
       function makeHole(parent, groupId){
         const h = document.createElement('div');
@@ -555,13 +556,13 @@
   <div class="card">
     <div class="challenge-trigger">
       <div style="font-size:2rem;margin-bottom:.5rem">🧵</div>
-      <h3>接線任務！</h3>
-      <p>準備好了嗎？按下按鈕，用紅色杜邦線完成接線！</p>
+      <h3>接地任務！</h3>
+      <p>準備好了嗎？按下按鈕，用黑色杜邦線把訊號區連到負極電源軌！</p>
       <button id="startChallengeBtn" class="start-challenge-btn" onclick="startChallenge()">🚀 開始挑戰</button>
       <div class="c-success" id="cs2">
         <div style="font-size:2.5rem;margin-bottom:.4rem">🎉🎁🎉</div>
-        <h4>挑戰成功！電路連起來了！</h4>
-        <p>老師要來發礼物了！請裉手告訴老師！✋</p>
+        <h4>挑戰成功！負極接地完成！</h4>
+        <p>老師要來發禮物了！請舉手告訴老師！✋</p>
       </div>
     </div>
   </div>
@@ -579,11 +580,19 @@ function startChallenge(){
   window.scrollTo({top:0,behavior:"smooth"});
   var iv=setInterval(function(){
     if(challengeDone){clearInterval(iv);return;}
-    var red=false;
-    if(typeof wires!=='undefined'&&wires.length>0){
-      wires.forEach(function(w){if(w.color&&(w.color==='#ff0000'||w.color==='red'))red=true;});
-    }
-    if(red){clearInterval(iv);showSuccess();}
+    if(typeof wires==='undefined'||wires.length===0)return;
+    var found=false;
+    wires.forEach(function(w){
+      if(w.color!=='#000000')return;
+      var h1=document.querySelector('[data-id="'+w.hole1+'"]');
+      var h2=document.querySelector('[data-id="'+w.hole2+'"]');
+      if(!h1||!h2)return;
+      var g1=h1.dataset.group,g2=h2.dataset.group;
+      var isMidLower=function(g){return g&&g.charAt(0)==='L';};
+      var isNegRail=function(g){return g==='R3';};
+      if((isMidLower(g1)&&isNegRail(g2))||(isMidLower(g2)&&isNegRail(g1)))found=true;
+    });
+    if(found){clearInterval(iv);showSuccess();}
   },500);
 }
 function showSuccess(){
