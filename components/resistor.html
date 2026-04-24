@@ -19,16 +19,52 @@
     }
 
     *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--background);color:var(--text);line-height:1.6}
+    body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--background);color:var(--text);line-height:1.6}
 
-    .header{background:linear-gradient(135deg,var(--primary),#0056b3);color:white;padding:20px 0;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
-    .header h1{font-size:2.5rem;font-weight:300;margin-bottom:8px}
-    .header p{font-size:1.2rem;opacity:0.9}
-
-    .nav{background:var(--surface);padding:10px 0;border-bottom:1px solid var(--border)}
-    .nav-content{max-width:1000px;margin:0 auto;padding:0 20px}
-    .nav a{color:var(--primary);text-decoration:none;font-weight:500;font-size:14px}
-    .nav a:hover{text-decoration:underline}
+    .header {
+      background: linear-gradient(135deg, var(--primary), #0056b3);
+      color: white;
+      padding: 1rem 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    }
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav h1 { font-size: 1.5rem; font-weight: 800; }
+    .nav a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-weight: 700;
+      transition: all 0.3s;
+    }
+    .nav a:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+    .navigation {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin: 2rem 1.5rem;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 0.8rem 2rem;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    .nav-btn:hover { background: #0056b3; transform: translateY(-2px); }
 
     .container{max-width:1000px;margin:0 auto;padding:20px}
 
@@ -245,17 +281,43 @@
     .color-silver{background:#c0c0c0}
 
     .legend{font-size:12px;color:var(--muted);margin-top:12px;text-align:center}
-  </style>
+  
+    .challenge-banner{position:fixed;top:0;left:0;right:0;z-index:900;background:white;border-bottom:4px solid var(--primary);box-shadow:0 4px 20px rgba(0,0,0,.18);transform:translateY(-110%);transition:transform .4s cubic-bezier(.4,0,.2,1);}
+    .challenge-banner.active{transform:translateY(0);}
+    .challenge-banner.success-state{border-bottom-color:var(--success);}
+    .cb-inner{max-width:1000px;margin:0 auto;padding:.85rem 1.5rem;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+    .cb-badge{background:linear-gradient(135deg,var(--primary),#0056b3);color:white;padding:4px 14px;border-radius:20px;font-weight:800;white-space:nowrap;}
+    .cb-badge.winning{background:linear-gradient(135deg,var(--success),#1b6e2e);}
+    .cb-content{flex:1;}
+    .cb-close{background:none;border:none;font-size:1.2rem;cursor:pointer;color:#666;padding:4px 8px;margin-left:auto;}
+    .challenge-trigger{text-align:center;padding:2rem 1.5rem;}
+    .start-challenge-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--primary),#0056b3);color:white;border:none;border-radius:50px;padding:.85rem 2.4rem;font-size:1.05rem;font-weight:800;cursor:pointer;transition:all .3s;}
+    .start-challenge-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,122,204,.35);}
+    .c-success{background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border:3px solid var(--success);border-radius:12px;padding:1.5rem;text-align:center;margin-top:1.5rem;display:none;}
+    .c-success.show{display:block;animation:cPop .5s ease-out;}
+    @keyframes cPop{0%{transform:scale(.8);opacity:0}60%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="header">
-    <h1>電阻 🧱</h1>
-    <p>電流的阻擋者 - 控制電流大小！</p>
+<div id="challengeBanner" class="challenge-banner">
+  <div class="cb-inner">
+    <span class="cb-badge" id="cbBadge">🏆 挑戰進行中</span>
+    <div class="cb-content">
+      <div id="cbTask">下面有3個電阻，哪一個是 <strong>220Ω</strong>？看色碼環：第 1 環代表第 1 個數字，第 2 環代表第 2 個數字，第 3 環是倍率（幾個零）。</div>
+      <div id="cbHint">💡 提示：紅色 = 2，棕色倍率 = ×10，所以 2×2×10 = 220Ω</div>
+      <div id="cbWin" style="display:none">🎉 色碼讀對了！請裉手告訴老師！✋</div>
+    </div>
+    <button class="cb-close" onclick="closeBanner()" title="關閉提示">✕</button>
   </div>
+</div>
 
-  <div class="nav">
-    <div class="nav-content">
-      <a href="../index.html">← 返回首頁</a>
+  <div class="header">
+    <div class="nav">
+      <h1>電阻 🧱</h1>
+      <a href="../index.html">🏠 返回首頁</a>
     </div>
   </div>
 
@@ -918,5 +980,123 @@
       updateDisplay();
     })();
   </script>
+
+<div class="container">
+  <div class="card">
+    <div class="challenge-trigger">
+      <div style="font-size:2rem;margin-bottom:.5rem">🧱</div>
+      <h3>認識色碼環！</h3>
+      <p>準備好了嗎？找出 220Ω 的電阻！</p>
+      <button id="startChallengeBtn" class="start-challenge-btn" onclick="startChallenge()">🚀 開始挑戰</button>
+      <div id="challengeContent" style="display:none;text-align:left;margin-top:1.5rem">
+        <p style="font-weight:700;margin-bottom:.8rem">哪個是 220Ω？點擊選擇：</p>
+        <div style="margin-bottom:12px;display:flex;align-items:center;gap:16px">
+          <span style="font-weight:700;color:#555">選項 A：</span>
+          <div onclick="checkRes(this,'A')" class="c-resistor" title="選項A">
+            <div class="lead"></div><div class="cap"></div>
+            <div class="band" style="background:#FFD700"></div><div class="body"></div>
+            <div class="band" style="background:#9C27B0"></div><div class="body" style="width:12px"></div>
+            <div class="band" style="background:#795548"></div><div class="body" style="width:12px"></div>
+            <div class="band" style="background:gold;width:10px"></div>
+            <div class="cap"></div><div class="lead"></div>
+          </div>
+          <span style="font-size:.9rem;color:#888">470Ω（黃紫棕）</span>
+        </div>
+        <div style="margin-bottom:12px;display:flex;align-items:center;gap:16px">
+          <span style="font-weight:700;color:#555">選項 B：</span>
+          <div onclick="checkRes(this,'B')" class="c-resistor" title="選項B">
+            <div class="lead"></div><div class="cap"></div>
+            <div class="band" style="background:#f44336"></div><div class="body"></div>
+            <div class="band" style="background:#f44336"></div><div class="body" style="width:12px"></div>
+            <div class="band" style="background:#795548"></div><div class="body" style="width:12px"></div>
+            <div class="band" style="background:gold;width:10px"></div>
+            <div class="cap"></div><div class="lead"></div>
+          </div>
+          <span style="font-size:.9rem;color:#888">???（紅紅棕）</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px">
+          <span style="font-weight:700;color:#555">選項 C：</span>
+          <div onclick="checkRes(this,'C')" class="c-resistor" title="選項C">
+            <div class="lead"></div><div class="cap"></div>
+            <div class="band" style="background:#795548"></div><div class="body"></div>
+            <div class="band" style="background:#212121"></div><div class="body" style="width:12px"></div>
+            <div class="band" style="background:#f44336"></div><div class="body" style="width:12px"></div>
+            <div class="band" style="background:gold;width:10px"></div>
+            <div class="cap"></div><div class="lead"></div>
+          </div>
+          <span style="font-size:.9rem;color:#888">1000Ω（棕黑紅）</span>
+        </div>
+        <p id="rFeedback" style="font-size:1rem;font-weight:700;min-height:1.5rem;margin-top:.8rem"></p>
+      </div>
+      <div class="c-success" id="cs3">
+        <div style="font-size:2.5rem;margin-bottom:.4rem">🎉🎁🎉</div>
+        <h4>挑戰成功！色碼讀對了！</h4>
+        <p>老師要來發礼物了！請裉手告訴老師！✋</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+var challengeStarted=false,challengeDone=false;
+function startChallenge(){
+  if(challengeStarted)return;
+  challengeStarted=true;
+  var btn=document.getElementById("startChallengeBtn");
+  btn.disabled=true;btn.textContent="⌛ 挑戰進行中…";
+  var banner=document.getElementById("challengeBanner");
+  banner.classList.add("active");
+  setTimeout(function(){document.body.style.paddingTop=banner.offsetHeight+"px";},420);
+  window.scrollTo({top:0,behavior:"smooth"});
+  document.getElementById('challengeContent').style.display='block';
+
+}
+function showSuccess(){
+  if(challengeDone)return;
+  challengeDone=true;
+  var banner=document.getElementById("challengeBanner");
+  banner.classList.add("success-state");
+  document.getElementById("cbBadge").classList.add("winning");
+  document.getElementById("cbBadge").textContent="🎉 挑戰成功！";
+  document.getElementById("cbTask").style.display="none";
+  document.getElementById("cbHint").style.display="none";
+  document.getElementById("cbWin").style.display="block";
+  document.getElementById("startChallengeBtn").style.display="none";
+  var cs=document.getElementById("cs3");
+  cs.classList.add("show");
+  setTimeout(function(){cs.scrollIntoView({behavior:"smooth",block:"center"});},300);
+}
+function closeBanner(){
+  var banner=document.getElementById("challengeBanner");
+  banner.classList.remove("active");
+  document.body.style.paddingTop="";
+  if(!challengeDone){
+    challengeStarted=false;
+    var btn=document.getElementById("startChallengeBtn");
+    btn.disabled=false;btn.textContent="🚀 開始挑戰";
+    document.getElementById('challengeContent').style.display='none';
+  }
+}
+function checkRes(el,opt){
+  var fb=document.getElementById('rFeedback');
+  document.querySelectorAll('.c-resistor').forEach(function(b){b.style.outline='';});
+  if(opt==='B'){
+    el.style.outline='3px solid #4CAF50';
+    fb.style.color='#2E7D32';
+    fb.textContent='✅ 答對了！紅(2)紅(2)棕(×10) = 220Ω！';
+    setTimeout(function(){if(challengeStarted)showSuccess();},600);
+  } else {
+    el.style.outline='3px solid #f44336';
+    fb.style.color='#c62828';
+    fb.textContent='❌ 再想想！提示：找兩環都是紅色的那個～';
+    setTimeout(function(){el.style.outline='';},1200);
+  }
+}
+</script>
+
+
+  <div class="navigation">
+    <a href="../index.html" class="nav-btn">🏠 返回首頁</a>
+    <a href="led.html" class="nav-btn">下一個元件：三色 LED ➡️</a>
+  </div>
 </body>
 </html>
