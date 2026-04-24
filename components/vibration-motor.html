@@ -585,7 +585,7 @@
     <div class="cb-content">
       <div id="cbTask">調整上方的「強度」滑桿，把震動馬達的強度設定到 <strong>75%</strong>！這個強度就像手機收到訊息時的震動力道～</div>
       <div id="cbHint">💡 先點上方「電話震動」試試看，再微調滑桿到 75%！</div>
-      <div id="cbWin" style="display:none">🎉 精準調速成功！請裉手告訴老師！✋</div>
+      <div id="cbWin" style="display:none">🎉 精準調速成功！請舉手告訴老師！✋</div>
     </div>
     <button class="cb-close" onclick="closeBanner()" title="關閉提示">✕</button>
   </div>
@@ -857,6 +857,7 @@
       }
 
       function updateDisplays() {
+        window.currentMotorIntensity = currentIntensity; // 供挑戰偵測用
         intensityDisplay.textContent = currentIntensity + '%';
         pwmDisplay.textContent = currentPWM + '/255';
         
@@ -972,24 +973,12 @@
     <div class="challenge-trigger">
       <div style="font-size:2rem;margin-bottom:.5rem">⚙️</div>
       <h3>精準調速挑戰！</h3>
-      <p>準備好了嗎？把震動強度調到 75%！</p>
+      <p>準備好了嗎？按下按鈕，用上方的「強度」滑桿把震動強度調到 75%！</p>
       <button id="startChallengeBtn" class="start-challenge-btn" onclick="startChallenge()">🚀 開始挑戰</button>
-      <div id="challengeContent" style="display:none;text-align:left;margin-top:1.5rem">
-        <div style="background:white;border-radius:12px;padding:1rem 1.5rem;margin-bottom:1rem">
-          <p style="font-weight:700;margin-bottom:.5rem">目前偵測到的強度：</p>
-          <div style="display:flex;align-items:center;gap:16px">
-            <div style="flex:1;background:#eee;border-radius:20px;height:20px;overflow:hidden">
-              <div id="cMotorBar" style="height:100%;width:0%;background:linear-gradient(90deg,#42A5F5,#7E57C2);transition:width .2s;border-radius:20px"></div>
-            </div>
-            <span id="cMotorVal" style="font-size:1.3rem;font-weight:800;color:#5E35B1;width:60px;text-align:right">0%</span>
-          </div>
-          <p id="cMotorFb" style="font-size:1rem;color:#888;margin-top:.5rem;min-height:1.4rem"></p>
-        </div>
-      </div>
       <div class="c-success" id="cs5">
         <div style="font-size:2.5rem;margin-bottom:.4rem">🎉🎁🎉</div>
         <h4>挑戰成功！精準調速！</h4>
-        <p>老師要來發礼物了！請裉手告訴老師！✋</p>
+        <p>老師要來發禮物了！請舉手告訴老師！✋</p>
       </div>
     </div>
   </div>
@@ -1005,16 +994,9 @@ function startChallenge(){
   banner.classList.add("active");
   setTimeout(function(){document.body.style.paddingTop=banner.offsetHeight+"px";},420);
   window.scrollTo({top:0,behavior:"smooth"});
-  document.getElementById('challengeContent').style.display='block';
   var iv=setInterval(function(){
     if(challengeDone){clearInterval(iv);return;}
-    var v=typeof currentIntensity!=='undefined'?currentIntensity:0;
-    document.getElementById('cMotorBar').style.width=v+'%';
-    document.getElementById('cMotorVal').textContent=v+'%';
-    var fb=document.getElementById('cMotorFb');
-    if(v<70)fb.textContent='太低了，繼續往上調！⬆️';
-    else if(v>80)fb.textContent='太高了，稍微往下調一點！⬇️';
-    else fb.textContent='就在這個範圍！再精確一點！🔥';
+    var v=window.currentMotorIntensity||0;
     if(v>=72&&v<=78){clearInterval(iv);showSuccess();}
   },300);
 }
@@ -1041,7 +1023,6 @@ function closeBanner(){
     challengeStarted=false;
     var btn=document.getElementById("startChallengeBtn");
     btn.disabled=false;btn.textContent="🚀 開始挑戰";
-    document.getElementById('challengeContent').style.display='none';
   }
 }
 
