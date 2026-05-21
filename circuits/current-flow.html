@@ -18,7 +18,9 @@
       --card-bg: #fff;
       --shadow: 0 4px 20px rgba(0,0,0,0.08);
       --water: #00BCD4;
+      --water-dark: #0097A7;
       --electric: #FF9800;
+      --electric-dark: #F57C00;
       --safe: #4CAF50;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,7 +28,7 @@
       font-family: 'Nunito', 'Microsoft JhengHei', sans-serif;
       background: var(--background);
       color: var(--text);
-      line-height: 1.7;
+      line-height: 1.65;
       font-size: 18px;
     }
     .header {
@@ -43,7 +45,7 @@
       justify-content: space-between;
       align-items: center;
     }
-    .nav h1 { font-size: 1.5rem; font-weight: 800; }
+    .nav h1 { font-size: 1.4rem; font-weight: 800; }
     .nav a {
       color: white;
       text-decoration: none;
@@ -55,79 +57,75 @@
     .nav a:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 2rem; }
 
-    /* 本課一眼看懂區 */
-    .hero-banner {
-      background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #FFF3E0 100%);
-      border: 4px solid var(--water);
-      border-radius: 24px;
-      padding: 2.5rem 2rem;
-      margin-bottom: 2rem;
+    /* HERO 大場景 ------------------------------------------------------- */
+    .hero {
+      background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 45%, #FFE0B2 100%);
+      border-radius: 28px;
+      padding: 2rem 1.5rem 1.5rem;
+      margin: 1.5rem 0 2rem;
       text-align: center;
+      box-shadow: var(--shadow);
       position: relative;
       overflow: hidden;
-      box-shadow: var(--shadow);
     }
-    .hero-banner::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 6px;
-      background: linear-gradient(90deg, var(--water), var(--electric));
-      border-radius: 24px 24px 0 0;
-    }
-    .hero-icon-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .hero-icon {
-      width: 80px;
-      height: 80px;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.8rem;
-      animation: heroFloat 3s ease-in-out infinite;
-    }
-    .hero-icon.water { background: linear-gradient(135deg, #00BCD4, #0097A7); box-shadow: 0 8px 25px rgba(0,188,212,0.4); }
-    .hero-icon.electric { background: linear-gradient(135deg, #FF9800, #F57C00); box-shadow: 0 8px 25px rgba(255,152,0,0.4); animation-delay: 0.5s; }
-    .hero-equals { font-size: 2rem; font-weight: 900; color: #555; }
-    .hero-banner h2 {
-      color: var(--primary);
-      font-size: 1.75rem;
+    .hero h2 {
+      font-size: 2rem;
       font-weight: 900;
-      margin-bottom: 0.5rem;
+      color: #0D47A1;
+      margin-bottom: 0.3rem;
     }
-    .hero-banner .one-line {
-      font-size: 1.2rem;
-      color: #555;
+    .hero p.lead {
+      font-size: 1.1rem;
+      color: #455A64;
       font-weight: 700;
+      margin-bottom: 1rem;
     }
-    @keyframes heroFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+    .hero-scene {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      display: block;
     }
 
-    .intro {
+    /* 角色化卡片 ------------------------------------------------------- */
+    .role-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+      margin: 2rem 0;
+    }
+    .role-card {
       background: var(--card-bg);
-      padding: 2rem;
       border-radius: 20px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
+      padding: 1.5rem 1rem;
       text-align: center;
-      border: 3px solid rgba(33,150,243,0.15);
+      box-shadow: var(--shadow);
+      border: 3px solid transparent;
     }
-    .intro h2 { color: var(--primary); margin-bottom: 1rem; font-size: 1.6rem; font-weight: 800; }
-    .intro p { color: #555; font-size: 1.1rem; }
+    .role-card.water { border-color: var(--water); }
+    .role-card.electric { border-color: var(--electric); }
+    .role-card svg { display: block; margin: 0 auto 0.5rem; }
+    .role-card h3 { font-size: 1.3rem; font-weight: 900; margin-bottom: 0.3rem; }
+    .role-card.water h3 { color: var(--water-dark); }
+    .role-card.electric h3 { color: var(--electric-dark); }
+    .role-card p { font-size: 0.95rem; color: #555; font-weight: 700; }
+    .role-equals {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--primary);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
 
+    /* 區塊外殼 --------------------------------------------------------- */
     .section {
       background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 20px;
+      padding: 1.8rem 1.5rem;
+      border-radius: 24px;
       box-shadow: var(--shadow);
       margin-bottom: 2rem;
       border: 3px solid var(--border);
@@ -139,210 +137,295 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 5px;
-      background: linear-gradient(90deg, var(--primary), var(--water));
-      border-radius: 20px 20px 0 0;
+      background: linear-gradient(90deg, var(--water), var(--electric));
     }
     .section h3 {
       color: var(--primary);
-      margin-bottom: 1.5rem;
-      font-size: 1.4rem;
-      font-weight: 800;
+      margin-bottom: 1rem;
+      font-size: 1.45rem;
+      font-weight: 900;
       text-align: center;
+    }
+    .section .hint {
+      text-align: center;
+      color: #607D8B;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-top: 0.5rem;
     }
 
-    /* 水流 vs 電流 對比圖 */
-    .comparison-grid {
+    /* 大場景互動對照 --------------------------------------------------- */
+    .scene-pair {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin: 2rem 0;
+      gap: 1.2rem;
+      margin: 1rem 0;
     }
-    .compare-card {
-      border-radius: 20px;
-      padding: 2rem;
+    .scene-card {
+      border-radius: 18px;
+      padding: 0.8rem;
       text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.25s;
     }
-    .compare-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    .scene-card.water { background: linear-gradient(135deg, #E0F7FA, #B2EBF2); border: 3px solid var(--water); }
+    .scene-card.electric { background: linear-gradient(135deg, #FFF8E1, #FFE082); border: 3px solid var(--electric); }
+    .scene-card h4 { font-size: 1.1rem; font-weight: 900; margin-bottom: 0.5rem; }
+    .scene-card.water h4 { color: #006064; }
+    .scene-card.electric h4 { color: #E65100; }
+    .scene-card svg { width: 100%; height: auto; cursor: pointer; }
+    .scene-card svg .pair-target { transition: filter 0.2s, transform 0.2s; transform-origin: center; transform-box: fill-box; }
+    .scene-card svg .pair-target:hover { filter: brightness(1.15); }
+    .scene-card svg .pair-target.highlight {
+      filter: drop-shadow(0 0 14px #FFD600) brightness(1.2);
+      transform: scale(1.1);
     }
-    .water-side {
-      background: linear-gradient(135deg, #E0F7FA, #B2EBF2);
-      border: 4px solid var(--water);
-    }
-    .electric-side {
-      background: linear-gradient(135deg, #FFF8E1, #FFECB3);
-      border: 4px solid var(--electric);
-    }
-    .compare-card h4 { font-size: 1.3rem; margin-bottom: 1rem; font-weight: 800; }
-    .compare-card .visual-row {
+    .pair-readout {
+      grid-column: 1 / -1;
+      background: #F1F8E9;
+      border: 3px dashed var(--safe);
+      border-radius: 16px;
+      padding: 0.9rem;
+      text-align: center;
+      font-weight: 800;
+      color: #2E7D32;
+      font-size: 1.05rem;
+      margin-top: 0.5rem;
+      min-height: 3rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      margin: 1.5rem 0;
-      font-size: 2rem;
     }
-    .compare-card p { color: #555; margin: 0.5rem 0; font-size: 1rem; }
+    .pair-readout.empty { color: #90A4AE; border-style: solid; background: #F5F5F5; }
 
-    /* 流動動畫區 */
-    .flow-demo { margin: 2rem 0; }
-    .flow-label {
-      font-weight: 800;
-      color: var(--primary);
-      margin-bottom: 0.8rem;
-      font-size: 1.1rem;
-    }
-    .pipe-container {
-      position: relative;
-      background: linear-gradient(90deg, #E0F7FA, #B2EBF2);
-      border: 4px solid var(--water);
+    /* 動畫實驗室 ------------------------------------------------------- */
+    .lab {
+      background: linear-gradient(180deg, #F3F8FE, #FFF8E1);
       border-radius: 20px;
-      height: 70px;
+      padding: 1.2rem 1rem 1.5rem;
       margin: 1rem 0;
+    }
+    .lab-line {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 0.8rem;
+      margin: 0.8rem 0;
+    }
+    .lab-label {
+      font-weight: 900;
+      font-size: 1.05rem;
+      color: var(--primary-dark);
+      min-width: 70px;
+      text-align: right;
+    }
+    .lab-label.electric { color: var(--electric-dark); }
+    .lab-pipe {
+      position: relative;
+      background: linear-gradient(180deg, #B2EBF2, #80DEEA);
+      border: 3px solid var(--water);
+      border-radius: 999px;
+      height: 56px;
       overflow: hidden;
     }
-    .water-flow {
+    .lab-wire {
+      position: relative;
+      background: #455A64;
+      border: 3px solid #263238;
+      border-radius: 8px;
+      height: 30px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .lab-wire::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0; right: 0;
+      height: 2px;
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-50%);
+    }
+    .particle {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      left: -60px;
-      width: 50px;
-      height: 45px;
-      background: radial-gradient(circle, #00BCD4, #0097A7);
       border-radius: 50%;
-      animation: flowRight 2.5s linear infinite;
-      box-shadow: 0 0 20px rgba(0,188,212,0.5);
+      animation: streamRight 2.5s linear infinite;
+      animation-play-state: running;
     }
-    .wire-container {
-      position: relative;
-      background: linear-gradient(90deg, #FFF3E0, #FFE0B2);
-      border: 4px solid var(--electric);
-      border-radius: 20px;
-      height: 50px;
-      margin: 1rem 0;
-      overflow: hidden;
+    .particle.drop {
+      width: 30px;
+      height: 30px;
+      background: radial-gradient(circle at 35% 30%, #4FC3F7, #0277BD);
+      box-shadow: 0 0 12px rgba(2,119,189,0.6), inset -3px -4px 6px rgba(0,0,0,0.15);
     }
-    .electron-flow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      left: -20px;
+    .particle.electron {
       width: 16px;
       height: 16px;
-      background: radial-gradient(circle, #FFB74D, #FF9800);
-      border-radius: 50%;
-      animation: flowRight 1.8s linear infinite;
-      box-shadow: 0 0 15px rgba(255,152,0,0.6);
+      background: radial-gradient(circle at 35% 30%, #FFE082, #FF6F00);
+      box-shadow: 0 0 12px rgba(255,152,0,0.7);
     }
-    @keyframes flowRight {
-      0% { left: -60px; }
-      100% { left: 100%; }
+    @keyframes streamRight {
+      0% { left: -10%; }
+      100% { left: 105%; }
     }
-    .wire-container .electron-flow { left: -20px; }
-    .wire-container .electron-flow { animation: flowRight 1.5s linear infinite; }
-
-    .control-panel {
+    /* 終點目標 */
+    .lab-endpoint {
+      width: 64px;
+      height: 64px;
       display: flex;
+      align-items: center;
       justify-content: center;
+    }
+    .bucket {
+      width: 56px;
+      height: 56px;
+      position: relative;
+    }
+    .bucket svg { width: 100%; height: 100%; }
+    .bulb {
+      width: 60px;
+      height: 60px;
+    }
+    .lab-controls {
+      display: flex;
+      align-items: center;
       gap: 1rem;
-      margin: 1.5rem 0;
+      justify-content: center;
       flex-wrap: wrap;
-    }
-    .control-btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 0.9rem 1.5rem;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 800;
-      font-family: inherit;
-      transition: all 0.3s;
-    }
-    .control-btn:hover { background: var(--primary-dark); transform: translateY(-3px); }
-    .control-btn.active { background: var(--secondary); color: #333; box-shadow: 0 4px 15px rgba(255,193,7,0.4); }
-    .demo-display {
-      background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
-      border: 3px solid var(--safe);
+      margin-top: 1.2rem;
+      padding: 1rem;
+      background: #fff;
       border-radius: 16px;
-      padding: 1.5rem;
-      text-align: center;
-      margin-top: 1rem;
+      box-shadow: inset 0 0 0 2px var(--border);
     }
-    .demo-display h4 { color: #2E7D32; margin-bottom: 0.5rem; }
-    .demo-display p { color: #555; }
+    .lab-controls label {
+      font-weight: 900;
+      color: var(--primary-dark);
+    }
+    .lab-controls input[type=range] {
+      flex: 1;
+      min-width: 200px;
+      height: 8px;
+      accent-color: var(--electric);
+    }
+    .lab-controls .speed-readout {
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: var(--electric-dark);
+      min-width: 90px;
+      text-align: center;
+      background: #FFF3E0;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+    }
+    .lab-callout {
+      background: #E8F5E9;
+      border-radius: 14px;
+      padding: 0.8rem 1rem;
+      text-align: center;
+      color: #2E7D32;
+      font-weight: 800;
+      margin-top: 0.8rem;
+      font-size: 1rem;
+    }
 
-    .concept-cards {
+    /* 三好朋友 mini 動畫 ---------------------------------------------- */
+    .friends-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
+      gap: 1.2rem;
+      margin-top: 1rem;
     }
-    .concept-card {
-      background: var(--background);
-      padding: 1.8rem;
-      border-radius: 20px;
+    .friend-card {
+      background: #FAFAFA;
+      padding: 1.2rem 1rem;
+      border-radius: 18px;
       text-align: center;
-      transition: all 0.3s ease;
       border: 3px solid transparent;
+      transition: all 0.25s;
     }
-    .concept-card:hover {
-      transform: translateY(-6px);
+    .friend-card:hover {
+      transform: translateY(-4px);
       border-color: var(--primary);
-      box-shadow: 0 12px 30px rgba(33,150,243,0.15);
+      box-shadow: 0 12px 28px rgba(33,150,243,0.15);
     }
-    .concept-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      display: block;
+    .friend-card svg { display: block; margin: 0 auto 0.6rem; }
+    .friend-card h4 {
+      color: var(--primary-dark);
+      font-size: 1.1rem;
+      font-weight: 900;
+      margin-bottom: 0.4rem;
     }
-    .concept-card h3 { color: var(--primary); margin-bottom: 0.6rem; font-size: 1.25rem; }
-    .concept-card p { color: #555; font-size: 1rem; line-height: 1.6; }
+    .friend-card p {
+      color: #555;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
 
-    .quiz-section { margin-top: 2rem; }
-    .quiz-question {
-      background: #f8fafc;
-      padding: 1.5rem;
-      border-radius: 16px;
-      margin: 1rem 0;
-      border-left: 5px solid var(--primary);
+    /* 測驗 ------------------------------------------------------------ */
+    .quiz {
+      background: #F8FAFC;
+      border-radius: 18px;
+      padding: 1.2rem;
+      margin-top: 1rem;
+      border-left: 6px solid var(--primary);
     }
-    .quiz-options { display: grid; gap: 0.8rem; margin-top: 1rem; }
+    .quiz h4 {
+      font-size: 1.05rem;
+      font-weight: 900;
+      margin-bottom: 0.8rem;
+      color: #37474F;
+    }
+    .quiz-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.7rem;
+    }
     .quiz-option {
       background: white;
       border: 3px solid var(--border);
-      padding: 1rem 1.2rem;
+      padding: 0.8rem;
       border-radius: 12px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.25s;
       text-align: center;
-      font-weight: 700;
+      font-weight: 800;
+      font-size: 0.95rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
     }
-    .quiz-option:hover { border-color: var(--primary); transform: translateX(8px); }
-    .quiz-option.correct { background: #d4edda; border-color: #28a745; }
-    .quiz-option.wrong { background: #f8d7da; border-color: #dc3545; }
+    .quiz-option svg, .quiz-option .emoji { font-size: 1.8rem; }
+    .quiz-option:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 6px 14px rgba(33,150,243,0.15); }
+    .quiz-option.correct { background: #D4EDDA; border-color: #28A745; }
+    .quiz-option.wrong { background: #F8D7DA; border-color: #DC3545; }
+    .quiz-result {
+      margin-top: 0.8rem;
+      font-weight: 800;
+      text-align: center;
+      font-size: 1rem;
+    }
 
+    /* 成功與下一課 ----------------------------------------------------- */
     .success-box {
-      background: linear-gradient(135deg, #d4edda, #c3e6cb);
-      border: 3px solid #28a745;
+      background: linear-gradient(135deg, #D4EDDA, #C3E6CB);
+      border: 3px solid #28A745;
       border-radius: 20px;
-      padding: 2rem;
-      margin: 2rem 0;
+      padding: 1.5rem;
       text-align: center;
+      margin: 2rem 0;
     }
-    .success-box h3 { color: #155724; margin-bottom: 0.8rem; }
-    .success-box p { color: #155724; font-weight: 600; }
+    .success-box h3 { color: #155724; margin-bottom: 0.4rem; font-size: 1.3rem; }
+    .success-box p { color: #155724; font-weight: 700; }
 
     .navigation {
       display: flex;
       justify-content: space-between;
-      margin-top: 2rem;
-      padding: 1rem 0;
-      flex-wrap: wrap;
       gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
     }
     .nav-btn {
       background: var(--primary);
@@ -355,11 +438,14 @@
     }
     .nav-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
-    @media (max-width: 768px) {
-      .comparison-grid { grid-template-columns: 1fr; }
-      .hero-icon { width: 64px; height: 64px; font-size: 2.2rem; }
-      .hero-banner h2 { font-size: 1.4rem; }
+    /* 響應式 ----------------------------------------------------------- */
+    @media (max-width: 820px) {
+      .scene-pair { grid-template-columns: 1fr; }
+      .role-row { grid-template-columns: 1fr; }
+      .role-equals { transform: rotate(90deg); margin: 0.3rem auto; }
+      .hero h2 { font-size: 1.5rem; }
       body { font-size: 16px; }
+      .lab-label { min-width: 50px; font-size: 0.9rem; }
     }
   </style>
 </head>
@@ -372,122 +458,471 @@
   </div>
 
   <div class="container">
-    <!-- 一眼看懂：本課在講什麼 -->
-    <div class="hero-banner">
-      <div class="hero-icon-row">
-        <div class="hero-icon water">💧</div>
-        <span class="hero-equals">＝</span>
-        <div class="hero-icon electric">⚡</div>
+
+    <!-- HERO 大場景 -->
+    <section class="hero">
+      <h2>電流就像水流 💧⚡</h2>
+      <p class="lead">看不到的「電」，用看得到的「水」想一遍就懂！</p>
+      <svg class="hero-scene" viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" aria-label="水世界與電世界並排場景">
+        <!-- 左：水世界 -->
+        <g id="hero-water">
+          <!-- 水塔 -->
+          <rect x="40" y="40" width="80" height="110" rx="10" fill="#4DD0E1" stroke="#00838F" stroke-width="3"/>
+          <ellipse cx="80" cy="40" rx="40" ry="12" fill="#00ACC1" stroke="#00838F" stroke-width="3"/>
+          <text x="80" y="100" text-anchor="middle" font-weight="900" font-size="14" fill="#004D40">水塔</text>
+          <!-- 支柱 -->
+          <rect x="55" y="150" width="10" height="60" fill="#5D4037"/>
+          <rect x="95" y="150" width="10" height="60" fill="#5D4037"/>
+          <!-- 出水管 (從水塔到水龍頭) -->
+          <path d="M80 150 L80 230 L300 230" stroke="#00ACC1" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <!-- 水龍頭 -->
+          <rect x="295" y="200" width="20" height="40" fill="#90A4AE" stroke="#37474F" stroke-width="2"/>
+          <rect x="285" y="195" width="40" height="10" rx="3" fill="#607D8B" stroke="#37474F" stroke-width="2"/>
+          <text x="305" y="178" text-anchor="middle" font-weight="900" font-size="13" fill="#37474F">水龍頭</text>
+          <!-- 出水 -->
+          <g class="hero-drops">
+            <circle cx="305" cy="245" r="6" fill="#4FC3F7" opacity="0.9">
+              <animate attributeName="cy" values="245;290" dur="1s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="1;0" dur="1s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="305" cy="245" r="5" fill="#4FC3F7" opacity="0.9">
+              <animate attributeName="cy" values="245;290" dur="1s" begin="0.3s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="1;0" dur="1s" begin="0.3s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="305" cy="245" r="6" fill="#4FC3F7" opacity="0.9">
+              <animate attributeName="cy" values="245;290" dur="1s" begin="0.6s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="1;0" dur="1s" begin="0.6s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+          <!-- 流動水滴沿管子 -->
+          <circle r="5" fill="#fff" opacity="0.7">
+            <animateMotion dur="3s" repeatCount="indefinite" path="M80 150 L80 230 L300 230"/>
+          </circle>
+          <circle r="5" fill="#fff" opacity="0.7">
+            <animateMotion dur="3s" begin="1s" repeatCount="indefinite" path="M80 150 L80 230 L300 230"/>
+          </circle>
+          <circle r="5" fill="#fff" opacity="0.7">
+            <animateMotion dur="3s" begin="2s" repeatCount="indefinite" path="M80 150 L80 230 L300 230"/>
+          </circle>
+          <!-- 接水容器 -->
+          <path d="M275 290 L335 290 L325 325 L285 325 Z" fill="#90A4AE" stroke="#37474F" stroke-width="3"/>
+          <rect x="278" y="300" width="44" height="20" fill="#4FC3F7" opacity="0.8"/>
+          <text x="305" y="345" text-anchor="middle" font-weight="900" font-size="12" fill="#37474F">水桶</text>
+        </g>
+
+        <!-- 中間：等於符號 -->
+        <g transform="translate(440 140)">
+          <circle cx="30" cy="30" r="42" fill="#fff" stroke="#FFC107" stroke-width="4"/>
+          <text x="30" y="42" text-anchor="middle" font-size="36" font-weight="900" fill="#F57C00">＝</text>
+          <text x="30" y="100" text-anchor="middle" font-size="13" font-weight="900" fill="#37474F">同樣的概念</text>
+        </g>
+
+        <!-- 右：電世界 -->
+        <g id="hero-electric" transform="translate(540 30)">
+          <!-- 電池 -->
+          <rect x="40" y="80" width="60" height="130" rx="6" fill="#FFE082" stroke="#F57C00" stroke-width="3"/>
+          <rect x="55" y="70" width="30" height="12" rx="3" fill="#FFD54F" stroke="#F57C00" stroke-width="2"/>
+          <text x="70" y="135" text-anchor="middle" font-weight="900" font-size="11" fill="#E65100">＋</text>
+          <text x="70" y="180" text-anchor="middle" font-weight="900" font-size="11" fill="#E65100">－</text>
+          <!-- 電池 label：直書放在電池左側 -->
+          <text x="20" y="138" text-anchor="middle" font-weight="900" font-size="14" fill="#BF360C">電</text>
+          <text x="20" y="160" text-anchor="middle" font-weight="900" font-size="14" fill="#BF360C">池</text>
+          <!-- 電線回路 -->
+          <path d="M70 75 L70 50 L420 50 L420 270 L70 270 L70 210" stroke="#263238" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <!-- 開關 -->
+          <g transform="translate(200 50)">
+            <circle cx="0" cy="0" r="5" fill="#37474F"/>
+            <line x1="0" y1="0" x2="25" y2="-15" stroke="#FF5722" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="25" cy="-15" r="3" fill="#FF5722"/>
+            <text x="12" y="-30" text-anchor="middle" font-weight="900" font-size="11" fill="#37474F">開關</text>
+          </g>
+          <!-- 燈泡引線（接到主回路）-->
+          <path d="M395 145 L420 145" stroke="#263238" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <!-- 燈泡 -->
+          <g transform="translate(365 145)">
+            <circle cx="0" cy="0" r="30" fill="#FFEB3B" opacity="0.9">
+              <animate attributeName="opacity" values="0.6;1;0.6" dur="1.5s" repeatCount="indefinite"/>
+              <animate attributeName="r" values="28;33;28" dur="1.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="0" cy="0" r="22" fill="#FFF59D"/>
+            <path d="M-8 -10 L8 -10 L6 8 L-6 8 Z" fill="#FFA726" opacity="0.6"/>
+            <rect x="-10" y="20" width="20" height="8" fill="#9E9E9E"/>
+            <rect x="-7" y="28" width="14" height="6" fill="#757575"/>
+            <text x="0" y="80" text-anchor="middle" font-weight="900" font-size="13" fill="#37474F">燈泡</text>
+            <!-- 發亮光線（縮短不要碰到電線）-->
+            <g opacity="0.7">
+              <line x1="-42" y1="0" x2="-32" y2="0" stroke="#FFC107" stroke-width="3" stroke-linecap="round"/>
+              <line x1="0" y1="-42" x2="0" y2="-32" stroke="#FFC107" stroke-width="3" stroke-linecap="round"/>
+              <line x1="-30" y1="-30" x2="-22" y2="-22" stroke="#FFC107" stroke-width="3" stroke-linecap="round"/>
+            </g>
+          </g>
+          <!-- 流動電子沿回路 -->
+          <circle r="5" fill="#FFC107">
+            <animateMotion dur="3s" repeatCount="indefinite" path="M70 75 L70 50 L420 50 L420 270 L70 270 L70 210"/>
+          </circle>
+          <circle r="5" fill="#FFC107">
+            <animateMotion dur="3s" begin="0.5s" repeatCount="indefinite" path="M70 75 L70 50 L420 50 L420 270 L70 270 L70 210"/>
+          </circle>
+          <circle r="5" fill="#FFC107">
+            <animateMotion dur="3s" begin="1s" repeatCount="indefinite" path="M70 75 L70 50 L420 50 L420 270 L70 270 L70 210"/>
+          </circle>
+          <circle r="5" fill="#FFC107">
+            <animateMotion dur="3s" begin="1.5s" repeatCount="indefinite" path="M70 75 L70 50 L420 50 L420 270 L70 270 L70 210"/>
+          </circle>
+          <circle r="5" fill="#FFC107">
+            <animateMotion dur="3s" begin="2s" repeatCount="indefinite" path="M70 75 L70 50 L420 50 L420 270 L70 270 L70 210"/>
+          </circle>
+        </g>
+      </svg>
+    </section>
+
+    <!-- 角色化卡片 -->
+    <div class="role-row">
+      <div class="role-card water">
+        <svg width="140" height="100" viewBox="0 0 140 100">
+          <!-- 水滴角色 -->
+          <path d="M70 10 C 50 40, 35 55, 35 70 C 35 90, 105 90, 105 70 C 105 55, 90 40, 70 10 Z"
+                fill="#4FC3F7" stroke="#0277BD" stroke-width="3">
+            <animateTransform attributeName="transform" type="translate" values="0 0; 0 -5; 0 0" dur="1.2s" repeatCount="indefinite"/>
+          </path>
+          <!-- 眼睛 -->
+          <circle cx="58" cy="60" r="5" fill="#fff"/>
+          <circle cx="82" cy="60" r="5" fill="#fff"/>
+          <circle cx="60" cy="62" r="2.5" fill="#263238"/>
+          <circle cx="84" cy="62" r="2.5" fill="#263238"/>
+          <!-- 笑容 -->
+          <path d="M58 75 Q 70 82 82 75" stroke="#0277BD" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </svg>
+        <h3>水滴在水管裡跑</h3>
+        <p>看得到也摸得到</p>
       </div>
-      <h2>電流就像水流</h2>
-      <p class="one-line">用水管裡的水來想像電線裡的電，一下子就懂了！</p>
+      <div class="role-equals">＝</div>
+      <div class="role-card electric">
+        <svg width="140" height="100" viewBox="0 0 140 100">
+          <!-- 電子角色（閃電 emoji 樣式）-->
+          <path d="M70 8 L40 60 L62 60 L52 92 L98 38 L75 38 L88 8 Z"
+                fill="#FFD54F" stroke="#E65100" stroke-width="3" stroke-linejoin="round">
+            <animateTransform attributeName="transform" type="translate" values="0 0; 0 -5; 0 0" dur="1s" repeatCount="indefinite"/>
+          </path>
+          <!-- 眼睛 -->
+          <circle cx="62" cy="35" r="3.5" fill="#263238"/>
+          <circle cx="78" cy="35" r="3.5" fill="#263238"/>
+          <!-- 笑容 -->
+          <path d="M60 48 Q 68 54 76 48" stroke="#263238" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+        <h3>電子在電線裡跑</h3>
+        <p>看不到但威力強</p>
+      </div>
     </div>
 
-    <div class="intro">
-      <h2>🌊 為什麼要用水來比喻電？</h2>
-      <p>電看不到也摸不到，但「水」我們天天見！把電流想成水管裡的水流，電壓想成水壓，電阻想成窄窄的水管，小朋友和大人都能一起秒懂。</p>
-    </div>
+    <!-- 大場景互動對照 -->
+    <section class="section">
+      <h3>🔍 點點看！水世界和電世界長得超像</h3>
+      <div class="scene-pair">
+        <div class="scene-card water">
+          <h4>💧 水世界</h4>
+          <svg viewBox="0 0 360 320" xmlns="http://www.w3.org/2000/svg">
+            <!-- 水塔 -->
+            <g class="pair-target" data-pair="source" tabindex="0" role="button" aria-label="水塔">
+              <rect x="30" y="30" width="80" height="80" rx="8" fill="#4DD0E1" stroke="#00838F" stroke-width="3"/>
+              <ellipse cx="70" cy="30" rx="40" ry="10" fill="#00ACC1" stroke="#00838F" stroke-width="3"/>
+              <rect x="45" y="110" width="8" height="40" fill="#5D4037"/>
+              <rect x="87" y="110" width="8" height="40" fill="#5D4037"/>
+              <text x="70" y="75" text-anchor="middle" font-size="13" font-weight="900" fill="#004D40">水塔</text>
+            </g>
+            <!-- 水管 -->
+            <g class="pair-target" data-pair="path" tabindex="0" role="button" aria-label="水管">
+              <path d="M70 150 L70 200 L260 200" stroke="#00ACC1" stroke-width="16" fill="none" stroke-linecap="round"/>
+              <text x="165" y="232" text-anchor="middle" font-size="13" font-weight="900" fill="#004D40">水管</text>
+            </g>
+            <!-- 水龍頭 (開關) -->
+            <g class="pair-target" data-pair="switch" tabindex="0" role="button" aria-label="水龍頭">
+              <rect x="250" y="170" width="20" height="40" fill="#90A4AE" stroke="#37474F" stroke-width="2"/>
+              <rect x="240" y="165" width="40" height="12" rx="3" fill="#607D8B" stroke="#37474F" stroke-width="2"/>
+              <text x="260" y="148" text-anchor="middle" font-size="12" font-weight="900" fill="#37474F">水龍頭</text>
+            </g>
+            <!-- 水流終點 (水車) — 移到水龍頭正下方 -->
+            <g class="pair-target" data-pair="load" tabindex="0" role="button" aria-label="水車">
+              <g transform="translate(260 250)">
+                <circle cx="0" cy="0" r="30" fill="#FFE0B2" stroke="#8D6E63" stroke-width="3">
+                  <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite"/>
+                </circle>
+                <g>
+                  <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite"/>
+                  <line x1="0" y1="-25" x2="0" y2="25" stroke="#8D6E63" stroke-width="3"/>
+                  <line x1="-25" y1="0" x2="25" y2="0" stroke="#8D6E63" stroke-width="3"/>
+                  <line x1="-18" y1="-18" x2="18" y2="18" stroke="#8D6E63" stroke-width="3"/>
+                  <line x1="-18" y1="18" x2="18" y2="-18" stroke="#8D6E63" stroke-width="3"/>
+                </g>
+              </g>
+              <!-- 從水龍頭滴下來的水滴 -->
+              <circle r="3.5" fill="#4FC3F7" opacity="0.85">
+                <animate attributeName="cy" values="215;240" dur="0.6s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="1;0.2" dur="0.6s" repeatCount="indefinite"/>
+                <animate attributeName="cx" values="260;260" dur="0.6s" repeatCount="indefinite"/>
+              </circle>
+              <circle r="3.5" fill="#4FC3F7" opacity="0.85">
+                <animate attributeName="cy" values="215;240" dur="0.6s" begin="0.3s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="1;0.2" dur="0.6s" begin="0.3s" repeatCount="indefinite"/>
+                <animate attributeName="cx" values="260;260" dur="0.6s" begin="0.3s" repeatCount="indefinite"/>
+              </circle>
+              <text x="260" y="305" text-anchor="middle" font-size="11" font-weight="900" fill="#37474F">水車轉</text>
+            </g>
+            <!-- 動畫水滴 -->
+            <circle r="5" fill="#fff" opacity="0.85">
+              <animateMotion dur="2s" repeatCount="indefinite" path="M70 30 L70 200 L250 200"/>
+            </circle>
+            <circle r="5" fill="#fff" opacity="0.85">
+              <animateMotion dur="2s" begin="0.6s" repeatCount="indefinite" path="M70 30 L70 200 L250 200"/>
+            </circle>
+            <circle r="5" fill="#fff" opacity="0.85">
+              <animateMotion dur="2s" begin="1.2s" repeatCount="indefinite" path="M70 30 L70 200 L250 200"/>
+            </circle>
+          </svg>
+        </div>
+        <div class="scene-card electric">
+          <h4>⚡ 電世界</h4>
+          <svg viewBox="0 0 360 320" xmlns="http://www.w3.org/2000/svg">
+            <!-- 電池 (電壓來源) -->
+            <g class="pair-target" data-pair="source" tabindex="0" role="button" aria-label="電池">
+              <rect x="30" y="70" width="50" height="100" rx="6" fill="#FFE082" stroke="#F57C00" stroke-width="3"/>
+              <rect x="42" y="62" width="26" height="10" rx="3" fill="#FFD54F" stroke="#F57C00" stroke-width="2"/>
+              <text x="55" y="110" text-anchor="middle" font-size="14" font-weight="900" fill="#E65100">＋</text>
+              <text x="55" y="150" text-anchor="middle" font-size="14" font-weight="900" fill="#E65100">－</text>
+              <!-- 電池 label：直書放在電池右側 -->
+              <text x="100" y="112" text-anchor="middle" font-size="14" font-weight="900" fill="#BF360C">電</text>
+              <text x="100" y="132" text-anchor="middle" font-size="14" font-weight="900" fill="#BF360C">池</text>
+            </g>
+            <!-- 電線 -->
+            <g class="pair-target" data-pair="path" tabindex="0" role="button" aria-label="電線">
+              <path d="M55 70 L55 30 L330 30 L330 250 L55 250 L55 170" stroke="#263238" stroke-width="6" fill="none" stroke-linecap="round"/>
+              <!-- 電線 label：放在頂端電線下方（loop 內側），避免點擊放大時被 viewBox 上緣裁切 -->
+              <text x="105" y="55" text-anchor="middle" font-size="12" font-weight="900" fill="#37474F">電線</text>
+            </g>
+            <!-- 開關 -->
+            <g class="pair-target" data-pair="switch" tabindex="0" role="button" aria-label="開關">
+              <g transform="translate(195 30)">
+                <circle cx="-12" cy="0" r="5" fill="#37474F"/>
+                <line x1="-12" y1="0" x2="12" y2="-14" stroke="#FF5722" stroke-width="5" stroke-linecap="round"/>
+                <circle cx="12" cy="-14" r="3" fill="#FF5722"/>
+                <!-- 開關 label：放在開關下方（電線下方） -->
+                <text x="0" y="28" text-anchor="middle" font-size="12" font-weight="900" fill="#37474F">開關</text>
+              </g>
+            </g>
+            <!-- 燈泡引線（接到主回路）-->
+            <path d="M315 140 L330 140" stroke="#263238" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <!-- 燈泡 (負載) -->
+            <g class="pair-target" data-pair="load" tabindex="0" role="button" aria-label="燈泡">
+              <g transform="translate(285 140)">
+                <circle cx="0" cy="0" r="28" fill="#FFEB3B">
+                  <animate attributeName="opacity" values="0.7;1;0.7" dur="1.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="0" cy="0" r="20" fill="#FFF59D"/>
+                <rect x="-9" y="20" width="18" height="6" fill="#9E9E9E"/>
+                <rect x="-6" y="26" width="12" height="4" fill="#757575"/>
+                <!-- 縮短的光線：只保留左和上，避開右側的主電線 -->
+                <g opacity="0.7">
+                  <line x1="-48" y1="0" x2="-38" y2="0" stroke="#FFC107" stroke-width="3" stroke-linecap="round"/>
+                  <line x1="0" y1="-48" x2="0" y2="-38" stroke="#FFC107" stroke-width="3" stroke-linecap="round"/>
+                  <line x1="-34" y1="-34" x2="-26" y2="-26" stroke="#FFC107" stroke-width="3" stroke-linecap="round"/>
+                </g>
+                <text x="0" y="80" text-anchor="middle" font-size="11" font-weight="900" fill="#37474F">燈會亮</text>
+              </g>
+            </g>
+            <!-- 流動電子沿路 -->
+            <circle r="5" fill="#FFC107">
+              <animateMotion dur="3s" repeatCount="indefinite" path="M55 70 L55 30 L330 30 L330 250 L55 250 L55 170"/>
+            </circle>
+            <circle r="5" fill="#FFC107">
+              <animateMotion dur="3s" begin="0.6s" repeatCount="indefinite" path="M55 70 L55 30 L330 30 L330 250 L55 250 L55 170"/>
+            </circle>
+            <circle r="5" fill="#FFC107">
+              <animateMotion dur="3s" begin="1.2s" repeatCount="indefinite" path="M55 70 L55 30 L330 30 L330 250 L55 250 L55 170"/>
+            </circle>
+            <circle r="5" fill="#FFC107">
+              <animateMotion dur="3s" begin="1.8s" repeatCount="indefinite" path="M55 70 L55 30 L330 30 L330 250 L55 250 L55 170"/>
+            </circle>
+            <circle r="5" fill="#FFC107">
+              <animateMotion dur="3s" begin="2.4s" repeatCount="indefinite" path="M55 70 L55 30 L330 30 L330 250 L55 250 L55 170"/>
+            </circle>
+          </svg>
+        </div>
+        <div class="pair-readout empty" id="pairReadout">👆 點兩邊任一個元件試試看！會幫你找到另一邊的好朋友</div>
+      </div>
+      <p class="hint">💡 點點看：水塔的好朋友是電池，水管＝電線，水龍頭＝開關，水車＝燈泡！</p>
+    </section>
 
-    <div class="section">
-      <h3>🔍 水流 vs 電流：一比就懂</h3>
-      <div class="comparison-grid">
-        <div class="compare-card water-side">
-          <h4 style="color: #006064;">💧 水流世界</h4>
-          <div class="visual-row">🚰 → 🌊 → 🏠</div>
-          <p><strong>水塔</strong>＝存水、給壓力</p>
-          <p><strong>水管</strong>＝讓水流動的路</p>
-          <p><strong>水龍頭</strong>＝控制開關</p>
-          <p><strong>水流</strong>＝水在動</p>
+    <!-- 動畫實驗室 -->
+    <section class="section">
+      <h3>🎬 動手玩：水流與電流實驗室</h3>
+      <div class="lab">
+        <!-- 水的線 -->
+        <div class="lab-line" aria-label="水管動畫">
+          <span class="lab-label">💧 水管</span>
+          <div class="lab-pipe" id="labPipe"></div>
+          <div class="lab-endpoint">
+            <!-- 水桶會慢慢裝滿 -->
+            <svg class="bucket" viewBox="0 0 60 60">
+              <path d="M8 12 L52 12 L46 56 L14 56 Z" fill="none" stroke="#37474F" stroke-width="3"/>
+              <ellipse cx="30" cy="12" rx="22" ry="4" fill="#fff" stroke="#37474F" stroke-width="3"/>
+              <clipPath id="bucketClip">
+                <path d="M9 13 L51 13 L45 55 L15 55 Z"/>
+              </clipPath>
+              <g clip-path="url(#bucketClip)">
+                <rect id="bucketWater" x="9" y="55" width="42" height="0" fill="#4FC3F7">
+                </rect>
+              </g>
+            </svg>
+          </div>
         </div>
-        <div class="compare-card electric-side">
-          <h4 style="color: #E65100;">⚡ 電流世界</h4>
-          <div class="visual-row">🔋 → ⚡ → 💡</div>
-          <p><strong>電池</strong>＝存電、給電壓</p>
-          <p><strong>電線</strong>＝讓電流動的路</p>
-          <p><strong>開關</strong>＝控制開關</p>
-          <p><strong>電流</strong>＝電在動</p>
+        <!-- 電的線 -->
+        <div class="lab-line" aria-label="電線動畫">
+          <span class="lab-label electric">⚡ 電線</span>
+          <div class="lab-wire" id="labWire"></div>
+          <div class="lab-endpoint">
+            <!-- 燈泡會漸漸亮 -->
+            <svg class="bulb" viewBox="0 0 60 60">
+              <circle id="bulbGlow" cx="30" cy="26" r="26" fill="#FFEB3B" opacity="0"/>
+              <circle id="bulbBody" cx="30" cy="26" r="18" fill="#ECEFF1" stroke="#37474F" stroke-width="3"/>
+              <rect x="22" y="44" width="16" height="6" fill="#9E9E9E" stroke="#37474F" stroke-width="2"/>
+              <rect x="24" y="50" width="12" height="4" fill="#616161"/>
+            </svg>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="section">
-      <h3>🎬 看！水在流、電也在流</h3>
-      <div class="flow-demo">
-        <div class="flow-label">💧 水在管子裡流動</div>
-        <div class="pipe-container">
-          <div class="water-flow"></div>
+        <div class="lab-controls">
+          <label for="flowSlider">🎚️ 流速</label>
+          <input type="range" id="flowSlider" min="0" max="100" value="60">
+          <span class="speed-readout" id="speedReadout">中速</span>
         </div>
-        <p style="text-align: center; color: #555;">水從壓力大的地方流到壓力小的地方</p>
+        <div class="lab-callout" id="labCallout">💡 拉左邊：燈會暗、水桶裝得慢　／　拉右邊：燈會亮、水桶很快裝滿</div>
       </div>
-      <div class="flow-demo">
-        <div class="flow-label">⚡ 電在電線裡流動</div>
-        <div class="wire-container">
-          <div class="electron-flow"></div>
+    </section>
+
+    <!-- 三個好朋友 -->
+    <section class="section">
+      <h3>📚 電的三個好朋友</h3>
+      <div class="friends-grid">
+        <!-- 電壓 -->
+        <div class="friend-card">
+          <svg width="180" height="160" viewBox="0 0 180 160">
+            <!-- 高水塔 -->
+            <rect x="20" y="20" width="40" height="50" rx="5" fill="#4DD0E1" stroke="#00838F" stroke-width="3"/>
+            <ellipse cx="40" cy="20" rx="20" ry="6" fill="#00ACC1" stroke="#00838F" stroke-width="3"/>
+            <rect x="28" y="70" width="6" height="50" fill="#5D4037"/>
+            <rect x="46" y="70" width="6" height="50" fill="#5D4037"/>
+            <path d="M40 120 L40 140 L80 140" stroke="#00ACC1" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <!-- 強水柱 -->
+            <path d="M80 140 Q 110 105 160 110" stroke="#4FC3F7" stroke-width="5" fill="none" opacity="0.8">
+              <animate attributeName="opacity" values="0.6;1;0.6" dur="1s" repeatCount="indefinite"/>
+            </path>
+            <circle cx="100" cy="125" r="4" fill="#4FC3F7"><animate attributeName="cx" values="80;160" dur="0.8s" repeatCount="indefinite"/><animate attributeName="cy" values="140;110" dur="0.8s" repeatCount="indefinite"/></circle>
+            <circle cx="110" cy="120" r="4" fill="#4FC3F7"><animate attributeName="cx" values="80;160" dur="0.8s" begin="0.2s" repeatCount="indefinite"/><animate attributeName="cy" values="140;110" dur="0.8s" begin="0.2s" repeatCount="indefinite"/></circle>
+            <text x="40" y="155" text-anchor="middle" font-size="11" font-weight="900" fill="#004D40">高水塔＝水柱噴遠</text>
+          </svg>
+          <h4>🔋 電壓 ＝ 水壓</h4>
+          <p>水塔越高，水噴越遠！<br>電池越強，電推得越有力。</p>
         </div>
-        <p style="text-align: center; color: #555;">電從電壓高的地方流到電壓低的地方</p>
+
+        <!-- 電流 -->
+        <div class="friend-card">
+          <svg width="180" height="160" viewBox="0 0 180 160">
+            <!-- 水管 -->
+            <rect x="20" y="55" width="140" height="50" rx="25" fill="#B2EBF2" stroke="#00ACC1" stroke-width="3"/>
+            <!-- 多顆水滴 -->
+            <circle r="6" fill="#0277BD">
+              <animate attributeName="cx" values="20;160" dur="1.5s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="80;80" dur="1.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="6" fill="#0277BD">
+              <animate attributeName="cx" values="20;160" dur="1.5s" begin="0.3s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="80;80" dur="1.5s" begin="0.3s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="6" fill="#0277BD">
+              <animate attributeName="cx" values="20;160" dur="1.5s" begin="0.6s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="80;80" dur="1.5s" begin="0.6s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="6" fill="#0277BD">
+              <animate attributeName="cx" values="20;160" dur="1.5s" begin="0.9s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="80;80" dur="1.5s" begin="0.9s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="6" fill="#0277BD">
+              <animate attributeName="cx" values="20;160" dur="1.5s" begin="1.2s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="80;80" dur="1.5s" begin="1.2s" repeatCount="indefinite"/>
+            </circle>
+            <text x="90" y="135" text-anchor="middle" font-size="11" font-weight="900" fill="#004D40">越多水滴＝水流越大</text>
+          </svg>
+          <h4>⚡ 電流 ＝ 水流</h4>
+          <p>多少水在流＝多少電在跑。<br>電流越大，東西亮得越亮。</p>
+        </div>
+
+        <!-- 電阻 -->
+        <div class="friend-card">
+          <svg width="180" height="160" viewBox="0 0 180 160">
+            <!-- 上半粗管 -->
+            <rect x="10" y="25" width="160" height="30" rx="15" fill="#B2EBF2" stroke="#00ACC1" stroke-width="3"/>
+            <circle cx="40" cy="40" r="5" fill="#0277BD"><animate attributeName="cx" values="10;170" dur="1s" repeatCount="indefinite"/></circle>
+            <circle cx="80" cy="40" r="5" fill="#0277BD"><animate attributeName="cx" values="10;170" dur="1s" begin="0.3s" repeatCount="indefinite"/></circle>
+            <circle cx="120" cy="40" r="5" fill="#0277BD"><animate attributeName="cx" values="10;170" dur="1s" begin="0.6s" repeatCount="indefinite"/></circle>
+            <text x="90" y="20" text-anchor="middle" font-size="11" font-weight="900" fill="#004D40">粗水管＝流得快</text>
+            <!-- 下半窄管 -->
+            <rect x="10" y="100" width="160" height="12" rx="6" fill="#B2EBF2" stroke="#FF5722" stroke-width="3"/>
+            <circle cx="40" cy="106" r="3.5" fill="#0277BD"><animate attributeName="cx" values="10;170" dur="3s" repeatCount="indefinite"/></circle>
+            <circle cx="80" cy="106" r="3.5" fill="#0277BD"><animate attributeName="cx" values="10;170" dur="3s" begin="1s" repeatCount="indefinite"/></circle>
+            <text x="90" y="130" text-anchor="middle" font-size="11" font-weight="900" fill="#BF360C">窄水管＝塞住流得慢</text>
+          </svg>
+          <h4>🚧 電阻 ＝ 水管變窄</h4>
+          <p>水管越窄，水流越慢。<br>電阻越大，電流就越小。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 小測驗 -->
+    <section class="section">
+      <h3>🧠 來考一下：你抓到訣竅了嗎？</h3>
+
+      <div class="quiz">
+        <h4>🤔 第 1 題：水管變細了，水流會怎樣？</h4>
+        <div class="quiz-options" id="q1options">
+          <div class="quiz-option" data-correct="false">
+            <span class="emoji">💨</span><span>流得更快</span>
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="emoji">🐌</span><span>流得更慢</span>
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="emoji">🛑</span><span>完全停止</span>
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="emoji">😐</span><span>一樣多</span>
+          </div>
+        </div>
+        <div class="quiz-result" id="q1result"></div>
       </div>
 
-      <h4 style="color: var(--primary); margin: 2rem 0 1rem; text-align: center;">🎮 動手玩：調節流量</h4>
-      <div class="control-panel">
-        <button class="control-btn" onclick="changeFlow('slow')">🐌 慢速</button>
-        <button class="control-btn" onclick="changeFlow('normal')">🌊 正常</button>
-        <button class="control-btn" onclick="changeFlow('fast')">💨 快速</button>
-        <button class="control-btn" onclick="changeFlow('stop')">🛑 停止</button>
-      </div>
-      <div class="demo-display" id="flowDisplay">
-        <h4>🌊 目前：正常流動</h4>
-        <p>就像轉水龍頭一樣，我們也可以控制電流大小！</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <h3>📚 三個好朋友：電壓、電流、電阻</h3>
-      <div class="concept-cards">
-        <div class="concept-card">
-          <span class="concept-icon">🔋</span>
-          <h3>電壓 ＝ 水壓</h3>
-          <p>電池像水塔，提供「電壓」推動電流。電壓越高，推得越有力！</p>
+      <div class="quiz">
+        <h4>🤔 第 2 題：電池在電路裡，最像水世界的哪一個？</h4>
+        <div class="quiz-options" id="q2options">
+          <div class="quiz-option" data-correct="false">
+            <span class="emoji">🚰</span><span>水龍頭</span>
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="emoji">🏗️</span><span>水塔</span>
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="emoji">🪣</span><span>水桶</span>
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="emoji">🌊</span><span>水管</span>
+          </div>
         </div>
-        <div class="concept-card">
-          <span class="concept-icon">⚡</span>
-          <h3>電流 ＝ 水流</h3>
-          <p>電流就是電在電線裡流動，像水在水管裡流。電流越大，流過的電越多！</p>
-        </div>
-        <div class="concept-card">
-          <span class="concept-icon">🚧</span>
-          <h3>電阻 ＝ 水管變窄</h3>
-          <p>電阻會擋住電流，像窄水管讓水流變慢。電阻越大，電流越小！</p>
-        </div>
+        <div class="quiz-result" id="q2result"></div>
       </div>
-    </div>
-
-    <div class="section quiz-section">
-      <h3>🧠 小測驗：你學會了嗎？</h3>
-      <div class="quiz-question">
-        <h4>🤔 水管變細的時候，水流會怎樣？</h4>
-        <div class="quiz-options">
-          <div class="quiz-option" onclick="answerQuiz(this, false)">流得更快</div>
-          <div class="quiz-option" onclick="answerQuiz(this, true)">流得更慢</div>
-          <div class="quiz-option" onclick="answerQuiz(this, false)">完全停止</div>
-          <div class="quiz-option" onclick="answerQuiz(this, false)">沒有改變</div>
-        </div>
-        <div id="quiz1Result" style="margin-top: 1rem; font-weight: bold;"></div>
-      </div>
-      <div class="quiz-question">
-        <h4>🤔 電池在電路裡像什麼？</h4>
-        <div class="quiz-options">
-          <div class="quiz-option" onclick="answerQuiz2(this, false)">水龍頭</div>
-          <div class="quiz-option" onclick="answerQuiz2(this, true)">水塔</div>
-          <div class="quiz-option" onclick="answerQuiz2(this, false)">水管</div>
-          <div class="quiz-option" onclick="answerQuiz2(this, false)">蓮蓬頭</div>
-        </div>
-        <div id="quiz2Result" style="margin-top: 1rem; font-weight: bold;"></div>
-      </div>
-    </div>
+    </section>
 
     <div class="success-box">
-      <h3>🎉 太棒了！你已經會用「水流」來想「電流」了</h3>
-      <p>記住：電壓像水壓、電流像水流、電阻像窄水管。下一課我們來認識電池的正極和負極！</p>
+      <h3>🎉 你已經抓到「電 ≒ 水」的訣竅了！</h3>
+      <p>電壓像水壓、電流像水流、電阻像窄水管。下一課我們去看電池怎麼「藏電」！</p>
     </div>
 
     <div class="navigation">
@@ -497,41 +932,151 @@
   </div>
 
   <script>
-    function changeFlow(speed) {
-      const display = document.getElementById('flowDisplay');
-      const buttons = document.querySelectorAll('.control-btn');
-      const waterFlow = document.querySelector('.water-flow');
-      const electronFlow = document.querySelector('.electron-flow');
-      buttons.forEach(btn => btn.classList.remove('active'));
-      if (event && event.target) event.target.classList.add('active');
-      let duration = '2.5s', state = 'running';
-      const msgs = {
-        slow: ['🐌 目前：慢速流動', '電流變小，像細細的水流。'],
-        normal: ['🌊 目前：正常流動', '就像轉水龍頭一樣，我們也可以控制電流大小！'],
-        fast: ['💨 目前：快速流動', '大電流！可以驅動更亮的燈，但要小心安全喔！'],
-        stop: ['🛑 目前：停止', '沒有電流，就像關掉水龍頭，燈就不會亮。']
+    /* ===== 大場景互動對照 ===== */
+    const PAIR_LABEL = {
+      source: { water: "水塔", electric: "電池", say: "水塔提供水壓，電池提供電壓 — 都是「動力來源」！" },
+      path:   { water: "水管", electric: "電線", say: "水管讓水通過，電線讓電通過 — 都是「跑道」！" },
+      switch: { water: "水龍頭", electric: "開關", say: "水龍頭轉一下水就停，開關按一下電就停 — 都是「控制器」！" },
+      load:   { water: "水車", electric: "燈泡", say: "水推水車轉，電讓燈泡亮 — 都是「做事的地方」！" }
+    };
+    const readout = document.getElementById("pairReadout");
+    document.querySelectorAll(".scene-card .pair-target").forEach(el => {
+      const fire = () => {
+        const pair = el.dataset.pair;
+        document.querySelectorAll(".pair-target.highlight").forEach(t => t.classList.remove("highlight"));
+        document.querySelectorAll('[data-pair="' + pair + '"]').forEach(t => t.classList.add("highlight"));
+        const info = PAIR_LABEL[pair];
+        readout.classList.remove("empty");
+        readout.innerHTML =
+          '💧 <strong>' + info.water + '</strong> ＝ ⚡ <strong>' + info.electric + '</strong><br>' +
+          '<span style="font-weight:700;color:#33691E;">' + info.say + '</span>';
       };
-      if (speed === 'slow') duration = '5s';
-      else if (speed === 'fast') duration = '1s';
-      else if (speed === 'stop') state = 'paused';
-      display.innerHTML = '<h4>' + msgs[speed][0] + '</h4><p>' + msgs[speed][1] + '</p>';
-      if (waterFlow) { waterFlow.style.animationDuration = duration; waterFlow.style.animationPlayState = state; }
-      if (electronFlow) { electronFlow.style.animationDuration = speed === 'stop' ? duration : '1.5s'; electronFlow.style.animationPlayState = state; }
-      if (speed === 'stop') { waterFlow.style.opacity = '0.3'; electronFlow.style.opacity = '0.3'; }
-      else { waterFlow.style.opacity = '1'; electronFlow.style.opacity = '1'; }
+      el.addEventListener("click", fire);
+      el.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fire(); }
+      });
+    });
+
+    /* ===== 動畫實驗室 ===== */
+    const labPipe = document.getElementById("labPipe");
+    const labWire = document.getElementById("labWire");
+    const slider = document.getElementById("flowSlider");
+    const speedReadout = document.getElementById("speedReadout");
+    const bulbGlow = document.getElementById("bulbGlow");
+    const bucketWater = document.getElementById("bucketWater");
+    const callout = document.getElementById("labCallout");
+
+    const DROP_COUNT = 6;
+    const ELECTRON_COUNT = 8;
+
+    function buildParticles() {
+      labPipe.innerHTML = "";
+      labWire.innerHTML = "";
+      for (let i = 0; i < DROP_COUNT; i++) {
+        const d = document.createElement("div");
+        d.className = "particle drop";
+        d.style.animationDelay = (-i * (2.5 / DROP_COUNT)) + "s";
+        labPipe.appendChild(d);
+      }
+      for (let i = 0; i < ELECTRON_COUNT; i++) {
+        const e = document.createElement("div");
+        e.className = "particle electron";
+        e.style.animationDelay = (-i * (2.0 / ELECTRON_COUNT)) + "s";
+        labWire.appendChild(e);
+      }
     }
-    function answerQuiz(el, ok) {
-      el.parentNode.querySelectorAll('.quiz-option').forEach(o => { o.style.pointerEvents = 'none'; if (o === el) o.classList.add(ok ? 'correct' : 'wrong'); });
-      const res = document.getElementById('quiz1Result');
-      res.innerHTML = ok ? '✅ 答對了！水管變細＝阻力大，水流變慢。電阻大，電流也會變小！' : '❌ 再想想～用細吸管喝飲料是不是比較難吸？';
-      res.style.color = ok ? '#28a745' : '#dc3545';
+    buildParticles();
+
+    let bucketLevel = 0; /* 0~42 (svg units) */
+
+    function applySpeed(v) {
+      /* v: 0~100 */
+      const stopped = v < 5;
+      let dropDur, electronDur, label;
+      if (stopped) {
+        dropDur = "999s"; electronDur = "999s"; label = "停住了";
+      } else {
+        /* duration 越短=越快。線性 6s ~ 0.5s */
+        const d = 6 - (v / 100) * 5.5;
+        dropDur = d.toFixed(2) + "s";
+        electronDur = (d * 0.7).toFixed(2) + "s";
+        if (v < 25) label = "慢慢流";
+        else if (v < 55) label = "中速";
+        else if (v < 85) label = "快速";
+        else label = "超快！";
+      }
+      labPipe.querySelectorAll(".particle").forEach(p => {
+        p.style.animationDuration = dropDur;
+        p.style.animationPlayState = stopped ? "paused" : "running";
+        p.style.opacity = stopped ? "0.3" : "1";
+      });
+      labWire.querySelectorAll(".particle").forEach(p => {
+        p.style.animationDuration = electronDur;
+        p.style.animationPlayState = stopped ? "paused" : "running";
+        p.style.opacity = stopped ? "0.3" : "1";
+      });
+      /* 燈泡亮度 */
+      bulbGlow.setAttribute("opacity", stopped ? "0" : (0.2 + (v / 100) * 0.8).toFixed(2));
+      speedReadout.textContent = label;
+
+      /* 文案隨速度切換 */
+      if (stopped) {
+        callout.textContent = "🛑 沒水沒電：水桶不會裝、燈泡不會亮";
+      } else if (v < 35) {
+        callout.textContent = "🐌 慢慢來：燈微亮、水桶慢慢累積";
+      } else if (v < 75) {
+        callout.textContent = "🌊 剛剛好：燈亮起來、水桶穩穩裝";
+      } else {
+        callout.textContent = "💨 全力衝：燈很亮、水桶很快滿！";
+      }
     }
-    function answerQuiz2(el, ok) {
-      el.parentNode.querySelectorAll('.quiz-option').forEach(o => { o.style.pointerEvents = 'none'; if (o === el) o.classList.add(ok ? 'correct' : 'wrong'); });
-      const res = document.getElementById('quiz2Result');
-      res.innerHTML = ok ? '✅ 答對了！電池像水塔，提供壓力（電壓）推動電流！' : '❌ 再想想～電池是「提供電」的地方，像什麼？';
-      res.style.color = ok ? '#28a745' : '#dc3545';
+
+    /* 水桶慢慢被裝滿的動畫（用 JS 跑迴圈） */
+    let lastTime = performance.now();
+    function bucketTick(now) {
+      const dt = (now - lastTime) / 1000;
+      lastTime = now;
+      const v = parseInt(slider.value, 10);
+      if (v >= 5) {
+        bucketLevel += (v / 100) * 8 * dt;       /* 速度越快裝得越快 */
+        if (bucketLevel > 42) bucketLevel = 0;   /* 滿了倒掉重來 */
+      }
+      bucketWater.setAttribute("y", (55 - bucketLevel).toFixed(1));
+      bucketWater.setAttribute("height", bucketLevel.toFixed(1));
+      requestAnimationFrame(bucketTick);
     }
+    requestAnimationFrame(bucketTick);
+
+    slider.addEventListener("input", () => applySpeed(parseInt(slider.value, 10)));
+    applySpeed(parseInt(slider.value, 10));
+
+    /* ===== 測驗 ===== */
+    function bindQuiz(optsId, resId, okMsg, hintMsg) {
+      const opts = document.querySelectorAll("#" + optsId + " .quiz-option");
+      const res = document.getElementById(resId);
+      opts.forEach(o => {
+        o.addEventListener("click", () => {
+          const ok = o.dataset.correct === "true";
+          opts.forEach(x => x.style.pointerEvents = "none");
+          o.classList.add(ok ? "correct" : "wrong");
+          res.textContent = ok ? "✅ " + okMsg : "❌ " + hintMsg;
+          res.style.color = ok ? "#1B5E20" : "#B71C1C";
+          if (!ok) {
+            /* 答錯允許再選 */
+            setTimeout(() => {
+              opts.forEach(x => { x.style.pointerEvents = "auto"; });
+              o.classList.remove("wrong");
+            }, 1500);
+          }
+        });
+      });
+    }
+    bindQuiz("q1options", "q1result",
+      "對了！水管變窄＝塞住，所以流得更慢。電阻變大也是一樣的道理。",
+      "再想想：用細吸管喝飲料，是不是比較難吸？");
+    bindQuiz("q2options", "q2result",
+      "答對！電池像水塔，幫整條電路「打氣」（提供電壓）。",
+      "提示：誰是「儲存能量、給壓力」的那一個？");
   </script>
 </body>
 </html>

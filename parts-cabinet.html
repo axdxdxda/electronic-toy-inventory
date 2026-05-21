@@ -453,14 +453,47 @@
     .part-list li {
       font-size: 0.95rem;
       font-weight: 700;
-      padding: 8px 0;
+      padding: 8px 6px;
       border-bottom: 1px solid #eee;
       display: flex;
-      justify-content: space-between;
-      gap: 8px;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .part-list li:hover,
+    .part-list li:focus {
+      background: #e0f2f1;
+      outline: none;
+    }
+    .part-list li:focus-visible {
+      box-shadow: 0 0 0 3px rgba(0, 150, 136, 0.4);
     }
     .part-list li:last-child { border-bottom: none; }
-    .part-name { flex: 1; }
+    .part-name { flex: 1; min-width: 0; }
+    .part-thumb {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      background: #fff;
+      border: 1px solid #cfd8dc;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .part-thumb-ph {
+      width: 52px;
+      height: 52px;
+      background: #eceff1;
+      border: 1px dashed #b0bec5;
+      border-radius: 8px;
+      color: #90a4ae;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
     .part-qty {
       flex-shrink: 0;
       background: linear-gradient(135deg, var(--candy-pink), var(--candy-purple));
@@ -919,6 +952,39 @@
         : [];
     }
 
+    /** 依零件名稱於 BUZZWIRE_PARTS_DATA 查詢完整資料（含照片路徑） */
+    function findPartByName(name) {
+      var parts = getBuzzwireParts();
+      for (var i = 0; i < parts.length; i++) {
+        if (parts[i].name === name) return parts[i];
+      }
+      return null;
+    }
+
+    /** 在既有 #lightbox 開啟單一零件照片 */
+    function openPartLightbox(part, fallbackLoc, fallbackSlot) {
+      if (!part || !part.image) return;
+      var img = document.getElementById("lbImg");
+      var cap = document.getElementById("lbCap");
+      var box = document.getElementById("lightbox");
+      var closeBtn = document.getElementById("lbClose");
+      if (!img || !cap || !box) return;
+      img.src = part.image;
+      img.alt = part.name || "";
+      cap.textContent =
+        (part.name || "") +
+        " · 數量 " +
+        (part.qty != null ? part.qty : "—") +
+        " · 櫃位 " +
+        (part.location || fallbackLoc || "—") +
+        " · 細部 " +
+        (part.slot != null && part.slot !== "" && part.slot !== "無"
+          ? part.slot
+          : fallbackSlot != null ? fallbackSlot : "—");
+      box.classList.add("open");
+      if (closeBtn) closeBtn.focus();
+    }
+
     function parseCabinetLocation(loc) {
       var m = String(loc || "")
         .trim()
@@ -1061,7 +1127,37 @@
           const ul = document.createElement("ul");
           ul.className = "part-list";
           for (const p of parts) {
+            const meta = findPartByName(p.name);
             const li = document.createElement("li");
+            li.tabIndex = 0;
+            li.setAttribute("role", "button");
+            li.setAttribute("aria-label", "查看「" + p.name + "」的照片");
+            li.title = "點選看實照";
+
+            if (meta && meta.image) {
+              const thumb = document.createElement("img");
+              thumb.className = "part-thumb";
+              thumb.src = meta.image;
+              thumb.alt = p.name;
+              thumb.loading = "lazy";
+              thumb.onerror = function () {
+                const ph = document.createElement("span");
+                ph.className = "part-thumb-ph";
+                ph.textContent = "📷";
+                ph.setAttribute("aria-hidden", "true");
+                li.replaceChild(ph, thumb);
+                li.title = "尚無照片";
+              };
+              li.appendChild(thumb);
+            } else {
+              const ph = document.createElement("span");
+              ph.className = "part-thumb-ph";
+              ph.textContent = "📷";
+              ph.setAttribute("aria-hidden", "true");
+              li.appendChild(ph);
+              li.title = "尚無照片";
+            }
+
             const nm = document.createElement("span");
             nm.className = "part-name";
             nm.textContent = p.name;
@@ -1072,6 +1168,19 @@
               qty.textContent = "×" + p.qty;
               li.appendChild(qty);
             }
+
+            const openHandler = function () {
+              if (meta && meta.image) {
+                openPartLightbox(meta, layer + cab, sn);
+              }
+            };
+            li.addEventListener("click", openHandler);
+            li.addEventListener("keydown", function (e) {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                openHandler();
+              }
+            });
             ul.appendChild(li);
           }
           block.appendChild(ul);
