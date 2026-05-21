@@ -1,573 +1,883 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>家裡的電路 - 基礎電路教學</title>
+  <title>家裡的電路 - 電流急急棒互動教學</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #2196F3;
-      --primary-dark: #1976D2;
-      --secondary: #FFC107;
-      --background: #f8f9fa;
-      --text: #333;
-      --border: #e9ecef;
-      --card-bg: #fff;
-      --shadow: 0 2px 10px rgba(0,0,0,0.1);
-      --home: #4CAF50;
-      --danger: #F44336;
+      --primary: #1677c9;
+      --primary-dark: #0f5f9f;
+      --safe: #2f9e44;
+      --safe-dark: #1b6f2a;
+      --danger: #e03131;
+      --danger-dark: #b42323;
+      --warning: #f08c00;
+      --energy: #ffd43b;
+      --wire: #4a3428;
+      --ink: #263238;
+      --muted: #607d8b;
+      --bg: #f5f8fb;
+      --card: #ffffff;
+      --line: #dfe7ef;
+      --shadow: 0 12px 30px rgba(38, 50, 56, 0.12);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
-      font-family: 'Nunito', 'Microsoft JhengHei', sans-serif;
-      background: var(--background);
-      color: var(--text);
-      line-height: 1.7;
+      margin: 0;
+      font-family: "Nunito", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(22, 119, 201, 0.16), transparent 28rem),
+        radial-gradient(circle at 88% 0%, rgba(47, 158, 68, 0.16), transparent 30rem),
+        var(--bg);
+      color: var(--ink);
       font-size: 18px;
+      line-height: 1.65;
     }
 
     .header {
-      background: linear-gradient(135deg, var(--primary), #1976D2);
-      color: white;
-      padding: 1rem 0;
+      background: linear-gradient(135deg, var(--primary), #0f5f9f);
+      color: #fff;
       box-shadow: var(--shadow);
     }
 
     .nav {
-      max-width: 1200px;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 0 1.5rem;
+      padding: 0.9rem 1.25rem;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
     }
 
-    .nav h1 { font-size: 1.5rem; font-weight: 800; }
+    .nav h1 { margin: 0; font-size: clamp(1.05rem, 2.5vw, 1.45rem); font-weight: 900; }
+
+    .nav a, .nav-btn, button { min-height: 44px; font: inherit; }
 
     .nav a {
-      color: white;
+      color: #fff;
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 50px;
-      font-weight: 700;
-      transition: all 0.3s;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-weight: 800;
+      white-space: nowrap;
     }
-
-    .nav a:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+    .nav a:hover, .nav a:focus-visible {
+      background: rgba(255, 255, 255, 0.18);
+      outline: none;
+    }
 
     .container {
-      max-width: 1200px;
+      width: min(1180px, calc(100% - 2rem));
       margin: 0 auto;
-      padding: 0 1.5rem 2rem;
+      padding: 1.35rem 0 2.5rem;
     }
 
-    .intro {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 20px;
+    .hero, .section, .success-box {
+      background: var(--card);
+      border: 1px solid var(--line);
       box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-      text-align: center;
     }
 
-    .intro h2 {
-      color: var(--primary);
-      margin-bottom: 1rem;
-      font-size: 1.6rem;
+    .hero {
+      border-radius: 24px;
+      padding: clamp(1.2rem, 3vw, 2rem);
+      text-align: center;
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 45%, #e8f5e9 100%);
+      overflow: hidden;
+    }
+
+    .hero h2 {
+      margin: 0 0 0.45rem;
+      color: var(--primary-dark);
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      line-height: 1.15;
+      font-weight: 900;
+    }
+
+    .lead {
+      max-width: 780px;
+      margin: 0 auto 1rem;
+      color: #4d5b62;
+      font-size: clamp(1rem, 2.5vw, 1.18rem);
       font-weight: 800;
     }
 
-    .house-diagram {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-      border: 3px solid var(--border);
+    .hero-scene, .lab-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      overflow: visible;
+    }
+
+    .svg-label {
+      font-family: "Nunito", "Microsoft JhengHei", sans-serif;
+      font-weight: 900;
+      fill: var(--ink);
+      paint-order: stroke;
+      stroke: rgba(255, 255, 255, 0.94);
+      stroke-width: 5px;
+      stroke-linejoin: round;
+    }
+
+    .wire {
+      stroke: var(--wire);
+      stroke-width: 7;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .electron {
+      fill: #ffd43b;
+      stroke: #f08c00;
+      stroke-width: 2;
+      filter: drop-shadow(0 0 5px rgba(240, 140, 0, 0.55));
+    }
+
+    .section {
       position: relative;
       overflow: hidden;
+      margin-top: 1.4rem;
+      padding: clamp(1.15rem, 3vw, 1.7rem);
+      border-radius: 20px;
     }
-    .house-diagram::before {
-      content: '';
+
+    .section::before {
+      content: "";
       position: absolute;
-      top: 0; left: 0; right: 0;
+      inset: 0 0 auto;
       height: 5px;
-      background: linear-gradient(90deg, var(--home), var(--primary));
-      border-radius: 20px 20px 0 0;
+      background: linear-gradient(90deg, var(--primary), var(--safe), var(--warning));
     }
 
-    .house-container {
-      background: linear-gradient(135deg, #E3F2FD, #C8E6C9);
-      border: 4px solid var(--home);
-      border-radius: 24px;
-      padding: 2rem;
-      margin: 2rem 0;
-      position: relative;
-      min-height: 400px;
+    .section h3 {
+      margin: 0 0 1rem;
+      color: var(--primary-dark);
+      text-align: center;
+      font-size: clamp(1.25rem, 3.2vw, 1.65rem);
+      line-height: 1.3;
+      font-weight: 900;
     }
 
-    .room {
-      position: absolute;
-      background: rgba(255,255,255,0.9);
-      border: 3px solid var(--border);
-      border-radius: 16px;
+    .hint {
+      margin: 0.8rem auto 0;
+      max-width: 760px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    /* 互動房屋平面圖 ---------------------------------------------------- */
+    .house-lab {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1.2rem;
+      margin: 1rem 0;
+      align-items: stretch;
+    }
+    .house-svg-wrap {
+      background: linear-gradient(135deg, #e3f2fd, #f3f8fe);
+      border: 3px solid var(--primary);
+      border-radius: 18px;
       padding: 1rem;
       text-align: center;
-      cursor: pointer;
-      transition: all 0.3s;
+    }
+    .house-svg-wrap svg { width: 100%; height: auto; max-width: 540px; }
+    .room-target { cursor: pointer; transition: filter 0.2s; }
+    .room-target:hover .room-bg { filter: brightness(1.1); }
+    .room-target.active .room-bg {
+      filter: drop-shadow(0 0 12px #ffd43b) brightness(1.15);
     }
 
-    .room:hover {
-      background: rgba(255,255,255,0.98);
-      transform: scale(1.08);
-      box-shadow: 0 10px 30px rgba(33,150,243,0.25);
-      border-color: var(--primary);
+    .room-readout {
+      background: #fff;
+      border: 3px dashed var(--primary);
+      border-radius: 18px;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: left;
     }
-
-    .room.active {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
-
-    .living-room {
-      top: 20px;
-      left: 20px;
-      width: 120px;
-      height: 80px;
-    }
-
-    .kitchen {
-      top: 20px;
-      right: 20px;
-      width: 120px;
-      height: 80px;
-    }
-
-    .bedroom {
-      bottom: 20px;
-      left: 20px;
-      width: 120px;
-      height: 80px;
-    }
-
-    .bathroom {
-      bottom: 20px;
-      right: 20px;
-      width: 120px;
-      height: 80px;
-    }
-
-    .electrical-panel {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #333;
-      color: white;
-      padding: 1rem;
-      border-radius: 10px;
+    .room-readout.empty {
+      color: #78909c;
+      border-style: solid;
+      background: #f5f8fb;
       text-align: center;
-      font-weight: bold;
+    }
+    .room-readout h4 {
+      margin: 0 0 0.6rem;
+      color: var(--primary-dark);
+      font-size: 1.18rem;
+      font-weight: 900;
+      text-align: center;
+    }
+    .room-readout p {
+      margin: 0 0 0.5rem;
+      font-size: 0.95rem;
+      color: #4d5b62;
+      font-weight: 800;
+    }
+    .room-appliances {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0;
+    }
+    .room-appliances li {
+      padding: 0.5rem 0.7rem;
+      background: #f3f8fe;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--ink);
     }
 
+    /* 家電功率卡片 ------------------------------------------------------ */
     .appliances-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin: 2rem 0;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
     }
-
     .appliance-card {
-      background: var(--background);
-      padding: 1.5rem;
-      border-radius: 20px;
+      padding: 1.1rem 1rem;
+      border-radius: 18px;
+      background: #fff;
+      border: 3px solid transparent;
+      box-shadow: 0 8px 22px rgba(38, 50, 56, 0.08);
       text-align: center;
-      transition: all 0.3s;
-      border-top: 4px solid;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-
     .appliance-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 14px 28px rgba(38, 50, 56, 0.12);
+    }
+    .appliance-card.high { border-color: var(--danger); }
+    .appliance-card.mid { border-color: var(--warning); }
+    .appliance-card.low { border-color: var(--safe); }
+    .appliance-card svg { display: block; margin: 0 auto 0.5rem; }
+    .appliance-card h4 { margin: 0 0 0.3rem; color: var(--ink); font-size: 1.05rem; font-weight: 900; }
+    .watt-badge {
+      display: inline-block;
+      padding: 0.2rem 0.8rem;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 0.9rem;
+      margin: 0.3rem 0;
+      color: #fff;
+    }
+    .appliance-card.high .watt-badge { background: var(--danger); }
+    .appliance-card.mid .watt-badge { background: var(--warning); }
+    .appliance-card.low .watt-badge { background: var(--safe); }
+    .appliance-card .use {
+      font-size: 0.88rem;
+      color: #4d5b62;
+      font-weight: 800;
     }
 
-    .appliance-card.high-power {
-      border-top-color: var(--danger);
-    }
-
-    .appliance-card.medium-power {
-      border-top-color: var(--secondary);
-    }
-
-    .appliance-card.low-power {
-      border-top-color: var(--home);
-    }
-
-    .safety-section {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-      border: 3px solid var(--border);
-    }
-
-    .safety-grid {
+    /* 安全 vs 危險 對照 ------------------------------------------------- */
+    .safe-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin: 2rem 0;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .safe-card {
+      padding: 1.2rem 1rem;
+      border-radius: 18px;
+      background: #fff;
+      border: 3px solid transparent;
+      box-shadow: 0 8px 22px rgba(38, 50, 56, 0.08);
+      text-align: center;
+    }
+    .safe-card.do { border-color: var(--safe); background: linear-gradient(135deg, #f0fdf4, #fff); }
+    .safe-card.dont { border-color: var(--danger); background: linear-gradient(135deg, #fef2f2, #fff); }
+    .safe-card h4 { margin: 0 0 0.5rem; font-size: 1.1rem; font-weight: 900; }
+    .safe-card.do h4 { color: var(--safe-dark); }
+    .safe-card.dont h4 { color: var(--danger-dark); }
+    .safe-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0;
+      text-align: left;
+    }
+    .safe-card ul li {
+      padding: 0.5rem 0.7rem;
+      margin-bottom: 0.4rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #4d5b62;
+    }
+    .safe-card.do ul li { background: rgba(47, 158, 68, 0.1); }
+    .safe-card.dont ul li { background: rgba(224, 49, 49, 0.08); }
+
+    /* 節能 tips --------------------------------------------------------- */
+    .eco-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .eco-card {
+      padding: 1.1rem 1rem;
+      border-radius: 16px;
+      background: #fff;
+      border: 3px solid #b2f2bb;
+      text-align: center;
+      box-shadow: 0 8px 22px rgba(38, 50, 56, 0.06);
+    }
+    .eco-card .icon-emoji {
+      width: 52px; height: 52px;
+      margin: 0 auto 0.5rem;
+      display: grid; place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #d3f9d8, #b2f2bb);
+      font-size: 1.7rem;
+    }
+    .eco-card h4 { margin: 0 0 0.3rem; color: var(--safe-dark); font-size: 1.02rem; font-weight: 900; }
+    .eco-card p { margin: 0; color: #4d5b62; font-size: 0.9rem; font-weight: 800; }
+
+    /* 測驗 ------------------------------------------------------------- */
+    .quiz {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 16px;
+      background: #f8fbfe;
+      border-left: 6px solid var(--primary);
+    }
+    .quiz h4 { margin: 0 0 0.8rem; color: #37474f; font-size: 1.05rem; font-weight: 900; }
+    .quiz-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.7rem; }
+    .quiz-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      min-height: 92px;
+      padding: 0.7rem;
+      border: 3px solid var(--line);
+      border-radius: 13px;
+      background: #fff;
+      color: #37474f;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 900;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+    .quiz-option .emoji { font-size: 1.7rem; line-height: 1; }
+    .quiz-option:hover, .quiz-option:focus-visible {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      outline: none;
+    }
+    .quiz-option.correct { background: #d3f9d8; border-color: var(--safe); color: var(--safe-dark); }
+    .quiz-option.wrong { background: #ffe3e3; border-color: var(--danger); color: var(--danger-dark); }
+    .quiz-result { min-height: 1.5rem; margin-top: 0.75rem; text-align: center; font-weight: 900; }
+
+    /* 系列完成 ---------------------------------------------------------- */
+    .series-complete {
+      margin-top: 1.5rem;
+      padding: clamp(1.4rem, 4vw, 2rem);
+      border-radius: 24px;
+      background: linear-gradient(135deg, #fff8e1, #ffe8a3 60%, #d3f9d8);
+      border: 3px solid var(--warning);
+      text-align: center;
+    }
+    .series-complete h3 {
+      margin: 0 0 0.6rem;
+      color: var(--danger-dark);
+      font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+      font-weight: 900;
+    }
+    .series-complete p {
+      max-width: 700px;
+      margin: 0 auto 1.2rem;
+      color: #5c4a00;
+      font-weight: 800;
+    }
+    .lesson-badges {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin: 1rem 0;
+    }
+    .badge {
+      padding: 1rem 0.6rem;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: 0 4px 12px rgba(38, 50, 56, 0.06);
+    }
+    .badge .em { font-size: 1.8rem; line-height: 1; }
+    .badge .name {
+      display: block;
+      margin-top: 0.3rem;
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: var(--ink);
     }
 
-    .safety-card {
-      background: var(--background);
-      padding: 2rem;
+    .success-box {
+      margin-top: 1.4rem;
+      padding: clamp(1.15rem, 3vw, 1.55rem);
       border-radius: 20px;
+      border-color: #c7ddff;
+      background: linear-gradient(135deg, #e3f2fd, #f0fdf4);
       text-align: center;
-      transition: transform 0.3s;
     }
-    .safety-card:hover { transform: translateY(-6px); }
+    .success-box h3 {
+      margin: 0 0 0.45rem;
+      color: var(--primary-dark);
+      font-size: 1.35rem;
+      font-weight: 900;
+    }
+    .success-box p {
+      max-width: 820px;
+      margin: 0 auto;
+      color: #4d5b62;
+      font-weight: 800;
+    }
 
     .navigation {
       display: flex;
       justify-content: space-between;
-      margin-top: 2rem;
-      padding: 1rem 0;
-      flex-wrap: wrap;
       gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.4rem;
     }
-
     .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 100%;
+      padding: 0.75rem 1.1rem;
+      border-radius: 999px;
       background: var(--primary);
-      color: white;
-      padding: 0.9rem 1.5rem;
+      color: #fff;
       text-decoration: none;
-      border-radius: 50px;
-      font-weight: 800;
-      font-family: inherit;
-      transition: all 0.3s;
+      font-weight: 900;
     }
-    .nav-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+    .nav-btn:hover, .nav-btn:focus-visible {
+      background: var(--primary-dark);
+      outline: none;
+    }
 
-    @media (max-width: 768px) {
-      .house-container {
-        min-height: 500px;
-      }
-      
-      .room {
-        position: relative;
-        display: inline-block;
-        margin: 0.5rem;
-        width: auto;
-        height: auto;
-      }
-      
-      .electrical-panel {
-        position: relative;
-        transform: none;
-        margin: 1rem auto;
-        display: block;
-      }
-      
-      .navigation {
-        flex-direction: column;
-        gap: 1rem;
+    @media (max-width: 900px) {
+      .house-lab { grid-template-columns: 1fr; }
+      .appliances-grid { grid-template-columns: 1fr 1fr; }
+      .safe-grid { grid-template-columns: 1fr; }
+      .eco-grid { grid-template-columns: 1fr 1fr; }
+      .quiz-options { grid-template-columns: 1fr 1fr; }
+      .lesson-badges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      .container { width: min(100% - 1rem, 1180px); }
+      .hero, .section, .success-box { border-radius: 16px; }
+      .nav { align-items: flex-start; flex-direction: column; }
+      .navigation { flex-direction: column; }
+      .nav-btn { width: 100%; }
+      .appliances-grid, .eco-grid, .quiz-options { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
       }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="nav">
+  <header class="header">
+    <nav class="nav" aria-label="頁面導覽">
       <h1>🏠 家裡的電路</h1>
       <a href="../index.html">🏠 返回首頁</a>
-    </div>
-  </div>
+    </nav>
+  </header>
 
-  <div class="container">
-    <div class="intro" style="background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #C8E6C9 100%); border: 4px solid var(--home); border-radius: 24px; text-align: center; padding: 2.5rem 2rem; margin-bottom: 2rem;">
-      <div style="font-size: 3.5rem; margin-bottom: 1rem;">🏠 ⚡</div>
-      <h2 style="color: var(--primary); font-size: 1.75rem; font-weight: 900;">家裡的電路</h2>
-      <p style="font-size: 1.2rem; color: #555; font-weight: 700;">從插座到電燈，每個房間的電器都連成一個大電路！</p>
-    </div>
-    <div class="intro" style="border-radius: 20px; border: 3px solid var(--border);">
-      <h2>🏠 家裡電路長怎樣？</h2>
-      <p>電從門口的配電箱出來，分到客廳、廚房、房間……每個插座和電燈都是電路的一站。點下面的房間可以看看那裡有哪些電器，親子一起認識最安全！</p>
-    </div>
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <h2>家裡到處都是電路 🔌</h2>
+      <p class="lead">電從外面進到家裡的配電箱，再分到每個房間的插座和燈 — 像血管一樣，連到每個電器。</p>
 
-    <div class="house-diagram">
-      <h3 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">🏘️ 家庭電路地圖</h3>
-      
-      <div class="house-container">
-        <div class="room living-room" onclick="showRoomInfo('living')">
-          <div style="font-size: 2rem;">🛋️</div>
-          <div>客廳</div>
+      <svg class="hero-scene" viewBox="0 0 1000 360" role="img" aria-labelledby="heroTitle heroDesc">
+        <title id="heroTitle">家裡電路示意圖</title>
+        <desc id="heroDesc">配電箱在屋外，電線進入屋內分配到客廳、廚房、臥室、浴室四個房間。</desc>
+        <rect x="40" y="28" width="920" height="300" rx="34" fill="rgba(255,255,255,0.5)"/>
+
+        <!-- 屋頂 -->
+        <path d="M150 120 L500 60 L850 120" stroke="#37474f" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- 屋體 -->
+        <rect x="180" y="120" width="640" height="180" fill="#fff" stroke="#37474f" stroke-width="5"/>
+        <!-- 房間分隔 -->
+        <line x1="500" y1="120" x2="500" y2="300" stroke="#37474f" stroke-width="4"/>
+        <line x1="180" y1="210" x2="820" y2="210" stroke="#37474f" stroke-width="4"/>
+
+        <!-- 房間 label + 圖示 -->
+        <g><text class="svg-label" x="340" y="155" text-anchor="middle" font-size="18">🛋️ 客廳</text></g>
+        <g><text class="svg-label" x="660" y="155" text-anchor="middle" font-size="18">🍳 廚房</text></g>
+        <g><text class="svg-label" x="340" y="248" text-anchor="middle" font-size="18">🛏️ 臥室</text></g>
+        <g><text class="svg-label" x="660" y="248" text-anchor="middle" font-size="18">🚿 浴室</text></g>
+
+        <!-- 配電箱（屋外左下） -->
+        <g transform="translate(95 260)">
+          <rect x="-30" y="-30" width="60" height="60" rx="6" fill="#ffe082" stroke="#f08c00" stroke-width="4"/>
+          <line x1="-18" y1="-12" x2="18" y2="-12" stroke="#37474f" stroke-width="3"/>
+          <line x1="-18" y1="0" x2="18" y2="0" stroke="#37474f" stroke-width="3"/>
+          <line x1="-18" y1="12" x2="18" y2="12" stroke="#37474f" stroke-width="3"/>
+          <text class="svg-label" x="0" y="50" text-anchor="middle" font-size="14">配電箱</text>
+        </g>
+
+        <!-- 電線：從配電箱進屋，分到 4 個房間 -->
+        <path class="wire" d="M125 260 L180 260 L180 165 L340 165 M340 175 L340 200 M180 260 L340 260 M500 165 L660 165 M500 260 L660 260"/>
+
+        <!-- 流動電子 -->
+        <circle class="electron" r="6"><animateMotion dur="3.5s" repeatCount="indefinite" path="M125 260 L180 260 L180 165 L340 165"/></circle>
+        <circle class="electron" r="6"><animateMotion dur="3.5s" begin="0.7s" repeatCount="indefinite" path="M125 260 L180 260 L340 260"/></circle>
+        <circle class="electron" r="6"><animateMotion dur="3.5s" begin="1.4s" repeatCount="indefinite" path="M125 260 L180 260 L180 165 L500 165 L660 165"/></circle>
+        <circle class="electron" r="6"><animateMotion dur="3.5s" begin="2.1s" repeatCount="indefinite" path="M125 260 L180 260 L500 260 L660 260"/></circle>
+
+        <!-- 屋頂上的閃電 emoji -->
+        <text x="500" y="50" text-anchor="middle" font-size="28">⚡</text>
+      </svg>
+    </section>
+
+    <!-- 互動：點房間看電器 -->
+    <section class="section">
+      <h3>🗺️ 點點看：每個房間有什麼電器？</h3>
+      <div class="house-lab">
+        <div class="house-svg-wrap">
+          <svg viewBox="0 0 420 340" xmlns="http://www.w3.org/2000/svg" aria-label="可點選的家庭房間平面圖">
+            <!-- 屋體 -->
+            <rect x="40" y="40" width="340" height="260" fill="none" stroke="#37474f" stroke-width="4"/>
+            <line x1="210" y1="40" x2="210" y2="300" stroke="#37474f" stroke-width="3"/>
+            <line x1="40" y1="170" x2="380" y2="170" stroke="#37474f" stroke-width="3"/>
+
+            <!-- 客廳 -->
+            <g class="room-target" id="roomLiving" data-room="living" tabindex="0" role="button" aria-label="客廳">
+              <rect class="room-bg" x="42" y="42" width="166" height="126" fill="#e3f2fd"/>
+              <text class="svg-label" x="125" y="100" text-anchor="middle" font-size="36">🛋️</text>
+              <text class="svg-label" x="125" y="140" text-anchor="middle" font-size="18">客廳</text>
+            </g>
+            <!-- 廚房 -->
+            <g class="room-target" id="roomKitchen" data-room="kitchen" tabindex="0" role="button" aria-label="廚房">
+              <rect class="room-bg" x="212" y="42" width="166" height="126" fill="#fff8e1"/>
+              <text class="svg-label" x="295" y="100" text-anchor="middle" font-size="36">🍳</text>
+              <text class="svg-label" x="295" y="140" text-anchor="middle" font-size="18">廚房</text>
+            </g>
+            <!-- 臥室 -->
+            <g class="room-target" id="roomBedroom" data-room="bedroom" tabindex="0" role="button" aria-label="臥室">
+              <rect class="room-bg" x="42" y="172" width="166" height="126" fill="#f0fdf4"/>
+              <text class="svg-label" x="125" y="230" text-anchor="middle" font-size="36">🛏️</text>
+              <text class="svg-label" x="125" y="270" text-anchor="middle" font-size="18">臥室</text>
+            </g>
+            <!-- 浴室 -->
+            <g class="room-target" id="roomBathroom" data-room="bathroom" tabindex="0" role="button" aria-label="浴室">
+              <rect class="room-bg" x="212" y="172" width="166" height="126" fill="#e0f7fa"/>
+              <text class="svg-label" x="295" y="230" text-anchor="middle" font-size="36">🚿</text>
+              <text class="svg-label" x="295" y="270" text-anchor="middle" font-size="18">浴室</text>
+            </g>
+
+            <!-- 屋頂 -->
+            <path d="M30 40 L210 8 L390 40" stroke="#37474f" stroke-width="4" fill="#ffebee" stroke-linecap="round" stroke-linejoin="round"/>
+
+            <!-- 配電箱 -->
+            <g class="room-target" id="roomPanel" data-room="panel" tabindex="0" role="button" aria-label="配電箱">
+              <rect class="room-bg" x="8" y="204" width="30" height="50" rx="4" fill="#ffe082" stroke="#f08c00" stroke-width="3"/>
+              <text class="svg-label" x="23" y="274" text-anchor="middle" font-size="11">配電箱</text>
+              <line x1="19" y1="219" x2="33" y2="219" stroke="#37474f" stroke-width="2"/>
+              <line x1="19" y1="229" x2="33" y2="229" stroke="#37474f" stroke-width="2"/>
+              <line x1="19" y1="239" x2="33" y2="239" stroke="#37474f" stroke-width="2"/>
+            </g>
+          </svg>
         </div>
-        
-        <div class="room kitchen" onclick="showRoomInfo('kitchen')">
-          <div style="font-size: 2rem;">🍳</div>
-          <div>廚房</div>
-        </div>
-        
-        <div class="room bedroom" onclick="showRoomInfo('bedroom')">
-          <div style="font-size: 2rem;">🛏️</div>
-          <div>臥室</div>
-        </div>
-        
-        <div class="room bathroom" onclick="showRoomInfo('bathroom')">
-          <div style="font-size: 2rem;">🚿</div>
-          <div>浴室</div>
-        </div>
-        
-        <div class="electrical-panel" onclick="showRoomInfo('panel')">
-          <div style="font-size: 1.5rem;">⚡</div>
-          <div>配電箱</div>
+        <div class="room-readout empty" id="roomReadout">
+          <h4>👆 點點看任一房間</h4>
+          <p>看看那裡通常有哪些電器，再認識它們大概要用多少電！</p>
         </div>
       </div>
+    </section>
 
-      <div id="roomInfo" style="background: var(--background); padding: 1.5rem; border-radius: 10px; margin-top: 2rem; display: none;">
-        <h4 id="roomTitle"></h4>
-        <p id="roomDescription"></p>
-        <div id="roomAppliances"></div>
-      </div>
-    </div>
-
-    <div class="safety-section">
-      <h3 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">⚡ 家電功率大解密</h3>
-      
+    <!-- 家電功率分級 -->
+    <section class="section">
+      <h3>⚡ 家電功率大比拚</h3>
+      <p class="hint">數字越大 = 用電越多。同時開太多大功率的會跳電喔！</p>
       <div class="appliances-grid">
-        <div class="appliance-card high-power">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">❄️</div>
-          <h4>冷氣機</h4>
-          <p><strong>功率：</strong>1000-2000瓦</p>
-          <p><strong>用電量：</strong>很高</p>
-          <p>夏天的好朋友，但也是用電大戶！</p>
-        </div>
-
-        <div class="appliance-card high-power">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">🔥</div>
-          <h4>電磁爐</h4>
-          <p><strong>功率：</strong>1500-2000瓦</p>
-          <p><strong>用電量：</strong>很高</p>
-          <p>煮飯用的，加熱速度快但很耗電！</p>
-        </div>
-
-        <div class="appliance-card medium-power">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">📺</div>
-          <h4>電視</h4>
-          <p><strong>功率：</strong>100-200瓦</p>
-          <p><strong>用電量：</strong>中等</p>
-          <p>娛樂必備，現代電視比較省電！</p>
-        </div>
-
-        <div class="appliance-card medium-power">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">💻</div>
-          <h4>電腦</h4>
-          <p><strong>功率：</strong>300-500瓦</p>
-          <p><strong>用電量：</strong>中等</p>
-          <p>學習工作好幫手，記得不用時關機！</p>
-        </div>
-
-        <div class="appliance-card low-power">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">💡</div>
-          <h4>LED燈</h4>
-          <p><strong>功率：</strong>5-15瓦</p>
-          <p><strong>用電量：</strong>很低</p>
-          <p>照明專家，省電又環保！</p>
-        </div>
-
-        <div class="appliance-card low-power">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">📱</div>
-          <h4>手機充電器</h4>
-          <p><strong>功率：</strong>5-20瓦</p>
-          <p><strong>用電量：</strong>很低</p>
-          <p>小巧但重要，充滿就拔掉更省電！</p>
-        </div>
+        <article class="appliance-card high">
+          <svg width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
+            <rect x="10" y="20" width="60" height="40" rx="6" fill="#90caf9" stroke="#0d47a1" stroke-width="3"/>
+            <rect x="14" y="26" width="52" height="6" fill="#fff"/>
+            <rect x="14" y="36" width="52" height="6" fill="#fff"/>
+            <rect x="14" y="46" width="52" height="6" fill="#fff"/>
+            <text class="svg-label" x="40" y="74" text-anchor="middle" font-size="11">冷氣</text>
+          </svg>
+          <h4>冷氣機 ❄️</h4>
+          <div class="watt-badge">1000–2000 W</div>
+          <p class="use">夏天好朋友，但超耗電</p>
+        </article>
+        <article class="appliance-card high">
+          <svg width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
+            <rect x="10" y="34" width="60" height="32" rx="6" fill="#37474f" stroke="#263238" stroke-width="3"/>
+            <circle cx="40" cy="50" r="12" fill="#ff5252" stroke="#b71c1c" stroke-width="2"/>
+            <circle cx="40" cy="50" r="6" fill="#fff8e1"/>
+            <text class="svg-label" x="40" y="22" text-anchor="middle" font-size="14">🔥</text>
+          </svg>
+          <h4>電磁爐 🔥</h4>
+          <div class="watt-badge">1500–2000 W</div>
+          <p class="use">煮飯快但很耗電</p>
+        </article>
+        <article class="appliance-card mid">
+          <svg width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
+            <rect x="6" y="14" width="68" height="44" rx="6" fill="#37474f" stroke="#263238" stroke-width="3"/>
+            <rect x="12" y="20" width="56" height="32" rx="2" fill="#90caf9"/>
+            <rect x="32" y="60" width="16" height="6" fill="#37474f"/>
+            <rect x="22" y="66" width="36" height="6" rx="2" fill="#37474f"/>
+          </svg>
+          <h4>電視 📺</h4>
+          <div class="watt-badge">100–200 W</div>
+          <p class="use">看影片娛樂用</p>
+        </article>
+        <article class="appliance-card mid">
+          <svg width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
+            <rect x="10" y="14" width="60" height="40" rx="4" fill="#37474f" stroke="#263238" stroke-width="3"/>
+            <rect x="14" y="18" width="52" height="32" rx="2" fill="#1677c9"/>
+            <rect x="4" y="56" width="72" height="6" rx="2" fill="#9e9e9e"/>
+            <rect x="32" y="62" width="16" height="6" fill="#9e9e9e"/>
+          </svg>
+          <h4>電腦 💻</h4>
+          <div class="watt-badge">300–500 W</div>
+          <p class="use">寫作業 / 玩遊戲</p>
+        </article>
+        <article class="appliance-card low">
+          <svg width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
+            <circle cx="40" cy="36" r="22" fill="#ffeb3b" stroke="#f08c00" stroke-width="3">
+              <animate attributeName="opacity" values="0.85;1;0.85" dur="1.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="40" cy="34" r="14" fill="#fff59d"/>
+            <rect x="32" y="58" width="16" height="8" fill="#9e9e9e" stroke="#37474f" stroke-width="2"/>
+            <rect x="34" y="66" width="12" height="5" fill="#616161"/>
+          </svg>
+          <h4>LED 燈 💡</h4>
+          <div class="watt-badge">5–15 W</div>
+          <p class="use">省電又環保</p>
+        </article>
+        <article class="appliance-card low">
+          <svg width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
+            <rect x="26" y="14" width="28" height="50" rx="4" fill="#1677c9" stroke="#0d47a1" stroke-width="3"/>
+            <rect x="32" y="20" width="16" height="32" rx="2" fill="#90caf9"/>
+            <circle cx="40" cy="58" r="3" fill="#fff"/>
+            <path d="M40 8 L40 4" stroke="#37474f" stroke-width="3" stroke-linecap="round"/>
+            <path d="M30 6 L30 -2 M50 6 L50 -2" stroke="#f08c00" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <h4>手機充電器 🔌</h4>
+          <div class="watt-badge">5–20 W</div>
+          <p class="use">充滿就拔掉更省</p>
+        </article>
       </div>
-    </div>
+    </section>
 
-    <div class="safety-section">
-      <h3 style="text-align: center; margin-bottom: 2rem; color: var(--primary);">🛡️ 家庭用電安全指南</h3>
-      
-      <div class="safety-grid">
-        <div class="safety-card">
-          <div style="font-size: 3rem; margin-bottom: 1rem; color: var(--home);">✅</div>
-          <h4>正確使用插座</h4>
-          <ul style="text-align: left; margin-top: 1rem;">
-            <li>不要同時插太多電器</li>
-            <li>使用三孔插頭的安全插座</li>
-            <li>濕手不要碰插座</li>
-            <li>定期檢查插座是否鬆動</li>
+    <!-- 安全 vs 危險 -->
+    <section class="section">
+      <h3>🛡️ 安全 vs 危險：兩張清單</h3>
+      <div class="safe-grid">
+        <article class="safe-card do">
+          <h4>✅ 這樣做最安全</h4>
+          <ul>
+            <li>🔌 用三孔插頭、認明安全標章</li>
+            <li>🤲 手是乾的才碰插座</li>
+            <li>🔧 插座鬆動 / 變色 → 找大人</li>
+            <li>👃 聞到燒焦味 → 立刻關電源</li>
           </ul>
-        </div>
-
-        <div class="safety-card">
-          <div style="font-size: 3rem; margin-bottom: 1rem; color: var(--danger);">⚠️</div>
-          <h4>避免過載</h4>
-          <ul style="text-align: left; margin-top: 1rem;">
-            <li>不要在一個插座上接太多延長線</li>
-            <li>大功率電器要單獨使用插座</li>
-            <li>注意配電箱的總開關</li>
-            <li>聞到燒焦味立即關閉電源</li>
+        </article>
+        <article class="safe-card dont">
+          <h4>🚫 這些事絕對不行</h4>
+          <ul>
+            <li>💧 濕手碰插座 → 會觸電</li>
+            <li>🔌 一個插座插太多電器</li>
+            <li>📏 拿金屬插到插座裡</li>
+            <li>🪢 電線打結、踩在電線上</li>
           </ul>
-        </div>
-
-        <div class="safety-card">
-          <div style="font-size: 3rem; margin-bottom: 1rem; color: var(--secondary);">🔧</div>
-          <h4>定期檢查</h4>
-          <ul style="text-align: left; margin-top: 1rem;">
-            <li>檢查電線是否破損</li>
-            <li>測試斷路器是否正常</li>
-            <li>清潔插座周圍的灰塵</li>
-            <li>有問題請找專業電工</li>
-          </ul>
-        </div>
-
-        <div class="safety-card">
-          <div style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary);">💡</div>
-          <h4>節能小撇步</h4>
-          <ul style="text-align: left; margin-top: 1rem;">
-            <li>離開房間隨手關燈</li>
-            <li>不用的電器拔掉插頭</li>
-            <li>選擇省電標章的電器</li>
-            <li>冷氣溫度設定26-28度</li>
-          </ul>
-        </div>
+        </article>
       </div>
-    </div>
+    </section>
 
-    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px; padding: 2rem; margin: 2rem 0;">
-      <h3 style="text-align: center; margin-bottom: 2rem;">🌍 保護地球的用電習慣</h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-        <div style="text-align: center;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">🌱</div>
-          <h4>選擇綠能</h4>
-          <p>使用太陽能、風能等再生能源，減少對環境的影響。</p>
-        </div>
-        <div style="text-align: center;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">💰</div>
-          <h4>節省電費</h4>
-          <p>養成良好的用電習慣，不只環保還能省錢呢！</p>
-        </div>
-        <div style="text-align: center;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">⚡</div>
-          <h4>智慧用電</h4>
-          <p>使用智慧插座和定時器，讓電器在最需要時才工作。</p>
-        </div>
-        <div style="text-align: center;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">🔄</div>
-          <h4>回收再利用</h4>
-          <p>舊電器要正確回收，減少電子垃圾對環境的污染。</p>
-        </div>
+    <!-- 節能小撇步 -->
+    <section class="section">
+      <h3>🌱 節能小撇步：地球會謝謝你</h3>
+      <div class="eco-grid">
+        <article class="eco-card">
+          <div class="icon-emoji">💡</div>
+          <h4>隨手關燈</h4>
+          <p>離開房間順手按一下，輕鬆省電</p>
+        </article>
+        <article class="eco-card">
+          <div class="icon-emoji">🔌</div>
+          <h4>不用就拔掉</h4>
+          <p>充電器、電視待機都會偷電</p>
+        </article>
+        <article class="eco-card">
+          <div class="icon-emoji">❄️</div>
+          <h4>冷氣 26-28 度</h4>
+          <p>溫度高 1 度，可以省好多電</p>
+        </article>
+        <article class="eco-card">
+          <div class="icon-emoji">♻️</div>
+          <h4>挑省電標章</h4>
+          <p>買新電器時看「能源效率」標籤</p>
+        </article>
       </div>
-    </div>
+    </section>
 
-    <div style="background: #d4edda; border: 1px solid #c3e6cb; border-radius: 10px; padding: 2rem; margin: 2rem 0; text-align: center;">
-      <h3 style="color: #155724; margin-bottom: 1rem;">🎉 恭喜完成基礎電路系列！</h3>
-      <p style="font-size: 1.1rem; margin-bottom: 1rem;">你已經學會了電流、電壓、電路、短路、開關和家庭用電的基本知識！</p>
-      <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 2rem;">
-        <div>
-          <div style="font-size: 2rem; color: #155724;">💧</div>
-          <p>電流就像水流</p>
+    <!-- 小測驗 -->
+    <section class="section">
+      <h3>🧠 來考一下：你抓到訣竅了嗎？</h3>
+
+      <div class="quiz">
+        <h4>🤔 第 1 題：家裡的電從哪裡進來？</h4>
+        <div class="quiz-options" id="q1options">
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🔋</span><span>客廳的電池</span></button>
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">⚡</span><span>配電箱</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">📺</span><span>電視機</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">💡</span><span>燈泡裡</span></button>
         </div>
-        <div>
-          <div style="font-size: 2rem; color: #155724;">🔋</div>
-          <p>電池的秘密</p>
-        </div>
-        <div>
-          <div style="font-size: 2rem; color: #155724;">🔌</div>
-          <p>完整的電路</p>
-        </div>
-        <div>
-          <div style="font-size: 2rem; color: #155724;">⚠️</div>
-          <p>危險的短路</p>
-        </div>
-        <div>
-          <div style="font-size: 2rem; color: #155724;">💡</div>
-          <p>開關的魔法</p>
-        </div>
-        <div>
-          <div style="font-size: 2rem; color: #155724;">🏠</div>
-          <p>家裡的電路</p>
-        </div>
+        <div class="quiz-result" id="q1result" aria-live="polite"></div>
       </div>
-      <p style="margin-top: 2rem; font-weight: bold;">現在你可以繼續學習電子元件，成為小小電路工程師！</p>
+
+      <div class="quiz">
+        <h4>🤔 第 2 題：哪一種電器用電最多？</h4>
+        <div class="quiz-options" id="q2options">
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">❄️</span><span>冷氣機</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">💡</span><span>LED 燈</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">📱</span><span>手機充電器</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">📺</span><span>電視</span></button>
+        </div>
+        <div class="quiz-result" id="q2result" aria-live="polite"></div>
+      </div>
+
+      <div class="quiz">
+        <h4>🤔 第 3 題：哪一個動作絕對不可以做？</h4>
+        <div class="quiz-options" id="q3options">
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🤲</span><span>乾手拔插頭</span></button>
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">📏</span><span>拿金屬戳插座</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">💡</span><span>關燈出門</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🔌</span><span>充滿後拔掉</span></button>
+        </div>
+        <div class="quiz-result" id="q3result" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- 系列完成 -->
+    <div class="series-complete">
+      <h3>🎉 太棒了！你完成基礎電路系列了！</h3>
+      <p>從「電流就像水流」一路走到「家裡的電路」 — 你已經懂電池怎麼推電、電路怎麼接、短路怎麼避免、家裡的電怎麼分配。給自己掌聲 👏</p>
+      <div class="lesson-badges" aria-label="已完成的課程徽章">
+        <div class="badge"><div class="em">💧</div><span class="name">電流就像水流</span></div>
+        <div class="badge"><div class="em">🔋</div><span class="name">電池的秘密</span></div>
+        <div class="badge"><div class="em">🔌</div><span class="name">完整的電路</span></div>
+        <div class="badge"><div class="em">⚠️</div><span class="name">危險的短路</span></div>
+        <div class="badge"><div class="em">🏠</div><span class="name">家裡的電路</span></div>
+      </div>
+      <p style="margin-top: 1rem;">下一站：認識電子元件，動手做電流急急棒！🛠️</p>
     </div>
 
-    <div class="navigation">
-      <a href="switch-magic.html" class="nav-btn">⬅️ 上一課：開關的魔法</a>
-      <a href="../index.html" class="nav-btn">🎯 繼續學習電子元件 ➡️</a>
+    <div class="success-box">
+      <h3>💡 帶回家的重點</h3>
+      <p>家裡的電從配電箱進來 → 分到每個房間 → 接到電器。記得：濕手不要碰、不要一個插座接太多、不用的電器隨手拔！</p>
     </div>
-  </div>
+
+    <nav class="navigation" aria-label="上下頁">
+      <a href="short-circuit.html" class="nav-btn">⬅️ 上一課：危險的短路</a>
+      <a href="../index.html" class="nav-btn">🎯 繼續探索電子元件 ➡️</a>
+    </nav>
+  </main>
 
   <script>
-    const roomData = {
+    /* ===== 房間互動 ===== */
+    const ROOM_INFO = {
       living: {
         title: '🛋️ 客廳電路',
-        description: '客廳是家中的娛樂中心，有很多電器設備。',
-        appliances: ['📺 電視', '❄️ 冷氣', '💡 燈具', '🔌 各種插座']
+        desc: '家裡的娛樂中心，電器最多。',
+        items: ['📺 電視', '❄️ 冷氣', '💡 燈具', '🔌 多個插座', '🎵 音響', '🌀 風扇']
       },
       kitchen: {
         title: '🍳 廚房電路',
-        description: '廚房有最多大功率電器，需要特別注意安全。',
-        appliances: ['🔥 電磁爐', '❄️ 冰箱', '🌀 抽油煙機', '☕ 微波爐']
+        desc: '大功率電器最多 — 一次別開太多！',
+        items: ['🔥 電磁爐', '❄️ 冰箱', '🌀 抽油煙機', '☕ 微波爐', '🍞 烤麵包機', '🫖 熱水瓶']
       },
       bedroom: {
         title: '🛏️ 臥室電路',
-        description: '臥室主要是照明和小功率電器。',
-        appliances: ['💡 檯燈', '📱 充電器', '💻 電腦', '🌀 電風扇']
+        desc: '以照明和小型電器為主。',
+        items: ['💡 檯燈', '📱 充電器', '💻 筆電', '🌀 風扇', '⏰ 鬧鐘', '📺 小電視']
       },
       bathroom: {
         title: '🚿 浴室電路',
-        description: '浴室環境潮濕，電路設計特別重視安全。',
-        appliances: ['💡 防水燈具', '🌀 排風扇', '🔌 防水插座', '🔥 熱水器']
+        desc: '潮濕地方 — 插座要特別防水！',
+        items: ['💡 防水燈', '🌀 排風扇', '🔌 防水插座', '♨️ 熱水器', '💨 吹風機', '🪒 電動牙刷']
       },
       panel: {
         title: '⚡ 配電箱',
-        description: '家中電路的總控制中心，所有電路都從這裡分配出去。',
-        appliances: ['🔧 總開關', '⚡ 各房間斷路器', '🛡️ 漏電保護器', '📊 電錶']
+        desc: '家裡電路的「總指揮」 — 所有電線從這裡分配出去。',
+        items: ['🔧 總開關', '⚡ 各房間斷路器', '🛡️ 漏電保護器', '📊 電錶']
       }
     };
-
-    function showRoomInfo(room) {
-      const roomInfo = document.getElementById('roomInfo');
-      const roomTitle = document.getElementById('roomTitle');
-      const roomDescription = document.getElementById('roomDescription');
-      const roomAppliances = document.getElementById('roomAppliances');
-      
-      // 移除所有房間的active狀態
-      document.querySelectorAll('.room, .electrical-panel').forEach(r => {
-        r.classList.remove('active');
+    const roomReadout = document.getElementById('roomReadout');
+    document.querySelectorAll('.room-target').forEach(el => {
+      const fire = () => {
+        document.querySelectorAll('.room-target.active').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        const info = ROOM_INFO[el.dataset.room];
+        roomReadout.classList.remove('empty');
+        roomReadout.innerHTML =
+          '<h4>' + info.title + '</h4>' +
+          '<p>' + info.desc + '</p>' +
+          '<ul class="room-appliances">' +
+          info.items.map(x => '<li>' + x + '</li>').join('') +
+          '</ul>';
+      };
+      el.addEventListener('click', fire);
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fire(); }
       });
-      
-      // 添加active狀態到點擊的房間
-      event.target.closest('.room, .electrical-panel').classList.add('active');
-      
-      const data = roomData[room];
-      roomTitle.textContent = data.title;
-      roomDescription.textContent = data.description;
-      
-      roomAppliances.innerHTML = `
-        <h5 style="margin: 1rem 0; color: var(--primary);">主要電器設備：</h5>
-        <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
-          ${data.appliances.map(appliance => 
-            `<span style="background: white; padding: 0.5rem 1rem; border-radius: 20px; border: 2px solid var(--primary);">${appliance}</span>`
-          ).join('')}
-        </div>
-      `;
-      
-      roomInfo.style.display = 'block';
+    });
+
+    /* ===== 測驗 ===== */
+    function bindQuiz(optionsId, resultId, okMessage, hintMessage) {
+      const options = document.querySelectorAll('#' + optionsId + ' .quiz-option');
+      const result = document.getElementById(resultId);
+      options.forEach(option => {
+        option.addEventListener('click', () => {
+          const isCorrect = option.dataset.correct === 'true';
+          options.forEach(item => { item.classList.remove('correct', 'wrong'); item.disabled = false; });
+          option.classList.add(isCorrect ? 'correct' : 'wrong');
+          result.textContent = isCorrect ? '✅ 對了！' + okMessage : '❌ 再想想～' + hintMessage;
+          result.style.color = isCorrect ? '#1b6f2a' : '#b42323';
+          if (isCorrect) {
+            options.forEach(item => { item.disabled = true; });
+          } else {
+            setTimeout(() => { option.classList.remove('wrong'); }, 1500);
+          }
+        });
+      });
     }
+    bindQuiz('q1options', 'q1result',
+      '電從配電箱進來，再分配到每個房間的插座和燈。',
+      '電池只能撐一下下，家裡的電是從配電箱進來的！');
+    bindQuiz('q2options', 'q2result',
+      '冷氣機通常 1000–2000 W，是家裡最耗電的電器之一。',
+      '想想看：什麼電器要「持續做工」，比「只發光」更耗電？');
+    bindQuiz('q3options', 'q3result',
+      '金屬會導電，戳進去等於把人和高壓電直接連起來 — 超危險！',
+      '想想：哪一個動作會讓「電」直接跑到身上？');
   </script>
 </body>
 </html>

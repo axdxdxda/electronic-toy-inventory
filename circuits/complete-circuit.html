@@ -1,389 +1,1001 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>完整的電路 - 基礎電路教學</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>完整電路 - 電流急急棒互動教學</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary:#2196F3; --primary-dark:#1976D2; --secondary:#FFC107;
-      --background:#f8f9fa; --text:#333; --border:#e9ecef; --card-bg:#fff;
-      --shadow:0 4px 20px rgba(0,0,0,0.08);
-      --wire:#2b2d42; --active:#4CAF50; --broken:#F44336; --dim:#bdbdbd;
-      --lamp-on:#FFD54F; --lamp-off:#B0BEC5;
+      --primary: #1677c9;
+      --primary-dark: #0f5f9f;
+      --closed: #2f9e44;
+      --closed-dark: #1b6f2a;
+      --open: #e03131;
+      --open-dark: #b42323;
+      --energy: #f59f00;
+      --wire: #4a3428;
+      --ink: #263238;
+      --muted: #607d8b;
+      --bg: #f5f8fb;
+      --card: #ffffff;
+      --line: #dfe7ef;
+      --shadow: 0 12px 30px rgba(38, 50, 56, 0.12);
     }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Nunito', 'Microsoft JhengHei', sans-serif; background:var(--background); color:var(--text); line-height:1.7; font-size:18px; }
-    .header { background:linear-gradient(135deg, var(--primary), #1976D2); color:#fff; padding:1rem 0; box-shadow:var(--shadow); }
-    .nav { max-width:1200px; margin:0 auto; padding:0 1.5rem; display:flex; justify-content:space-between; align-items:center; }
-    .nav h1 { font-size:1.5rem; font-weight:800; }
-    .nav a { color:#fff; text-decoration:none; padding:.5rem 1rem; border-radius:50px; font-weight:700; transition:all .3s; }
-    .nav a:hover { background:rgba(255,255,255,0.2); transform:translateY(-2px); }
-    .container { max-width:1200px; margin:0 auto; padding:0 1.5rem 2rem; }
 
-    .hero-banner {
-      background:linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 50%, #E3F2FD 100%);
-      border:4px solid var(--active);
-      border-radius:24px;
-      padding:2.5rem 2rem;
-      margin-bottom:2rem;
-      text-align:center;
-      position:relative;
-      overflow:hidden;
-      box-shadow:var(--shadow);
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Nunito", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255, 214, 102, 0.22), transparent 28rem),
+        radial-gradient(circle at 88% 0%, rgba(47, 158, 68, 0.16), transparent 30rem),
+        var(--bg);
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.65;
     }
-    .hero-banner::before { content:''; position:absolute; top:0; left:0; right:0; height:6px; background:linear-gradient(90deg, var(--active), var(--primary)); border-radius:24px 24px 0 0; }
-    .hero-loop {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:0.8rem;
-      margin-bottom:1rem;
-      font-size:2.5rem;
-      animation:heroPulse 2s ease-in-out infinite;
+
+    .header {
+      background: linear-gradient(135deg, var(--closed), #14532d);
+      color: #fff;
+      box-shadow: var(--shadow);
     }
-    @keyframes heroPulse { 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
-    .hero-banner h2 { color:#2E7D32; font-size:1.75rem; font-weight:900; margin-bottom:0.5rem; }
-    .hero-banner .one-line { font-size:1.2rem; color:#555; font-weight:700; }
 
-    .intro,.circuit-basics,.series-parallel,.interactive-demo,.card { background:var(--card-bg); padding:2rem; border-radius:20px; box-shadow:var(--shadow); margin-bottom:2rem; border:3px solid var(--border); }
-    .intro h2,.section-title { color:var(--primary); text-align:center; margin-bottom:1rem; font-size:1.6rem; font-weight:800; }
-    .circuit-comparison { display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin:2rem 0; }
-    .complete-example { border:3px solid var(--active); border-radius:15px; padding:1rem; background:linear-gradient(135deg,#e8f5e8,#c8e6c9); }
-    .incomplete-example { border:3px solid var(--broken); border-radius:15px; padding:1rem; background:linear-gradient(135deg,#ffebee,#ffcdd2); }
-    .comparison-grid { display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin:2rem 0; }
-    .circuit-type { background:#fff; border:1px solid var(--border); border-radius:15px; padding:1.5rem; }
-    .demo-controls, .nav-row { display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; }
-    .demo-btn, .nav-btn { background:var(--primary); color:#fff; border:none; padding:1rem 1.25rem; border-radius:10px; cursor:pointer; font-size:1rem; transition:.2s; text-decoration:none; display:inline-block; }
-    .demo-btn:hover, .nav-btn:hover { background:var(--primary-dark); transform:translateY(-2px); }
-    .demo-btn,.nav-btn { border-radius:50px; font-weight:800; font-family:inherit; }
-    .demo-btn.active { background:var(--secondary); color:#000; }
-    .status { text-align:center; font-weight:bold; margin-top:.75rem; }
-    .navigation { display:flex; justify-content:space-between; margin-top:2rem; padding:1rem 0; }
-    @media (max-width: 920px) { .circuit-comparison,.comparison-grid{grid-template-columns:1fr;} .navigation { flex-direction:column; gap:1rem; } }
+    .nav {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
 
-    /* SVG styling */
-    .schematic { width:100%; max-width:520px; margin:0 auto; display:block; }
-    .wire { stroke:var(--wire); stroke-width:4; fill:none; stroke-linecap:round; }
-    .battery-plus { stroke:#E53935; stroke-width:4; }
-    .battery-minus{ stroke:#1E88E5; stroke-width:4; }
-    .switch { stroke:#FB8C00; stroke-width:6; stroke-linecap:round; }
-    .switch.closed { stroke:#7CB342; }
-    .lamp-bulb { fill:var(--lamp-off); stroke:#607D8B; stroke-width:2; }
-    .lamp-glow { opacity:0; }
-    .lamp.on .lamp-bulb { fill:var(--lamp-on); }
-    .lamp.on .lamp-glow { opacity:.85; }
-    .lamp.dim .lamp-bulb { fill:#FFE082; }
-    .lamp.dim .lamp-glow { opacity:.5; }
-    .rail { stroke:#90A4AE; stroke-dasharray:6 6; }
-    .label { font: 500 14px/1 sans-serif; fill:#455A64; }
+    .nav h1 {
+      margin: 0;
+      font-size: clamp(1.05rem, 2.5vw, 1.45rem);
+      font-weight: 900;
+    }
 
-    /* nice glow when ON */
-    .glow-filter { filter:url(#glow); }
+    .nav a,
+    .nav-btn,
+    button {
+      min-height: 44px;
+      font: inherit;
+    }
+
+    .nav a {
+      color: #fff;
+      text-decoration: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      background: rgba(255, 255, 255, 0.18);
+      outline: none;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1.35rem 0 2.5rem;
+    }
+
+    .hero,
+    .section,
+    .success-box {
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      padding: clamp(1.2rem, 3vw, 2rem);
+      text-align: center;
+      background: linear-gradient(135deg, #e8f8ed 0%, #d2f1da 48%, #fff6d8 100%);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.45rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--closed-dark);
+      font-size: 0.9rem;
+      font-weight: 900;
+    }
+
+    .hero h2 {
+      margin: 0 0 0.45rem;
+      color: var(--closed-dark);
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      line-height: 1.15;
+      font-weight: 900;
+    }
+
+    .lead {
+      max-width: 760px;
+      margin: 0 auto 1rem;
+      color: #41545d;
+      font-weight: 800;
+      font-size: clamp(1rem, 2.5vw, 1.18rem);
+    }
+
+    .hero-scene,
+    .lab-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      overflow: visible;
+    }
+
+    .svg-label {
+      font-family: "Nunito", "Microsoft JhengHei", sans-serif;
+      font-weight: 900;
+      fill: var(--ink);
+      paint-order: stroke;
+      stroke: rgba(255, 255, 255, 0.92);
+      stroke-width: 5px;
+      stroke-linejoin: round;
+    }
+
+    .electron {
+      fill: #ffd43b;
+      stroke: #f08c00;
+      stroke-width: 2;
+      filter: drop-shadow(0 0 5px rgba(245, 159, 0, 0.55));
+    }
+
+    .wire {
+      stroke: var(--wire);
+      stroke-width: 8;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .section {
+      position: relative;
+      overflow: hidden;
+      margin-top: 1.4rem;
+      padding: clamp(1.15rem, 3vw, 1.7rem);
+      border-radius: 20px;
+    }
+
+    .section::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 5px;
+      background: linear-gradient(90deg, var(--closed), var(--primary), var(--energy));
+    }
+
+    .section h3 {
+      margin: 0 0 1rem;
+      color: var(--closed-dark);
+      text-align: center;
+      font-size: clamp(1.25rem, 3.2vw, 1.65rem);
+      line-height: 1.3;
+      font-weight: 900;
+    }
+
+    .hint {
+      margin: 0.8rem auto 0;
+      max-width: 760px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    .role-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: stretch;
+      gap: 1rem;
+      margin-top: 1.4rem;
+    }
+
+    .role-card,
+    .trio-card,
+    .app-card {
+      border-radius: 18px;
+      background: #fff;
+      border: 3px solid transparent;
+      box-shadow: 0 8px 22px rgba(38, 50, 56, 0.08);
+      text-align: center;
+    }
+
+    .role-card {
+      padding: 1.2rem;
+    }
+
+    .role-card.good { border-color: var(--closed); }
+    .role-card.bad { border-color: var(--open); }
+    .role-card svg,
+    .trio-card svg,
+    .app-card svg {
+      display: block;
+      margin: 0 auto 0.55rem;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .role-card h3,
+    .trio-card h4,
+    .app-card h4 {
+      margin: 0 0 0.25rem;
+      font-size: 1.12rem;
+      font-weight: 900;
+    }
+
+    .role-card.good h3,
+    .trio-card h4,
+    .app-card h4 { color: var(--closed-dark); }
+
+    .role-card.bad h3 { color: var(--open-dark); }
+
+    .role-card p,
+    .trio-card p,
+    .app-card p {
+      margin: 0;
+      color: #4d5b62;
+      font-size: 0.95rem;
+      font-weight: 750;
+    }
+
+    .role-vs {
+      align-self: center;
+      color: var(--energy);
+      font-size: 2rem;
+      font-weight: 900;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    .trio,
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .apps-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .trio-card,
+    .app-card {
+      padding: 1.15rem 1rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .trio-card:hover,
+    .app-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 28px rgba(38, 50, 56, 0.12);
+    }
+
+    .trio-card.source { border-color: #f08c00; }
+    .trio-card.path { border-color: #795548; }
+    .trio-card.load { border-color: #ffd43b; }
+
+    .formula {
+      margin: 1rem auto 0;
+      padding: 0.8rem 1rem;
+      border-radius: 15px;
+      background: #e8f8ed;
+      color: var(--closed-dark);
+      text-align: center;
+      font-size: clamp(1rem, 2.4vw, 1.2rem);
+      font-weight: 900;
+    }
+
+    .lab {
+      margin-top: 0.7rem;
+      padding: 1rem;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #f0f7ff, #fff8dc);
+      border: 2px solid #d7e8f7;
+      text-align: center;
+    }
+
+    .switch-target,
+    .break-target {
+      cursor: pointer;
+      outline: none;
+    }
+
+    .switch-target:focus-visible .target-bg,
+    .break-target:focus-visible .wire-segment {
+      filter: drop-shadow(0 0 8px rgba(22, 119, 201, 0.75));
+    }
+
+    .switch-target:hover .target-bg { fill: #fff3bf; }
+
+    .wire-segment {
+      stroke: var(--wire);
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke 0.2s ease, stroke-dasharray 0.2s ease;
+    }
+
+    .break-target:hover .wire-segment { stroke: #f08c00; }
+    .break-target.broken .wire-segment {
+      stroke: var(--open);
+      stroke-dasharray: 12 8;
+    }
+
+    .status {
+      margin-top: 0.85rem;
+      padding: 0.85rem 1rem;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .status.on {
+      background: #e8f8ed;
+      color: var(--closed-dark);
+      border: 3px solid var(--closed);
+    }
+
+    .status.off,
+    .status.broken {
+      background: #fff0f0;
+      color: var(--open-dark);
+      border: 3px solid var(--open);
+    }
+
+    .status.ready {
+      background: #fff;
+      color: #43525a;
+      border: 3px solid var(--line);
+    }
+
+    .reset-btn {
+      margin-top: 0.8rem;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--closed), var(--closed-dark));
+      color: #fff;
+      cursor: pointer;
+      font-weight: 900;
+      padding: 0.65rem 1.35rem;
+    }
+
+    .reset-btn:hover,
+    .reset-btn:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(47, 158, 68, 0.25);
+      outline: none;
+    }
+
+    .quiz {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 16px;
+      background: #f8fbfe;
+      border-left: 6px solid var(--closed);
+    }
+
+    .quiz h4 {
+      margin: 0 0 0.8rem;
+      color: #37474f;
+      font-size: 1.05rem;
+      font-weight: 900;
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.7rem;
+    }
+
+    .quiz-option {
+      display: flex;
+      min-height: 76px;
+      align-items: center;
+      justify-content: center;
+      padding: 0.7rem;
+      border: 3px solid var(--line);
+      border-radius: 13px;
+      background: #fff;
+      color: #37474f;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 900;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .quiz-option:hover,
+    .quiz-option:focus-visible {
+      transform: translateY(-3px);
+      border-color: var(--closed);
+      outline: none;
+    }
+
+    .quiz-option.correct {
+      background: #d3f9d8;
+      border-color: var(--closed);
+      color: var(--closed-dark);
+    }
+
+    .quiz-option.wrong {
+      background: #ffe3e3;
+      border-color: var(--open);
+      color: var(--open-dark);
+    }
+
+    .quiz-result {
+      min-height: 1.5rem;
+      margin-top: 0.75rem;
+      text-align: center;
+      font-weight: 900;
+    }
+
+    .success-box {
+      margin-top: 1.4rem;
+      padding: clamp(1.15rem, 3vw, 1.55rem);
+      border-radius: 20px;
+      border-color: #9be7a7;
+      background: linear-gradient(135deg, #d3f9d8, #e8f8ed);
+      text-align: center;
+    }
+
+    .success-box h3 {
+      margin: 0 0 0.45rem;
+      color: #155724;
+      font-size: 1.35rem;
+      font-weight: 900;
+    }
+
+    .success-box p {
+      max-width: 820px;
+      margin: 0 auto;
+      color: #155724;
+      font-weight: 800;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.4rem;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 100%;
+      padding: 0.75rem 1.1rem;
+      border-radius: 999px;
+      background: var(--closed);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 900;
+    }
+
+    .nav-btn:hover,
+    .nav-btn:focus-visible {
+      background: var(--closed-dark);
+      outline: none;
+    }
+
+    @media (max-width: 860px) {
+      .role-row,
+      .trio,
+      .apps-grid,
+      .quiz-options {
+        grid-template-columns: 1fr;
+      }
+
+      .role-vs {
+        justify-self: center;
+        transform: rotate(90deg);
+      }
+
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      .container { width: min(100% - 1rem, 1180px); }
+      .hero,
+      .section,
+      .success-box { border-radius: 16px; }
+      .lab { padding: 0.45rem; }
+      .navigation { flex-direction: column; }
+      .nav-btn { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="nav">
-      <h1>🔌 完整的電路</h1>
-      <a href="../index.html">🏠 返回首頁</a>
-    </div>
-  </div>
+  <header class="header">
+    <nav class="nav" aria-label="頁面導覽">
+      <h1>完整電路</h1>
+      <a href="../index.html">回到課程首頁</a>
+    </nav>
+  </header>
 
-  <div class="container">
-    <div class="hero-banner">
-      <div class="hero-loop">🔋 → 💡 → 🔋</div>
-      <h2>完整的電路</h2>
-      <p class="one-line">電要「繞一圈」才有路可以走，燈才會亮！</p>
-    </div>
-    <div class="intro">
-      <h2>🔄 電為什麼要繞一圈？</h2>
-      <p>電流像在跑操場：從電池出發，經過電線、燈泡，再回到電池，形成一個「閉合回路」。路沒接好、中間斷掉，電就過不去，燈就不會亮。小朋友可以想成：一定要有去有回，電才願意工作喔！</p>
+  <main class="container">
+    <section class="hero">
+      <div class="eyebrow">完整電路</div>
+      <h2>讓電流找到一條完整的路</h2>
+      <p class="lead">電池、導線與燈泡要接成一個封閉回路，電流才會連續流動，燈泡才會亮起來。</p>
+
+      <svg class="hero-scene" viewBox="0 0 1000 360" role="img" aria-labelledby="heroTitle heroDesc">
+        <title id="heroTitle">完整電路示意圖</title>
+        <desc id="heroDesc">電池、開關、燈泡與導線形成封閉回路，黃色粒子沿著導線移動。</desc>
+        <rect x="40" y="28" width="920" height="300" rx="34" fill="rgba(255,255,255,0.38)"/>
+        <path class="wire" d="M165 130 H500 H830 V260 H165 Z"/>
+
+        <g transform="translate(165 195)">
+          <rect x="-44" y="-52" width="88" height="104" rx="10" fill="#ffe082" stroke="#f08c00" stroke-width="5"/>
+          <rect x="-16" y="-66" width="32" height="14" rx="4" fill="#ffd43b" stroke="#f08c00" stroke-width="4"/>
+          <text class="svg-label" x="0" y="-8" text-anchor="middle" font-size="28">+</text>
+          <text class="svg-label" x="0" y="28" text-anchor="middle" font-size="28">-</text>
+          <text class="svg-label" x="0" y="83" text-anchor="middle" font-size="22">電池</text>
+        </g>
+
+        <g transform="translate(500 130)">
+          <rect x="-74" y="-48" width="148" height="60" rx="13" fill="#fff" stroke="#ffd43b" stroke-width="5"/>
+          <circle cx="-40" cy="-18" r="8" fill="#37474f"/>
+          <circle cx="40" cy="-18" r="8" fill="#37474f"/>
+          <line x1="-40" y1="-18" x2="40" y2="-18" stroke="#2f9e44" stroke-width="8" stroke-linecap="round"/>
+          <text class="svg-label" x="0" y="-66" text-anchor="middle" font-size="20">開關關上</text>
+        </g>
+
+        <g transform="translate(830 195)">
+          <circle cx="0" cy="0" r="68" fill="#ffd43b" opacity="0.22">
+            <animate attributeName="r" values="58;70;58" dur="1.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.18;0.34;0.18" dur="1.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="0" cy="0" r="42" fill="#ffeb3b" stroke="#f08c00" stroke-width="5"/>
+          <circle cx="0" cy="-5" r="30" fill="#fff59d"/>
+          <path d="M-15 -5 Q -8 11 0 -2 Q 8 11 15 -5" stroke="#e67700" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <rect x="-17" y="40" width="34" height="13" fill="#9e9e9e" stroke="#37474f" stroke-width="3"/>
+          <rect x="-12" y="53" width="24" height="8" fill="#616161"/>
+          <g opacity="0.9">
+            <line x1="-72" y1="0" x2="-58" y2="0" stroke="#ffd43b" stroke-width="5" stroke-linecap="round"/>
+            <line x1="58" y1="0" x2="72" y2="0" stroke="#ffd43b" stroke-width="5" stroke-linecap="round"/>
+            <line x1="0" y1="-72" x2="0" y2="-58" stroke="#ffd43b" stroke-width="5" stroke-linecap="round"/>
+            <line x1="-51" y1="-51" x2="-41" y2="-41" stroke="#ffd43b" stroke-width="5" stroke-linecap="round"/>
+            <line x1="51" y1="-51" x2="41" y2="-41" stroke="#ffd43b" stroke-width="5" stroke-linecap="round"/>
+          </g>
+          <text class="svg-label" x="0" y="100" text-anchor="middle" font-size="22">燈泡發亮</text>
+        </g>
+
+        <g>
+          <circle class="electron" r="8"><animateMotion dur="4s" repeatCount="indefinite" path="M165 260 H830 V130 H165 Z"/></circle>
+          <circle class="electron" r="8"><animateMotion dur="4s" begin="0.5s" repeatCount="indefinite" path="M165 260 H830 V130 H165 Z"/></circle>
+          <circle class="electron" r="8"><animateMotion dur="4s" begin="1s" repeatCount="indefinite" path="M165 260 H830 V130 H165 Z"/></circle>
+          <circle class="electron" r="8"><animateMotion dur="4s" begin="1.5s" repeatCount="indefinite" path="M165 260 H830 V130 H165 Z"/></circle>
+          <circle class="electron" r="8"><animateMotion dur="4s" begin="2s" repeatCount="indefinite" path="M165 260 H830 V130 H165 Z"/></circle>
+          <circle class="electron" r="8"><animateMotion dur="4s" begin="2.5s" repeatCount="indefinite" path="M165 260 H830 V130 H165 Z"/></circle>
+          <circle class="electron" r="8"><animateMotion dur="4s" begin="3s" repeatCount="indefinite" path="M165 260 H830 V130 H165 Z"/></circle>
+          <circle class="electron" r="8"><animateMotion dur="4s" begin="3.5s" repeatCount="indefinite" path="M165 260 H830 V130 H165 Z"/></circle>
+        </g>
+      </svg>
+    </section>
+
+    <div class="role-row" aria-label="完整電路與斷路比較">
+      <article class="role-card good">
+        <svg width="150" height="110" viewBox="0 0 150 110" aria-hidden="true">
+          <circle cx="75" cy="55" r="38" fill="#e8f8ed" stroke="#2f9e44" stroke-width="6"/>
+          <path d="M55 57 L69 70 L97 39" fill="none" stroke="#1b6f2a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3>完整電路</h3>
+        <p>路徑接起來，電流能繞一圈，負載開始工作。</p>
+      </article>
+      <div class="role-vs" aria-hidden="true">VS</div>
+      <article class="role-card bad">
+        <svg width="150" height="110" viewBox="0 0 150 110" aria-hidden="true">
+          <path d="M46 76 A38 38 0 1 1 104 76" fill="none" stroke="#e03131" stroke-width="6" stroke-linecap="round"/>
+          <line x1="55" y1="83" x2="95" y2="43" stroke="#b42323" stroke-width="7" stroke-linecap="round"/>
+          <line x1="55" y1="43" x2="95" y2="83" stroke="#b42323" stroke-width="7" stroke-linecap="round"/>
+        </svg>
+        <h3>斷路</h3>
+        <p>中間有缺口，電流無法通過，燈泡不會亮。</p>
+      </article>
     </div>
 
-    <!-- 完整 vs 不完整（SVG 取代表情排版） -->
-    <div class="circuit-basics">
-      <h3 class="section-title">🔍 完整電路 vs 斷路：一眼看懂</h3>
-
-      <div class="circuit-comparison">
-        <!-- 完整 -->
-        <div class="complete-example">
-          <h4 style="color:#2e7d32; text-align:center; margin-bottom:.75rem;">✅ 完整電路（閉合）</h4>
-          <svg viewBox="0 0 520 240" class="schematic" aria-label="完整電路">
-            <defs>
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="6" result="blur"/>
-                <feMerge>
-                  <feMergeNode in="blur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-            </defs>
-            <!-- 外框導線 -->
-            <polyline class="wire" points="60,40 460,40 460,200 60,200 60,40"/>
-            <!-- 電池與極性標示（加大Icon） -->
-            <text x="36" y="98" class="label" style="font-size:24px">🔋</text>
-            <text x="100" y="58" class="label">正極</text>
-            <text x="100" y="194" class="label">負極</text>
-            <!-- 開關（閉合） -->
-            <line x1="200" y1="40" x2="260" y2="40" class="switch closed"/>
-            <text x="215" y="28" class="label">Switch</text>
-            <!-- 電阻 -->
-            <polyline class="wire" points="300,40 312,55 324,25 336,55 348,25 360,55 372,25 384,40"/>
-            <text x="310" y="18" class="label">R</text>
-            <!-- 燈泡（以圓心置中） -->
-            <g class="lamp on glow-filter">
-              <circle cx="460" cy="120" r="18" class="lamp-bulb"/>
-              <circle cx="460" cy="120" r="34" fill="#FFD54F" class="lamp-glow"/>
-            </g>
-            <!-- 連接燈泡上下 -->
-            <line x1="460" y1="40" x2="460" y2="102" class="wire"/>
-            <line x1="460" y1="138" x2="460" y2="200" class="wire"/>
+    <section class="section">
+      <h3>完整電路需要三個條件</h3>
+      <div class="trio">
+        <article class="trio-card source">
+          <svg width="96" height="110" viewBox="0 0 96 110" aria-hidden="true">
+            <rect x="26" y="22" width="44" height="72" rx="7" fill="#ffe082" stroke="#f08c00" stroke-width="4"/>
+            <rect x="38" y="12" width="20" height="11" rx="3" fill="#ffd43b" stroke="#f08c00" stroke-width="3"/>
+            <text class="svg-label" x="48" y="53" text-anchor="middle" font-size="22">+</text>
+            <text class="svg-label" x="48" y="78" text-anchor="middle" font-size="22">-</text>
           </svg>
-          <p class="status" style="color:#2e7d32;">💡 燈泡會亮！電流可以順利流動</p>
-        </div>
-
-        <!-- 不完整 -->
-        <div class="incomplete-example">
-          <h4 style="color:#c62828; text-align:center; margin-bottom:.75rem;">❌ 不完整電路（開路）</h4>
-          <svg viewBox="0 0 520 240" class="schematic" aria-label="不完整電路">
-            <!-- 外框導線（上方缺口） -->
-            <polyline class="wire" points="60,40 240,40"/>
-            <polyline class="wire" points="320,40 460,40 460,200 60,200 60,40"/>
-            <!-- 斷開符號 -->
-            <line x1="240" y1="40" x2="300" y2="60" stroke="var(--broken)" stroke-width="5" stroke-linecap="round"/>
-            <!-- 電池與極性標示（移除彩色短線） -->
-            <text x="36" y="98" class="label" style="font-size:24px">🔋</text>
-            <text x="100" y="58" class="label">正極</text>
-            <text x="100" y="194" class="label">負極</text>
-            <!-- 燈泡（不亮，置中） -->
-            <g class="lamp">
-              <circle cx="460" cy="120" r="18" class="lamp-bulb"/>
-            </g>
-            <line x1="460" y1="40" x2="460" y2="102" class="wire"/>
-            <line x1="460" y1="138" x2="460" y2="200" class="wire"/>
+          <h4>電源</h4>
+          <p>電池提供推動電流的能量。</p>
+        </article>
+        <article class="trio-card path">
+          <svg width="150" height="110" viewBox="0 0 150 110" aria-hidden="true">
+            <path d="M20 56 C45 20, 70 92, 100 56 S128 38, 135 56" stroke="#795548" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <circle class="electron" r="7">
+              <animateMotion dur="2.2s" repeatCount="indefinite" path="M20 56 C45 20, 70 92, 100 56 S128 38, 135 56"/>
+            </circle>
           </svg>
-          <p class="status" style="color:#c62828;">💡 不亮！上方路徑中斷，電流無法成圈</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- 串聯 vs 並聯（SVG + 互動） -->
-    <div class="series-parallel">
-      <h3 class="section-title">🔗 串聯 vs 並聯</h3>
-
-      <div class="comparison-grid">
-        <!-- 串聯電路 -->
-        <div class="circuit-type">
-          <h4 style="text-align:center;">串聯電路</h4>
-          <svg id="seriesSvg" viewBox="0 0 560 220" class="schematic" aria-label="串聯電路">
-            <defs>
-              <filter id="glow2">
-                <feGaussianBlur stdDeviation="6" result="b"/>
-                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-            </defs>
-            <!-- 導線 -->
-            <polyline class="wire" points="70,40 500,40 500,180 70,180 70,40"/>
-            <!-- 電池（移除正負短線，僅保留Icon與文字） -->
-            <text x="44" y="100" class="label" style="font-size:24px">🔋</text>
-            <text x="140" y="62" class="label">正極</text>
-            <text x="140" y="192" class="label">負極</text>
-            <text x="140" y="62" class="label">正極</text>
-            <text x="140" y="192" class="label">負極</text>
-            <!-- 兩顆燈泡串聯在上邊 -->
-            <g id="sLamp1" class="lamp" transform="translate(260,40)">
-              <circle cx="0" cy="0" r="18" class="lamp-bulb"/>
-              <circle cx="0" cy="0" r="34" fill="#FFD54F" class="lamp-glow"/>
-            </g>
-            <g id="sLamp2" class="lamp" transform="translate(380,40)">
-              <circle cx="0" cy="0" r="18" class="lamp-bulb"/>
-              <circle cx="0" cy="0" r="34" fill="#FFD54F" class="lamp-glow"/>
-            </g>
-            <!-- 連接燈泡到下邊 -->
-            <line x1="500" y1="40" x2="500" y2="180" class="wire"/>
-            <line x1="70"  y1="180" x2="70"  y2="40"  class="wire"/>
+          <h4>通路</h4>
+          <p>導線要接成連續的封閉路徑。</p>
+        </article>
+        <article class="trio-card load">
+          <svg width="96" height="110" viewBox="0 0 96 110" aria-hidden="true">
+            <circle cx="48" cy="44" r="28" fill="#ffeb3b" stroke="#f08c00" stroke-width="4"/>
+            <circle cx="48" cy="40" r="19" fill="#fff59d"/>
+            <path d="M37 41 Q43 54 48 38 Q53 54 59 41" stroke="#e67700" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <rect x="35" y="70" width="26" height="11" fill="#9e9e9e" stroke="#37474f" stroke-width="3"/>
           </svg>
-          <div class="demo-controls" style="margin-top:1rem;">
-            <button class="demo-btn" onclick="toggleSeries()">開關串聯電路</button>
-          </div>
-          <p class="status" id="seriesStatus">說明：串聯只有一條路，一個壞掉，全滅。</p>
-        </div>
+          <h4>負載</h4>
+          <p>燈泡、蜂鳴器或馬達會消耗能量。</p>
+        </article>
+      </div>
+      <div class="formula">電源 + 封閉通路 + 負載 = 完整電路</div>
+    </section>
 
-        <!-- 並聯電路 -->
-        <div class="circuit-type">
-          <h4 style="text-align:center;">並聯電路</h4>
-          <svg id="parallelSvg" viewBox="0 0 560 240" class="schematic" aria-label="並聯電路">
-            <defs>
-              <filter id="glow3">
-                <feGaussianBlur stdDeviation="6" result="b"/>
-                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-            </defs>
-            <!-- 主幹（補全上下與左右邊線） -->
-            <polyline class="wire" points="70,40 500,40"/>
-            <polyline class="wire" points="70,200 500,200"/>
-            <line x1="70" y1="40" x2="70" y2="200" class="wire"/>
-            <line x1="500" y1="40" x2="500" y2="200" class="wire"/>
-            <!-- 電池（僅保留Icon與文字標示極性） -->
-            <text x="44" y="100" class="label" style="font-size:24px">🔋</text>
-            <text x="140" y="62" class="label">正極</text>
-            <text x="140" y="192" class="label">負極</text>
-            <!-- 上支路燈泡 -->
-            <g id="pLamp1" class="lamp" transform="translate(300,90)">
-              <circle cx="0" cy="0" r="18" class="lamp-bulb"/>
-              <circle cx="0" cy="0" r="34" fill="#FFD54F" class="lamp-glow"/>
-            </g>
-            <polyline class="wire" points="300,40 300,72"/>
-            <polyline class="wire" points="300,108 300,200"/>
-            <!-- 下支路燈泡 -->
-            <g id="pLamp2" class="lamp" transform="translate(420,140)">
-              <circle cx="0" cy="0" r="18" class="lamp-bulb"/>
-              <circle cx="0" cy="0" r="34" fill="#FFD54F" class="lamp-glow"/>
-            </g>
-            <polyline class="wire" points="420,40 420,122"/>
-            <polyline class="wire" points="420,158 420,200"/>
+    <section class="section">
+      <h3>互動實驗一：按下開關看看會發生什麼事</h3>
+      <div class="lab">
+        <svg class="lab-svg" viewBox="0 0 620 300" role="img" aria-labelledby="switchTitle switchDesc">
+          <title id="switchTitle">開關實驗</title>
+          <desc id="switchDesc">點擊開關可切換斷路與完整電路，燈泡會跟著亮或熄滅。</desc>
+          <path class="wire" d="M90 112 H245 M335 112 H530 V246 H90 V200"/>
+
+          <g transform="translate(90 162)">
+            <rect x="-34" y="-38" width="68" height="76" rx="8" fill="#ffe082" stroke="#f08c00" stroke-width="4"/>
+            <rect x="-13" y="-50" width="26" height="12" rx="3" fill="#ffd43b" stroke="#f08c00" stroke-width="3"/>
+            <text class="svg-label" x="0" y="-4" text-anchor="middle" font-size="20">+</text>
+            <text class="svg-label" x="0" y="25" text-anchor="middle" font-size="20">-</text>
+            <text class="svg-label" x="0" y="64" text-anchor="middle" font-size="16">電池</text>
+          </g>
+
+          <g class="switch-target" id="switchTarget" tabindex="0" role="button" aria-label="切換電路開關">
+            <rect class="target-bg" x="230" y="52" width="120" height="84" rx="14" fill="#fff" stroke="#ffd43b" stroke-width="4"/>
+            <circle cx="250" cy="112" r="8" fill="#37474f"/>
+            <circle cx="330" cy="112" r="8" fill="#37474f"/>
+            <line id="switchLever" x1="250" y1="112" x2="314" y2="78" stroke="#e03131" stroke-width="8" stroke-linecap="round"/>
+            <text id="switchLabel" class="svg-label" x="290" y="160" text-anchor="middle" font-size="17">目前斷開</text>
+          </g>
+
+          <g transform="translate(530 162)">
+            <circle id="bulbGlow" cx="0" cy="0" r="48" fill="#ffeb3b" opacity="0"/>
+            <circle id="bulbBody" cx="0" cy="0" r="30" fill="#eceff1" stroke="#37474f" stroke-width="4"/>
+            <path id="bulbFilament" d="M-12 -4 Q-6 10 0 -1 Q6 10 12 -4" stroke="#e67700" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.4"/>
+            <rect x="-14" y="28" width="28" height="10" fill="#9e9e9e" stroke="#37474f" stroke-width="3"/>
+            <text id="bulbLabel" class="svg-label" x="0" y="68" text-anchor="middle" font-size="17">燈泡熄滅</text>
+          </g>
+
+          <g id="switchElectrons" style="visibility: hidden;">
+            <circle class="electron" r="7"><animateMotion dur="4s" repeatCount="indefinite" path="M90 246 H530 V112 H335 M245 112 H90 V200"/></circle>
+            <circle class="electron" r="7"><animateMotion dur="4s" begin="0.7s" repeatCount="indefinite" path="M90 246 H530 V112 H335 M245 112 H90 V200"/></circle>
+            <circle class="electron" r="7"><animateMotion dur="4s" begin="1.4s" repeatCount="indefinite" path="M90 246 H530 V112 H335 M245 112 H90 V200"/></circle>
+            <circle class="electron" r="7"><animateMotion dur="4s" begin="2.1s" repeatCount="indefinite" path="M90 246 H530 V112 H335 M245 112 H90 V200"/></circle>
+            <circle class="electron" r="7"><animateMotion dur="4s" begin="2.8s" repeatCount="indefinite" path="M90 246 H530 V112 H335 M245 112 H90 V200"/></circle>
+          </g>
+        </svg>
+        <div class="status off" id="switchStatus">開關斷開：電路中有缺口，電流暫停，燈泡不亮。</div>
+      </div>
+      <p class="hint">操作重點：只要路徑中有一個地方沒有接上，就算其他零件都正確，電路仍然無法工作。</p>
+    </section>
+
+    <section class="section">
+      <h3>互動實驗二：任意剪斷一段導線</h3>
+      <div class="lab">
+        <svg class="lab-svg" viewBox="0 0 620 300" role="img" aria-labelledby="breakTitle breakDesc">
+          <title id="breakTitle">斷路實驗</title>
+          <desc id="breakDesc">點擊任一段導線可模擬斷路，燈泡會熄滅。</desc>
+          <g class="break-target" id="breakTop" tabindex="0" role="button" aria-label="切斷上方導線">
+            <line class="wire-segment" x1="90" y1="75" x2="530" y2="75"/>
+            <rect x="80" y="55" width="460" height="40" fill="transparent"/>
+          </g>
+          <g class="break-target" id="breakRight" tabindex="0" role="button" aria-label="切斷右側導線">
+            <line class="wire-segment" x1="530" y1="75" x2="530" y2="225"/>
+            <rect x="510" y="65" width="40" height="170" fill="transparent"/>
+          </g>
+          <g class="break-target" id="breakBottom" tabindex="0" role="button" aria-label="切斷下方導線">
+            <line class="wire-segment" x1="530" y1="225" x2="90" y2="225"/>
+            <rect x="80" y="205" width="460" height="40" fill="transparent"/>
+          </g>
+          <g class="break-target" id="breakLeft" tabindex="0" role="button" aria-label="切斷左側導線">
+            <line class="wire-segment" x1="90" y1="225" x2="90" y2="75"/>
+            <rect x="70" y="65" width="40" height="170" fill="transparent"/>
+          </g>
+
+          <g transform="translate(170 225)">
+            <rect x="-30" y="-27" width="60" height="54" rx="7" fill="#ffe082" stroke="#f08c00" stroke-width="4"/>
+            <rect x="-12" y="-38" width="24" height="10" rx="3" fill="#ffd43b" stroke="#f08c00" stroke-width="3"/>
+            <text class="svg-label" x="0" y="1" text-anchor="middle" font-size="18">+</text>
+            <text class="svg-label" x="0" y="22" text-anchor="middle" font-size="18">-</text>
+            <text class="svg-label" x="0" y="52" text-anchor="middle" font-size="15">電池</text>
+          </g>
+
+          <g transform="translate(430 75)">
+            <circle id="breakBulbGlow" cx="0" cy="0" r="46" fill="#ffeb3b" opacity="0.38"/>
+            <circle id="breakBulbBody" cx="0" cy="0" r="30" fill="#ffeb3b" stroke="#f08c00" stroke-width="4"/>
+            <circle cx="0" cy="-4" r="21" fill="#fff59d"/>
+            <path d="M-12 -4 Q-6 10 0 -1 Q6 10 12 -4" stroke="#e67700" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <rect x="-14" y="28" width="28" height="10" fill="#9e9e9e" stroke="#37474f" stroke-width="3"/>
+            <text id="breakBulbLabel" class="svg-label" x="0" y="66" text-anchor="middle" font-size="17">燈泡發亮</text>
+          </g>
+
+          <g id="breakElectrons">
+            <circle class="electron" r="7"><animateMotion dur="4s" repeatCount="indefinite" path="M90 225 H530 V75 H90 Z"/></circle>
+            <circle class="electron" r="7"><animateMotion dur="4s" begin="0.5s" repeatCount="indefinite" path="M90 225 H530 V75 H90 Z"/></circle>
+            <circle class="electron" r="7"><animateMotion dur="4s" begin="1s" repeatCount="indefinite" path="M90 225 H530 V75 H90 Z"/></circle>
+            <circle class="electron" r="7"><animateMotion dur="4s" begin="1.5s" repeatCount="indefinite" path="M90 225 H530 V75 H90 Z"/></circle>
+            <circle class="electron" r="7"><animateMotion dur="4s" begin="2s" repeatCount="indefinite" path="M90 225 H530 V75 H90 Z"/></circle>
+            <circle class="electron" r="7"><animateMotion dur="4s" begin="2.5s" repeatCount="indefinite" path="M90 225 H530 V75 H90 Z"/></circle>
+            <circle class="electron" r="7"><animateMotion dur="4s" begin="3s" repeatCount="indefinite" path="M90 225 H530 V75 H90 Z"/></circle>
+            <circle class="electron" r="7"><animateMotion dur="4s" begin="3.5s" repeatCount="indefinite" path="M90 225 H530 V75 H90 Z"/></circle>
+          </g>
+        </svg>
+        <div class="status ready" id="breakStatus">目前是完整電路：電流能沿著導線繞一圈，燈泡會亮。</div>
+        <button class="reset-btn" id="breakReset" type="button">恢復完整電路</button>
+      </div>
+      <p class="hint">點任一段導線做斷路實驗。這和電流急急棒碰到金屬路線時產生的通路判斷很像，關鍵都在「有沒有連成路」。</p>
+    </section>
+
+    <section class="section">
+      <h3>生活中的完整電路</h3>
+      <div class="apps-grid">
+        <article class="app-card">
+          <svg width="92" height="92" viewBox="0 0 92 92" aria-hidden="true">
+            <rect x="25" y="12" width="42" height="68" rx="8" fill="#fff" stroke="#37474f" stroke-width="4"/>
+            <circle cx="46" cy="33" r="8" fill="#ffd43b" stroke="#f08c00" stroke-width="3"/>
+            <rect x="34" y="52" width="24" height="10" rx="2" fill="#f08c00"/>
           </svg>
-          <div class="demo-controls" style="margin-top:1rem;">
-            <button class="demo-btn" onclick="toggleParallel()">開關並聯電路</button>
-          </div>
-          <p class="status" id="parallelStatus">說明：並聯多條路，一個壞掉，其他照亮。</p>
-        </div>
+          <h4>手電筒</h4>
+          <p>按下開關後，電池和燈泡接成完整電路。</p>
+        </article>
+        <article class="app-card">
+          <svg width="92" height="92" viewBox="0 0 92 92" aria-hidden="true">
+            <rect x="16" y="18" width="60" height="58" rx="7" fill="#eceff1" stroke="#455a64" stroke-width="4"/>
+            <rect x="24" y="27" width="44" height="20" fill="#90caf9"/>
+            <circle cx="46" cy="37" r="7" fill="#ffeb3b" stroke="#f08c00" stroke-width="3"/>
+          </svg>
+          <h4>門鈴</h4>
+          <p>按鈕被按下時，蜂鳴器才會通電發聲。</p>
+        </article>
+        <article class="app-card">
+          <svg width="106" height="92" viewBox="0 0 106 92" aria-hidden="true">
+            <rect x="24" y="22" width="58" height="28" rx="8" fill="#ff7043" stroke="#bf360c" stroke-width="4"/>
+            <circle cx="38" cy="36" r="7" fill="#ffd43b"/>
+            <rect x="18" y="55" width="70" height="18" rx="5" fill="#37474f"/>
+            <line x1="24" y1="50" x2="24" y2="55" stroke="#37474f" stroke-width="4"/>
+            <line x1="82" y1="50" x2="82" y2="55" stroke="#37474f" stroke-width="4"/>
+          </svg>
+          <h4>玩具車</h4>
+          <p>電池、馬達與開關串起來，車輪才會轉。</p>
+        </article>
+        <article class="app-card">
+          <svg width="92" height="92" viewBox="0 0 92 92" aria-hidden="true">
+            <rect x="18" y="26" width="56" height="38" rx="8" fill="#ffd43b" stroke="#f08c00" stroke-width="4"/>
+            <circle cx="46" cy="45" r="12" fill="#f08c00" stroke="#bf360c" stroke-width="3"/>
+            <path d="M38 45 H54" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+          <h4>蜂鳴器</h4>
+          <p>通電時發出提示音，斷路時保持安靜。</p>
+        </article>
       </div>
+    </section>
+
+    <section class="section">
+      <h3>小測驗：你能判斷電路狀態嗎？</h3>
+
+      <div class="quiz">
+        <h4>第 1 題：哪一組最可能讓燈泡發亮？</h4>
+        <div class="quiz-options" id="q1options">
+          <button class="quiz-option" type="button" data-correct="false">只有電池</button>
+          <button class="quiz-option" type="button" data-correct="false">只有燈泡</button>
+          <button class="quiz-option" type="button" data-correct="true">電池、導線、燈泡接成一圈</button>
+          <button class="quiz-option" type="button" data-correct="false">只有一條導線</button>
+        </div>
+        <div class="quiz-result" id="q1result" aria-live="polite"></div>
+      </div>
+
+      <div class="quiz">
+        <h4>第 2 題：開關打開時，電路通常是什麼狀態？</h4>
+        <div class="quiz-options" id="q2options">
+          <button class="quiz-option" type="button" data-correct="false">完整電路</button>
+          <button class="quiz-option" type="button" data-correct="true">斷路</button>
+          <button class="quiz-option" type="button" data-correct="false">電池變大</button>
+          <button class="quiz-option" type="button" data-correct="false">燈泡變亮</button>
+        </div>
+        <div class="quiz-result" id="q2result" aria-live="polite"></div>
+      </div>
+
+      <div class="quiz">
+        <h4>第 3 題：如果導線中間斷掉，電流會怎樣？</h4>
+        <div class="quiz-options" id="q3options">
+          <button class="quiz-option" type="button" data-correct="false">流得更快</button>
+          <button class="quiz-option" type="button" data-correct="false">繼續繞一圈</button>
+          <button class="quiz-option" type="button" data-correct="true">停止流動</button>
+          <button class="quiz-option" type="button" data-correct="false">變成聲音</button>
+        </div>
+        <div class="quiz-result" id="q3result" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <div class="success-box">
+      <h3>你已經掌握完整電路的核心概念</h3>
+      <p>只要記得「電流需要一條沒有缺口的回家路」，就能更容易理解電流急急棒、開關、蜂鳴器與 LED 的工作方式。</p>
     </div>
 
-    <!-- 互動：壞燈泡/修復 -->
-    <div class="interactive-demo">
-      <h3 class="section-title">🎮 串聯並聯體驗</h3>
-      <div class="demo-controls">
-        <button class="demo-btn" onclick="breakBulb()">💥 弄壞一個燈泡</button>
-        <button class="demo-btn" onclick="fixBulb()">🔧 修理燈泡</button>
-      </div>
-      <div id="demoResult" class="status"></div>
-    </div>
-
-    <!-- 你的下方卡片保持原意（略微潤飾文字） -->
-    <div class="card">
-      <h3 class="section-title" style="margin-bottom:1.5rem;">🔬 電路實驗小課堂</h3>
-      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem;">
-        <div style="background:#f8f9fa; padding:1.5rem; border-radius:10px; border-left:4px solid #28a745;">
-          <h4 style="color:#28a745; margin-bottom:1rem;">✅ 實驗一：簡單電路</h4>
-          <p><strong>材料：</strong>電池、LED、電阻、電線</p>
-          <p><strong>目標：</strong>讓 LED 安全發光（加保護電阻）</p>
-          <p><strong>重點：</strong>閉合回路 + 極性正確</p>
-        </div>
-        <div style="background:#f8f9fa; padding:1.5rem; border-radius:10px; border-left:4px solid #ffc107;">
-          <h4 style="color:#ffc107; margin-bottom:1rem;">⚠️ 實驗二：斷路測試</h4>
-          <p><strong>材料：</strong>電池、LED、開關</p>
-          <p><strong>目標：</strong>用開關控制燈泡</p>
-          <p><strong>重點：</strong>開關斷開即開路，LED 不亮</p>
-        </div>
-        <div style="background:#f8f9fa; padding:1.5rem; border-radius:10px; border-left:4px solid #17a2b8;">
-          <h4 style="color:#17a2b8; margin-bottom:1rem;">🔄 實驗三：串並聯對比</h4>
-          <p><strong>材料：</strong>電池、2 顆 LED、電阻、電線</p>
-          <p><strong>目標：</strong>比較亮度與容錯：串聯全滅、並聯單獨亮</p>
-        </div>
-      </div>
-    </div>
-
-    <div style="background: linear-gradient(135deg,#4ECDC4,#44A08D); color:#fff; border-radius:15px; padding:2rem; margin:2rem 0;">
-      <h3 style="text-align:center; margin-bottom:2rem;">🏠 生活中的電路應用</h3>
-      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1.5rem;">
-        <div style="text-align:center;"><div style="font-size:3rem; margin-bottom:1rem;">🎄</div><h4>聖誕燈串</h4><p>早期串聯，一壞全暗；現在多並聯，更可靠。</p></div>
-        <div style="text-align:center;"><div style="font-size:3rem; margin-bottom:1rem;">🏠</div><h4>家裡的電燈</h4><p>並聯電路，個別控制，不互相影響。</p></div>
-        <div style="text-align:center;"><div style="font-size:3rem; margin-bottom:1rem;">🚗</div><h4>汽車電路</h4><p>燈具與模組多並聯，提高安全性與可維修性。</p></div>
-        <div style="text-align:center;"><div style="font-size:3rem; margin-bottom:1rem;">📱</div><h4>手機充電</h4><p>完整充電迴路與保護機制，確保安全。</p></div>
-      </div>
-    </div>
-
-    <div class="navigation">
-      <a href="battery-power.html" class="nav-btn">⬅️ 上一課：電池的秘密</a>
-      <a href="short-circuit.html" class="nav-btn">下一課：危險的短路 ➡️</a>
-    </div>
-  </div>
+    <nav class="navigation" aria-label="上下頁">
+      <a href="battery-power.html" class="nav-btn">上一頁：電池的力量</a>
+      <a href="short-circuit.html" class="nav-btn">下一頁：短路的危險</a>
+    </nav>
+  </main>
 
   <script>
-    // 互動狀態
-    let seriesOn = false;
-    let parallelOn = false;
-    let bulbBroken = false;
+    let switchOn = false;
+    const switchTarget = document.getElementById("switchTarget");
+    const switchLever = document.getElementById("switchLever");
+    const switchLabel = document.getElementById("switchLabel");
+    const switchStatus = document.getElementById("switchStatus");
+    const switchElectrons = document.getElementById("switchElectrons");
+    const bulbBody = document.getElementById("bulbBody");
+    const bulbGlow = document.getElementById("bulbGlow");
+    const bulbLabel = document.getElementById("bulbLabel");
+    const bulbFilament = document.getElementById("bulbFilament");
 
-    const sLamp1 = () => document.getElementById('sLamp1');
-    const sLamp2 = () => document.getElementById('sLamp2');
-    const pLamp1 = () => document.getElementById('pLamp1');
-    const pLamp2 = () => document.getElementById('pLamp2');
-
-    function setLamp(el, state){ // 'off' | 'dim' | 'on'
-      if(!el) return;
-      el.classList.remove('on','dim');
-      if(state==='on') el.classList.add('on');
-      else if(state==='dim') el.classList.add('dim');
-    }
-
-    function toggleSeries(){
-      seriesOn = !seriesOn;
-      const status = document.getElementById('seriesStatus');
-      if(seriesOn){
-        if(bulbBroken){
-          // 串聯：壞一顆即斷路 → 都不亮
-          setLamp(sLamp1(),'off'); setLamp(sLamp2(),'off');
-          status.textContent = '💡 串聯：有燈泡壞掉 → 迴路斷開 → 全部不亮';
-          status.style.color = '#c62828';
-        }else{
-          // 串聯：亮度較低（等效分壓）→ 用 dim 呈現
-          setLamp(sLamp1(),'dim'); setLamp(sLamp2(),'dim');
-          status.textContent = '🔆 串聯開啟：亮度較暗（電壓分配）';
-          status.style.color = '#2e7d32';
-        }
-      }else{
-        setLamp(sLamp1(),'off'); setLamp(sLamp2(),'off');
-        status.textContent = '⚫ 串聯關閉';
-        status.style.color = '#666';
+    function setSwitch(on) {
+      switchOn = on;
+      if (on) {
+        switchLever.setAttribute("x2", "330");
+        switchLever.setAttribute("y2", "112");
+        switchLever.setAttribute("stroke", "#2f9e44");
+        switchLabel.textContent = "完整通路";
+        switchElectrons.style.visibility = "visible";
+        bulbBody.setAttribute("fill", "#ffeb3b");
+        bulbBody.setAttribute("stroke", "#f08c00");
+        bulbGlow.setAttribute("opacity", "0.48");
+        bulbFilament.setAttribute("opacity", "1");
+        bulbLabel.textContent = "燈泡發亮";
+        switchStatus.className = "status on";
+        switchStatus.textContent = "開關關上：電路變成完整回路，電流開始流動，燈泡發亮。";
+      } else {
+        switchLever.setAttribute("x2", "314");
+        switchLever.setAttribute("y2", "78");
+        switchLever.setAttribute("stroke", "#e03131");
+        switchLabel.textContent = "目前斷開";
+        switchElectrons.style.visibility = "hidden";
+        bulbBody.setAttribute("fill", "#eceff1");
+        bulbBody.setAttribute("stroke", "#37474f");
+        bulbGlow.setAttribute("opacity", "0");
+        bulbFilament.setAttribute("opacity", "0.4");
+        bulbLabel.textContent = "燈泡熄滅";
+        switchStatus.className = "status off";
+        switchStatus.textContent = "開關斷開：電路中有缺口，電流暫停，燈泡不亮。";
       }
     }
 
-    function toggleParallel(){
-      parallelOn = !parallelOn;
-      const status = document.getElementById('parallelStatus');
-      if(parallelOn){
-        if(bulbBroken){
-          // 並聯：壞一顆，另一顆仍正常亮
-          setLamp(pLamp1(),'on'); setLamp(pLamp2(),'off');
-          status.textContent = '💡 並聯開啟：一顆壞掉，另一顆仍正常發亮';
-          status.style.color = '#FFC107';
-        }else{
-          setLamp(pLamp1(),'on'); setLamp(pLamp2(),'on');
-          status.textContent = '✨ 並聯開啟：兩顆都很亮（各自得到完整電壓）';
-          status.style.color = '#2e7d32';
-        }
-      }else{
-        setLamp(pLamp1(),'off'); setLamp(pLamp2(),'off');
-        status.textContent = '⚫ 並聯關閉';
-        status.style.color = '#666';
+    switchTarget.addEventListener("click", () => setSwitch(!switchOn));
+    switchTarget.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        setSwitch(!switchOn);
       }
+    });
+
+    const breakMessages = {
+      breakTop: "上方導線被切斷：路徑中斷，電流無法繞完整一圈。",
+      breakRight: "右側導線被切斷：燈泡和電池之間失去連接。",
+      breakBottom: "下方導線被切斷：回到電池的路斷掉了。",
+      breakLeft: "左側導線被切斷：電池無法把能量送完整圈。"
+    };
+    const breakStatus = document.getElementById("breakStatus");
+    const breakElectrons = document.getElementById("breakElectrons");
+    const breakBulbBody = document.getElementById("breakBulbBody");
+    const breakBulbGlow = document.getElementById("breakBulbGlow");
+    const breakBulbLabel = document.getElementById("breakBulbLabel");
+    const breakTargets = document.querySelectorAll(".break-target");
+
+    function setBroken(targetId) {
+      breakTargets.forEach(target => target.classList.remove("broken"));
+      document.getElementById(targetId).classList.add("broken");
+      breakElectrons.style.visibility = "hidden";
+      breakBulbBody.setAttribute("fill", "#eceff1");
+      breakBulbBody.setAttribute("stroke", "#37474f");
+      breakBulbGlow.setAttribute("opacity", "0");
+      breakBulbLabel.textContent = "燈泡熄滅";
+      breakStatus.className = "status broken";
+      breakStatus.textContent = breakMessages[targetId];
     }
 
-    function breakBulb(){
-      bulbBroken = true;
-      const result = document.getElementById('demoResult');
-      result.textContent = '💥 啊！一個燈泡壞掉了。串聯會全滅；並聯其餘仍會亮。';
-      result.style.color = '#c62828';
-      // 立即反映在當前開啟的電路
-      if(seriesOn){ seriesOn = false; toggleSeries(); seriesOn = true; toggleSeries(); }
-      if(parallelOn){ parallelOn = false; toggleParallel(); parallelOn = true; toggleParallel(); }
+    function resetBreak() {
+      breakTargets.forEach(target => target.classList.remove("broken"));
+      breakElectrons.style.visibility = "visible";
+      breakBulbBody.setAttribute("fill", "#ffeb3b");
+      breakBulbBody.setAttribute("stroke", "#f08c00");
+      breakBulbGlow.setAttribute("opacity", "0.38");
+      breakBulbLabel.textContent = "燈泡發亮";
+      breakStatus.className = "status ready";
+      breakStatus.textContent = "目前是完整電路：電流能沿著導線繞一圈，燈泡會亮。";
     }
 
-    function fixBulb(){
-      bulbBroken = false;
-      const result = document.getElementById('demoResult');
-      result.textContent = '🔧 燈泡修好了！恢復正常對比：串聯較暗、並聯很亮。';
-      result.style.color = '#2e7d32';
-      if(seriesOn){ seriesOn = false; toggleSeries(); seriesOn = true; toggleSeries(); }
-      if(parallelOn){ parallelOn = false; toggleParallel(); parallelOn = true; toggleParallel(); }
+    breakTargets.forEach(target => {
+      target.addEventListener("click", () => setBroken(target.id));
+      target.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          setBroken(target.id);
+        }
+      });
+    });
+    document.getElementById("breakReset").addEventListener("click", resetBreak);
+
+    function bindQuiz(optionsId, resultId, okMessage, hintMessage) {
+      const options = document.querySelectorAll("#" + optionsId + " .quiz-option");
+      const result = document.getElementById(resultId);
+      options.forEach(option => {
+        option.addEventListener("click", () => {
+          const isCorrect = option.dataset.correct === "true";
+          options.forEach(item => {
+            item.classList.remove("correct", "wrong");
+            item.disabled = isCorrect;
+          });
+          option.classList.add(isCorrect ? "correct" : "wrong");
+          result.textContent = isCorrect ? "答對了：" + okMessage : "再想想：" + hintMessage;
+          result.style.color = isCorrect ? "#1b6f2a" : "#b42323";
+        });
+      });
     }
+
+    bindQuiz(
+      "q1options",
+      "q1result",
+      "三個必要條件都出現，而且接成一圈，電流才能連續流動。",
+      "只有零件還不夠，重點是要接成封閉回路。"
+    );
+    bindQuiz(
+      "q2options",
+      "q2result",
+      "開關打開就像把路切開，電路變成斷路。",
+      "想想看，電流能不能跨過空氣中的缺口？"
+    );
+    bindQuiz(
+      "q3options",
+      "q3result",
+      "導線中間斷掉後，電流沒有完整路徑，所以會停止。",
+      "電流需要完整的路，少一段就無法繞回電池。"
+    );
   </script>
 </body>
 </html>
