@@ -3,771 +3,1175 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D 列印 - 創客電子學院</title>
+  <title>3D 列印小學堂 - 電流急急棒</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #2196F3;
-      --primary-dark: #1976D2;
-      --secondary: #FF9800;
-      --background: #f8f9fa;
-      --text: #333;
-      --border: #e9ecef;
-      --card-bg: #fff;
-      --shadow: 0 2px 10px rgba(0,0,0,0.1);
-      --candy-pink: #FF6B9D;
-      --candy-cyan: #48DBFB;
-      --candy-green: #5CD85A;
-      --candy-purple: #A55EEA;
-      --print-color: #6366f1;
+      --primary: #6366f1;
+      --primary-dark: #4338ca;
+      --accent: #f472b6;
+      --hot: #ef4444;
+      --warm: #f59f00;
+      --cool: #06b6d4;
+      --safe: #2f9e44;
+      --safe-dark: #1b6f2a;
+      --danger: #e03131;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --bg: #f5f7fc;
+      --card: #ffffff;
+      --line: #e5e7eb;
+      --shadow: 0 12px 30px rgba(31, 41, 55, 0.12);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { box-sizing: border-box; }
 
     body {
-      font-family: 'Nunito', 'Microsoft JhengHei', sans-serif;
-      background: var(--background);
-      color: var(--text);
-      line-height: 1.7;
+      margin: 0;
+      font-family: "Nunito", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(99, 102, 241, 0.18), transparent 28rem),
+        radial-gradient(circle at 88% 0%, rgba(244, 114, 182, 0.18), transparent 30rem),
+        var(--bg);
+      color: var(--ink);
       font-size: 18px;
+      line-height: 1.65;
     }
 
     .header {
-      background: linear-gradient(135deg, var(--primary), #5C6BC0);
-      color: white;
-      padding: 1.2rem 0;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
       box-shadow: var(--shadow);
     }
-
     .nav {
-      max-width: 1200px;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 0 1.5rem;
+      padding: 0.9rem 1.25rem;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
     }
-
-    .nav h1 { font-size: 1.6rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+    .nav h1 { margin: 0; font-size: clamp(1.05rem, 2.5vw, 1.45rem); font-weight: 900; }
+    .nav a, .nav-btn, button { min-height: 44px; font: inherit; }
     .nav a {
-      color: white;
+      color: #fff;
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 50px;
-      font-weight: 700;
-      transition: all 0.3s ease;
-      border: 2px solid rgba(255,255,255,0.3);
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-weight: 800;
+      white-space: nowrap;
     }
-    .nav a:hover {
-      background: rgba(255,255,255,0.2);
-      transform: translateY(-2px);
+    .nav a:hover, .nav a:focus-visible {
+      background: rgba(255, 255, 255, 0.18);
+      outline: none;
     }
 
-    .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+    .container {
+      width: min(1180px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1.35rem 0 2.5rem;
+    }
 
-    .intro {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 24px;
+    .hero, .section, .success-box {
+      background: var(--card);
+      border: 1px solid var(--line);
       box-shadow: var(--shadow);
-      margin-bottom: 2rem;
+    }
+
+    .hero {
+      border-radius: 24px;
+      padding: clamp(1.2rem, 3vw, 2rem);
       text-align: center;
-      border: 3px solid rgba(33, 150, 243, 0.2);
-    }
-    .intro h2 { color: var(--primary); margin-bottom: 1rem; font-size: 2rem; font-weight: 900; }
-    .intro p { font-size: 1.15rem; color: #555; max-width: 750px; margin: 0 auto; }
-
-    .section {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-      border: 3px solid var(--border);
-      position: relative;
+      background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 45%, #fce7f3 100%);
       overflow: hidden;
     }
+    .hero h2 {
+      margin: 0 0 0.45rem;
+      color: var(--primary-dark);
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      line-height: 1.15;
+      font-weight: 900;
+    }
+    .lead {
+      max-width: 780px;
+      margin: 0 auto 1rem;
+      color: #4d5b62;
+      font-size: clamp(1rem, 2.5vw, 1.18rem);
+      font-weight: 800;
+    }
+    .hero-scene { width: 100%; height: auto; display: block; overflow: visible; }
+    .svg-label {
+      font-family: "Nunito", "Microsoft JhengHei", sans-serif;
+      font-weight: 900;
+      fill: var(--ink);
+      paint-order: stroke;
+      stroke: rgba(255, 255, 255, 0.94);
+      stroke-width: 5px;
+      stroke-linejoin: round;
+    }
+
+    .section {
+      position: relative;
+      overflow: hidden;
+      margin-top: 1.4rem;
+      padding: clamp(1.15rem, 3vw, 1.7rem);
+      border-radius: 20px;
+    }
     .section::before {
-      content: '';
+      content: "";
       position: absolute;
-      top: 0; left: 0; right: 0;
+      inset: 0 0 auto;
       height: 5px;
-      background: linear-gradient(90deg, var(--primary), var(--candy-pink));
-      border-radius: 24px 24px 0 0;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--warm));
     }
     .section h3 {
-      color: var(--primary);
-      margin-bottom: 1.2rem;
-      font-size: 1.5rem;
+      margin: 0 0 0.5rem;
+      color: var(--primary-dark);
+      text-align: center;
+      font-size: clamp(1.25rem, 3.2vw, 1.65rem);
+      line-height: 1.3;
+      font-weight: 900;
+    }
+    .section p.section-lead {
+      max-width: 780px;
+      margin: 0 auto 1rem;
+      text-align: center;
+      color: #4d5b62;
       font-weight: 800;
+      font-size: 1rem;
+    }
+    .hint {
+      margin: 0.8rem auto 0;
+      max-width: 760px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    /* ========== Canvas 列印實驗室 ========== */
+    .printer-lab {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 1.2rem;
+      align-items: stretch;
+      margin-top: 0.5rem;
+    }
+
+    .printer-canvas-wrap {
+      background: linear-gradient(135deg, #1e1b4b, #312e81);
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: 0 20px 50px rgba(31, 41, 55, 0.3);
+      border: 4px solid #4338ca;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .progress-row {
       display: flex;
       align-items: center;
       gap: 10px;
+      color: #c7d2fe;
+      font-size: 0.92rem;
+      font-weight: 900;
     }
-    .section h3 .emoji { font-size: 1.8rem; }
-
-    /* ===== Canvas 列印動畫 ===== */
-    .canvas-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 2.5rem;
-      padding: 1.5rem 0;
-    }
-    .canvas-box {
-      background: #111827;
-      border-radius: 20px;
-      padding: 16px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-      border: 4px solid #374151;
+    .progress-bar {
+      flex: 1;
+      height: 16px;
+      background: #1e1b4b;
+      border: 2px solid #4338ca;
+      border-radius: 999px;
+      overflow: hidden;
       position: relative;
     }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--warm), var(--safe));
+      transition: width 0.2s;
+      border-radius: 999px;
+    }
+    .progress-pct {
+      min-width: 48px;
+      text-align: right;
+      color: #fff;
+      font-weight: 900;
+    }
+
     #printerCanvas {
       display: block;
       border-radius: 12px;
+      width: 100%;
+      height: auto;
+      background: #0f0c29;
     }
-    .canvas-info {
-      flex: 1;
-      min-width: 280px;
-      max-width: 420px;
-    }
-    .canvas-info h4 { color: var(--primary); margin-bottom: 0.8rem; font-size: 1.25rem; }
-    .canvas-info p { color: #555; margin-bottom: 0.7rem; font-size: 1.05rem; }
 
-    .status-panel {
-      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-      border: 2px solid rgba(33,150,243,0.3);
-      border-radius: 16px;
-      padding: 14px 18px;
-      margin-top: 1rem;
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .model-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.5rem;
+    }
+    .model-tab {
+      padding: 0.55rem 0.6rem;
+      border: 3px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .model-tab .em { font-size: 1.5rem; line-height: 1; }
+    .model-tab:hover { transform: translateY(-2px); border-color: var(--primary); }
+    .model-tab.active {
+      background: linear-gradient(135deg, #ede9fe, #fce7f3);
+      border-color: var(--primary);
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.18);
+    }
+
+    .status-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      font-size: 0.95rem;
+      gap: 0.4rem 0.8rem;
+      padding: 0.7rem 0.9rem;
+      background: #f5f7fc;
+      border-radius: 12px;
+      font-size: 0.92rem;
     }
-    .status-panel .label { color: #64748b; font-weight: 700; }
-    .status-panel .value { color: var(--primary); font-weight: 800; text-align: right; }
+    .status-grid .label { color: #64748b; font-weight: 700; }
+    .status-grid .value { color: var(--primary-dark); font-weight: 900; text-align: right; }
+    .status-grid .value.hot { color: var(--hot); }
+    .status-grid .value.warm { color: var(--warm); }
+    .status-grid .value.safe { color: var(--safe-dark); }
 
-    .controls-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 1rem;
-      flex-wrap: wrap;
+    .control-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.5rem;
     }
     .ctrl-btn {
-      padding: 10px 22px;
+      padding: 0.6rem;
       border: none;
-      border-radius: 50px;
-      font-weight: 800;
-      font-size: 0.95rem;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 0.92rem;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.2s;
       font-family: inherit;
+      color: #fff;
     }
-    .ctrl-btn.primary {
-      background: linear-gradient(135deg, var(--primary), #5C6BC0);
-      color: white;
-      box-shadow: 0 4px 15px rgba(33,150,243,0.35);
-    }
-    .ctrl-btn.secondary {
-      background: linear-gradient(135deg, var(--secondary), #e65100);
-      color: white;
-      box-shadow: 0 4px 15px rgba(255,152,0,0.35);
-    }
-    .ctrl-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    .ctrl-btn.play { background: linear-gradient(135deg, var(--safe), var(--safe-dark)); }
+    .ctrl-btn.pause { background: linear-gradient(135deg, var(--warm), #b76b00); }
+    .ctrl-btn.restart { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+    .ctrl-btn:hover { transform: translateY(-2px); filter: brightness(1.08); box-shadow: 0 8px 18px rgba(0,0,0,0.12); }
 
-    /* ===== FDM 零件圖解 ===== */
-    .fdm-diagram {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
-    .part-card {
-      background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-      border: 3px solid var(--border);
-      border-radius: 20px;
-      padding: 1.5rem;
-      text-align: center;
-      transition: all 0.3s ease;
-      cursor: default;
-    }
-    .part-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 30px rgba(33,150,243,0.15);
-      border-color: var(--primary);
-    }
-    .part-card .part-icon {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 12px;
-      border-radius: 16px;
+    .speed-row {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 2rem;
+      gap: 0.6rem;
+      font-weight: 900;
+      color: var(--ink);
+      font-size: 0.9rem;
     }
-    .part-card .part-icon.nozzle { background: linear-gradient(135deg, #fecaca, #fca5a5); }
-    .part-card .part-icon.bed    { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
-    .part-card .part-icon.spool  { background: linear-gradient(135deg, #ddd6fe, #c4b5fd); }
-    .part-card .part-icon.motor  { background: linear-gradient(135deg, #fef3c7, #fde68a); }
-    .part-card .part-icon.frame  { background: linear-gradient(135deg, #e0f2fe, #bae6fd); }
-    .part-card .part-icon.fan    { background: linear-gradient(135deg, #cffafe, #a5f3fc); }
-    .part-card strong { display: block; color: var(--primary); margin-bottom: 6px; font-size: 1.1rem; }
-    .part-card p { color: #555; font-size: 0.95rem; line-height: 1.5; }
+    .speed-row input[type=range] {
+      flex: 1;
+      accent-color: var(--accent);
+    }
+    .speed-readout {
+      min-width: 56px;
+      text-align: center;
+      padding: 0.2rem 0.6rem;
+      background: linear-gradient(135deg, var(--accent), var(--warm));
+      color: #fff;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 0.85rem;
+    }
 
-    /* ===== 材料比較 ===== */
+    /* ========== 零件 mini SVG ========== */
+    .parts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .part-card {
+      padding: 1.1rem 0.9rem;
+      border-radius: 18px;
+      background: #fff;
+      border: 3px solid var(--line);
+      box-shadow: 0 8px 22px rgba(31, 41, 55, 0.08);
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .part-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 28px rgba(31, 41, 55, 0.12);
+      border-color: var(--primary);
+    }
+    .part-card svg { display: block; margin: 0 auto 0.4rem; }
+    .part-card h4 { margin: 0 0 0.3rem; color: var(--primary-dark); font-size: 1.05rem; font-weight: 900; }
+    .part-card p { margin: 0; color: #4d5b62; font-size: 0.9rem; font-weight: 800; }
+
+    /* ========== 材料表 ========== */
     .material-table {
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
-      margin-top: 1.5rem;
+      margin-top: 0.5rem;
       border-radius: 16px;
       overflow: hidden;
       box-shadow: var(--shadow);
     }
     .material-table th {
-      background: linear-gradient(135deg, var(--primary), #5C6BC0);
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
-      padding: 14px 16px;
-      font-weight: 800;
+      padding: 12px 14px;
+      font-weight: 900;
       font-size: 1rem;
       text-align: left;
     }
     .material-table td {
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
       font-size: 0.95rem;
+      vertical-align: middle;
     }
     .material-table tbody tr { background: white; transition: background 0.2s; }
-    .material-table tbody tr:hover { background: #f0f9ff; }
+    .material-table tbody tr:hover { background: #f5f7fc; }
     .material-table tbody tr:last-child td { border-bottom: none; }
     .material-tag {
       display: inline-block;
       padding: 4px 12px;
-      border-radius: 50px;
+      border-radius: 999px;
       font-size: 0.85rem;
-      font-weight: 700;
-      color: white;
+      font-weight: 900;
+      color: #fff;
     }
-    .tag-pla  { background: var(--candy-green); }
-    .tag-abs  { background: var(--secondary); }
-    .tag-petg { background: var(--candy-cyan); color: #1e3a5f; }
-    .tag-tpu  { background: var(--candy-purple); }
+    .tag-pla { background: var(--safe); }
+    .tag-abs { background: var(--warm); }
+    .tag-petg { background: var(--cool); }
+    .tag-tpu { background: var(--accent); }
+    .temp-bar { display: inline-flex; align-items: center; gap: 8px; }
+    .temp-fill { height: 8px; border-radius: 5px; background: linear-gradient(90deg, #fbbf24, #ef4444); }
 
-    /* ===== 溫度圖示 ===== */
-    .temp-bar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .temp-fill {
-      height: 10px;
-      border-radius: 5px;
-      background: linear-gradient(90deg, #fbbf24, #ef4444);
-    }
-
-    /* ===== 可以印什麼 ===== */
-    .idea-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
-    .idea-card {
-      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-      border: 3px solid rgba(33, 150, 243, 0.3);
-      border-radius: 20px;
-      padding: 1.5rem;
-      text-align: center;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    .idea-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 12px 30px rgba(33, 150, 243, 0.2);
-      border-color: var(--primary);
-    }
-    .idea-card .icon { font-size: 3rem; margin-bottom: 0.8rem; display: block; }
-    .idea-card strong { color: var(--primary); font-size: 1.1rem; }
-
-    /* ===== 安全提醒 ===== */
-    .safety-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
-    .safety-card {
-      background: #fff8f0;
-      border: 3px solid rgba(255, 152, 0, 0.4);
-      border-radius: 20px;
-      padding: 1.5rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      transition: all 0.3s ease;
-    }
-    .safety-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(255, 152, 0, 0.15); }
-    .safety-card .icon { font-size: 2.5rem; flex-shrink: 0; }
-    .safety-card h4 { color: #b45309; margin-bottom: 0.5rem; font-size: 1.1rem; }
-    .safety-card p { color: #666; font-size: 1rem; }
-
-    /* ===== 流程步驟 ===== */
-    .steps-list { margin-top: 1rem; }
+    /* ========== 步驟流程 ========== */
+    .steps-list { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 0.5rem; }
     .step-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 1.2rem;
-      margin-bottom: 1.5rem;
-      padding: 1rem;
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 1rem;
       background: #f8fafc;
-      border-radius: 16px;
+      border-radius: 14px;
       border-left: 5px solid var(--primary);
-      transition: all 0.3s ease;
+      transition: transform 0.2s, background 0.2s;
     }
-    .step-item:hover { background: #f0f9ff; transform: translateX(8px); }
+    .step-item:hover { background: #ede9fe; transform: translateX(4px); }
     .step-num {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(135deg, var(--primary), var(--candy-pink));
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
       color: white;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: grid; place-items: center;
       font-weight: 900;
       font-size: 1.2rem;
-      flex-shrink: 0;
     }
-    .step-item h4 { color: var(--primary); margin-bottom: 0.3rem; }
-    .step-item p { color: #555; font-size: 1.05rem; }
+    .step-item h4 { margin: 0 0 0.2rem; color: var(--primary-dark); font-size: 1.05rem; font-weight: 900; }
+    .step-item p { margin: 0; color: #4d5b62; font-size: 0.95rem; font-weight: 800; }
 
-    .icon-3d-printer { display: inline-block; vertical-align: middle; }
-    .icon-3d-printer svg { display: block; }
-    .floating-emoji .icon-3d-printer svg { width: 1.2em; height: 1.2em; }
-    .intro .icon-3d-printer svg { width: 1.4em; height: 1.4em; }
-
-    .floating-emoji {
-      display: inline-block;
-      animation: float 3s ease-in-out infinite;
+    /* ========== 可以印什麼 ========== */
+    .ideas-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin-top: 0.5rem;
     }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+    .idea-card {
+      padding: 1rem 0.6rem;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ede9fe, #fce7f3);
+      border: 3px solid transparent;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
     }
+    .idea-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary);
+      box-shadow: 0 10px 22px rgba(99, 102, 241, 0.2);
+    }
+    .idea-card .em { font-size: 2.2rem; display: block; line-height: 1; margin-bottom: 0.3rem; }
+    .idea-card h4 { margin: 0 0 0.2rem; color: var(--primary-dark); font-size: 0.95rem; font-weight: 900; }
+    .idea-card p { margin: 0; color: #4d5b62; font-size: 0.85rem; font-weight: 800; }
 
-    .back-home {
+    /* ========== 安全 ========== */
+    .safety-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin-top: 0.5rem;
+    }
+    .safety-card {
+      padding: 1rem;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #fff7ed, #fef3c7);
+      border: 3px solid #fdba74;
+      text-align: center;
+    }
+    .safety-card .icon-emoji {
+      width: 52px; height: 52px;
+      margin: 0 auto 0.4rem;
+      display: grid; place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #fed7aa, #fdba74);
+      font-size: 1.7rem;
+    }
+    .safety-card h4 { margin: 0 0 0.2rem; color: #c2410c; font-size: 1rem; font-weight: 900; }
+    .safety-card p { margin: 0; color: #5c4a00; font-size: 0.9rem; font-weight: 800; }
+
+    /* ========== 測驗 ========== */
+    .quiz {
+      margin-top: 0.8rem;
+      padding: 1rem;
+      border-radius: 16px;
+      background: #f8fbfe;
+      border-left: 6px solid var(--primary);
+    }
+    .quiz h4 { margin: 0 0 0.7rem; color: #37474f; font-size: 1.05rem; font-weight: 900; }
+    .quiz-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.6rem; }
+    .quiz-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      min-height: 92px;
+      padding: 0.6rem;
+      border: 3px solid var(--line);
+      border-radius: 13px;
+      background: #fff;
+      color: #37474f;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 900;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .quiz-option .emoji { font-size: 1.7rem; line-height: 1; }
+    .quiz-option:hover, .quiz-option:focus-visible {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      outline: none;
+    }
+    .quiz-option.correct { background: #d3f9d8; border-color: var(--safe); color: var(--safe-dark); }
+    .quiz-option.wrong { background: #ffe3e3; border-color: var(--danger); color: #b42323; }
+    .quiz-result { min-height: 1.5rem; margin-top: 0.6rem; text-align: center; font-weight: 900; }
+
+    .success-box {
+      margin-top: 1.4rem;
+      padding: 1.4rem;
+      border-radius: 20px;
+      border-color: #c7d2fe;
+      background: linear-gradient(135deg, #ede9fe, #fce7f3);
+      text-align: center;
+    }
+    .success-box h3 { margin: 0 0 0.4rem; color: var(--primary-dark); font-size: 1.3rem; font-weight: 900; }
+    .success-box p { max-width: 760px; margin: 0 auto; color: #4338ca; font-weight: 800; }
+
+    .navigation {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.4rem;
+    }
+    .nav-btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: linear-gradient(135deg, var(--primary), #5C6BC0);
-      color: white;
-      padding: 12px 24px;
-      border-radius: 50px;
+      justify-content: center;
+      padding: 0.85rem 1.4rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
       text-decoration: none;
-      font-weight: 800;
-      margin-top: 2rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 6px 20px rgba(33, 150, 243, 0.35);
+      font-weight: 900;
+      box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
     }
-    .back-home:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(33, 150, 243, 0.45);
+    .nav-btn:hover, .nav-btn:focus-visible {
+      filter: brightness(1.08);
+      transform: translateY(-2px);
+      outline: none;
     }
 
-    .highlight-box {
-      background: linear-gradient(135deg, #ede9fe, #ddd6fe);
-      border: 3px solid rgba(165, 94, 234, 0.4);
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-top: 1.5rem;
+    @media (max-width: 960px) {
+      .printer-lab { grid-template-columns: 1fr; }
+      .parts-grid { grid-template-columns: 1fr 1fr; }
+      .ideas-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .safety-grid { grid-template-columns: 1fr 1fr; }
+      .quiz-options { grid-template-columns: 1fr 1fr; }
     }
-    .highlight-box h4 { color: var(--candy-purple); margin-bottom: 0.5rem; }
-    .highlight-box p { color: #555; }
-
-    @media (max-width: 768px) {
-      .canvas-wrapper { flex-direction: column; gap: 1.5rem; }
-      #printerCanvas { width: 100% !important; height: auto !important; }
-      .canvas-box { padding: 10px; }
+    @media (max-width: 560px) {
       body { font-size: 16px; }
-      .intro h2 { font-size: 1.6rem; }
-      .status-panel { grid-template-columns: 1fr; }
-      .material-table { font-size: 0.85rem; }
-      .material-table th, .material-table td { padding: 8px 10px; }
+      .container { width: min(100% - 1rem, 1180px); }
+      .hero, .section, .success-box { border-radius: 16px; }
+      .nav { align-items: flex-start; flex-direction: column; }
+      .ideas-grid, .safety-grid { grid-template-columns: 1fr 1fr; }
+      .control-row { grid-template-columns: 1fr; }
+      .parts-grid { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
 <body>
   <header class="header">
-    <nav class="nav">
-      <h1><span class="floating-emoji"><span class="icon-3d-printer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="14" rx="1.5"/><rect x="5" y="15" width="14" height="2" rx="0.5"/><rect x="9" y="6" width="6" height="5" rx="0.5"/><circle cx="12" cy="12" r="1.2"/></svg></span></span> 3D 列印小學堂</h1>
-      <a href="../index.html">← 返回首頁</a>
+    <nav class="nav" aria-label="頁面導覽">
+      <h1>🖨️ 3D 列印小學堂</h1>
+      <a href="../index.html">🏠 返回首頁</a>
     </nav>
   </header>
 
-  <div class="container">
-    <div class="intro">
-      <h2><span class="icon-3d-printer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="14" rx="1.5"/><rect x="5" y="15" width="14" height="2" rx="0.5"/><rect x="9" y="6" width="6" height="5" rx="0.5"/><circle cx="12" cy="12" r="1.2"/></svg></span> 什麼是 3D 列印？</h2>
-      <p>
-        3D 列印就像「一層一層疊積木」！電腦先畫好一個東西的形狀，列印機就會用材料一層一層疊上去，
-        最後就變成一個真正的、可以拿在手上的東西喔！最常見的方式叫做 <strong>FDM（熔融沉積成型）</strong>。
-      </p>
-    </div>
+  <main class="container">
 
-    <!-- ===== FDM 列印動畫 ===== -->
+    <!-- ========== HERO ========== -->
+    <section class="hero">
+      <h2>3D 列印：一層一層疊出來 🖨️</h2>
+      <p class="lead">電腦先畫好形狀 → 列印機把塑膠融化後一層一層擠出來 → 變成真正可以拿在手上的東西！</p>
+
+      <svg class="hero-scene" viewBox="0 0 1000 280" xmlns="http://www.w3.org/2000/svg" aria-label="從電腦設計到 3D 列印成品的流程">
+        <rect x="40" y="20" width="920" height="240" rx="28" fill="rgba(255,255,255,0.6)"/>
+
+        <!-- 電腦 -->
+        <g transform="translate(180 130)">
+          <rect x="-80" y="-50" width="160" height="100" rx="10" fill="#1e1b4b" stroke="#4338ca" stroke-width="5"/>
+          <rect x="-72" y="-42" width="144" height="80" fill="#a78bfa"/>
+          <!-- 3D 物件 in screen -->
+          <g transform="translate(0 0)">
+            <path d="M-25 -10 L0 -25 L25 -10 L25 15 L0 30 L-25 15 Z" fill="#ede9fe" stroke="#4338ca" stroke-width="2.5"/>
+            <path d="M-25 -10 L0 5 L25 -10" fill="none" stroke="#4338ca" stroke-width="2.5"/>
+            <path d="M0 5 L0 30" stroke="#4338ca" stroke-width="2.5"/>
+          </g>
+          <!-- 鍵盤 -->
+          <rect x="-90" y="52" width="180" height="14" rx="3" fill="#374151"/>
+          <text class="svg-label" x="0" y="90" text-anchor="middle" font-size="16">電腦設計</text>
+        </g>
+
+        <!-- 箭頭 1 -->
+        <g transform="translate(345 130)">
+          <line x1="0" y1="0" x2="60" y2="0" stroke="#6366f1" stroke-width="5" stroke-linecap="round"/>
+          <polygon points="60,-10 80,0 60,10" fill="#6366f1"/>
+        </g>
+
+        <!-- 列印機 -->
+        <g transform="translate(500 130)">
+          <!-- 外框 -->
+          <rect x="-70" y="-70" width="140" height="140" rx="10" fill="#312e81" stroke="#4338ca" stroke-width="5"/>
+          <rect x="-62" y="-62" width="124" height="100" fill="#1e1b4b"/>
+          <!-- 平台 -->
+          <rect x="-58" y="30" width="116" height="6" fill="#9ca3af"/>
+          <!-- 噴頭 -->
+          <g transform="translate(-15 -10)">
+            <rect x="-7" y="-15" width="14" height="20" fill="#9ca3af"/>
+            <polygon points="-7,5 7,5 4,12 -4,12" fill="#ef4444"/>
+            <circle cx="0" cy="14" r="3" fill="#fca5a5">
+              <animate attributeName="opacity" values="0.6;1;0.6" dur="0.8s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+          <!-- 線材軸 -->
+          <circle cx="35" cy="-40" r="13" fill="#fbbf24" stroke="#92400e" stroke-width="2.5">
+            <animateTransform attributeName="transform" type="rotate" from="0 35 -40" to="360 35 -40" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="35" cy="-40" r="5" fill="#92400e"/>
+          <!-- 印出物（在平台上）-->
+          <rect x="-25" y="14" width="20" height="16" fill="#ede9fe" stroke="#6366f1" stroke-width="2"/>
+          <rect x="-25" y="22" width="20" height="8" fill="#a78bfa"/>
+          <text class="svg-label" x="0" y="90" text-anchor="middle" font-size="16">3D 列印機</text>
+        </g>
+
+        <!-- 箭頭 2 -->
+        <g transform="translate(615 130)">
+          <line x1="0" y1="0" x2="60" y2="0" stroke="#6366f1" stroke-width="5" stroke-linecap="round"/>
+          <polygon points="60,-10 80,0 60,10" fill="#6366f1"/>
+        </g>
+
+        <!-- 成品 (恐龍 / 公仔) -->
+        <g transform="translate(800 130)">
+          <!-- 立體公仔簡化 -->
+          <ellipse cx="0" cy="40" rx="60" ry="10" fill="#c4b5fd" opacity="0.6"/>
+          <g>
+            <ellipse cx="0" cy="20" rx="40" ry="14" fill="#a78bfa" stroke="#6366f1" stroke-width="3"/>
+            <ellipse cx="0" cy="5" rx="38" ry="14" fill="#a78bfa" stroke="#6366f1" stroke-width="3"/>
+            <ellipse cx="0" cy="-10" rx="34" ry="14" fill="#a78bfa" stroke="#6366f1" stroke-width="3"/>
+            <ellipse cx="0" cy="-22" rx="28" ry="12" fill="#c4b5fd" stroke="#6366f1" stroke-width="3"/>
+            <!-- 笑臉 -->
+            <circle cx="-10" cy="-25" r="2.5" fill="#1e1b4b"/>
+            <circle cx="10" cy="-25" r="2.5" fill="#1e1b4b"/>
+            <path d="M-7 -18 Q 0 -14 7 -18" stroke="#1e1b4b" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </g>
+          <text class="svg-label" x="0" y="90" text-anchor="middle" font-size="16">3D 成品</text>
+        </g>
+      </svg>
+    </section>
+
+    <!-- ========== Canvas 列印實驗室 ========== -->
     <section class="section">
-      <h3><span class="emoji">🎬</span> FDM 列印過程（動畫模擬）</h3>
-      <p style="margin-bottom: 1rem; color: #555;">
-        下面是一台 FDM 3D 列印機正在工作！噴頭會在每一層左右來回移動，把融化的塑膠絲擠出來，
-        印完一層後往上移動，再印下一層——這次要印的是小朋友最喜歡的<strong>多啦A夢</strong>造型喔！
-      </p>
-      <div class="canvas-wrapper">
-        <div class="canvas-box">
-          <canvas id="printerCanvas" width="400" height="380"></canvas>
-        </div>
-        <div class="canvas-info">
-          <h4>🔍 你正在看 FDM 列印</h4>
-          <p>🔴 <strong>紅色噴頭</strong>會加熱到約 200°C，把塑膠絲融化後擠出來。</p>
-          <p>🎨 <strong>彩色像素格</strong>一格一格印出來：藍色是身體、白色是臉和肚子、紅色是鼻子和領子、黃色是鈴鐺！</p>
-          <p>⬜ <strong>灰色平台</strong>（熱床）會加熱，讓第一層黏得牢牢的。</p>
-          <p>🟡 <strong>黃色線</strong>是還沒融化的塑膠絲（線材），從上方送進噴頭。</p>
+      <h3>🎬 動手玩：模擬列印實驗室</h3>
+      <p class="section-lead">選一個喜歡的造型，看 3D 列印機怎麼一層一層把它印出來！</p>
 
-          <div class="status-panel">
+      <div class="printer-lab">
+        <!-- 左：Canvas 區 -->
+        <div class="printer-canvas-wrap">
+          <div class="progress-row">
+            <span>🖨️ 列印進度</span>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <span class="progress-pct" id="progressPct">0%</span>
+          </div>
+          <canvas id="printerCanvas" width="540" height="420" aria-label="3D 列印機模擬動畫"></canvas>
+        </div>
+
+        <!-- 右：控制面板 -->
+        <div class="panel">
+          <div>
+            <h4 style="margin: 0 0 0.5rem; color: var(--primary-dark); font-size: 1rem; font-weight: 900;">🎨 選擇造型</h4>
+            <div class="model-tabs" id="modelTabs">
+              <button type="button" class="model-tab active" data-model="doraemon"><span class="em">🤖</span>哆啦A夢</button>
+              <button type="button" class="model-tab" data-model="heart"><span class="em">❤️</span>愛心</button>
+              <button type="button" class="model-tab" data-model="star"><span class="em">⭐</span>星星</button>
+            </div>
+          </div>
+
+          <div class="status-grid">
             <span class="label">目前層數</span>
             <span class="value" id="layerCount">0 / 32</span>
             <span class="label">噴頭溫度</span>
-            <span class="value" id="nozzleTemp">200°C</span>
+            <span class="value hot" id="nozzleTemp">200°C 🔥</span>
             <span class="label">熱床溫度</span>
-            <span class="value" id="bedTemp">60°C</span>
-            <span class="label">列印狀態</span>
-            <span class="value" id="printStatus">列印中...</span>
+            <span class="value warm" id="bedTemp">60°C ♨️</span>
+            <span class="label">狀態</span>
+            <span class="value safe" id="printStatus">列印中</span>
           </div>
 
-          <div class="controls-row">
-            <button class="ctrl-btn primary" id="btnRestart">🔄 重新列印</button>
-            <button class="ctrl-btn secondary" id="btnSpeed">⚡ 加速</button>
+          <div class="control-row">
+            <button type="button" class="ctrl-btn pause" id="btnPause">⏸️ 暫停</button>
+            <button type="button" class="ctrl-btn restart" id="btnRestart">🔄 重來</button>
+            <button type="button" class="ctrl-btn play" id="btnFinish">⏩ 跳完</button>
           </div>
+
+          <div class="speed-row">
+            <span>🐢</span>
+            <input type="range" id="speedSlider" min="1" max="20" value="5">
+            <span>🐇</span>
+            <span class="speed-readout" id="speedReadout">5x</span>
+          </div>
+
+          <p style="margin: 0; color: #4d5b62; font-size: 0.88rem; font-weight: 800;">
+            💡 看仔細：🔴紅色噴頭把塑膠絲融化擠出來、灰色平台讓第一層黏住、黃色線材從上方送進去！
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- ===== FDM 完整介紹 ===== -->
+    <!-- ========== FDM 是什麼 ========== -->
     <section class="section">
-      <h3><span class="emoji">🔬</span> FDM 是什麼？（完整介紹）</h3>
-      <p style="color: #555; margin-bottom: 1rem;">
-        FDM 的全名是 <strong>Fused Deposition Modeling</strong>（熔融沉積成型），是目前最普遍、最適合初學者的 3D 列印技術。
-      </p>
-
-      <div class="highlight-box">
-        <h4>💡 簡單來說</h4>
-        <p>
-          把一捲塑膠線材（很像釣魚線），送進一個超高溫的噴頭裡融化，
-          融化的塑膠從噴頭細小的孔擠出來，像擠牙膏一樣，
-          在平台上畫出圖案。畫完一層後，噴頭往上移一點點（大約 0.1~0.3mm），
-          再畫下一層，一層一層疊起來，就變成一個立體的東西了！
-        </p>
-      </div>
-
-      <h4 style="color: var(--primary); margin: 1.5rem 0 0.8rem; font-size: 1.2rem;">🛠️ FDM 列印機的重要零件</h4>
-      <div class="fdm-diagram">
-        <div class="part-card">
-          <div class="part-icon nozzle">🔥</div>
-          <strong>噴頭（Nozzle）</strong>
-          <p>加熱到 180~260°C，把線材融化後從小孔（通常 0.4mm）擠出來。溫度不對的話，塑膠會擠不出來或太軟。</p>
-        </div>
-        <div class="part-card">
-          <div class="part-icon bed">📐</div>
-          <strong>熱床（Heated Bed）</strong>
-          <p>加熱到 50~110°C 的平台，讓印出來的第一層黏得穩穩的，不會翹起來。有些會貼專用貼紙增加附著力。</p>
-        </div>
-        <div class="part-card">
-          <div class="part-icon spool">🧵</div>
-          <strong>線材（Filament）</strong>
-          <p>捲在圓盤上的塑膠絲，常見直徑 1.75mm。不同材料有不同特性，像 PLA、ABS、PETG 等。</p>
-        </div>
-        <div class="part-card">
-          <div class="part-icon motor">⚙️</div>
-          <strong>擠出機（Extruder）</strong>
-          <p>用齒輪咬住線材，像推注射器一樣把線材推進加熱區。分「近端」和「遠端」兩種設計。</p>
-        </div>
-        <div class="part-card">
-          <div class="part-icon frame">🏗️</div>
-          <strong>機架與導軌</strong>
-          <p>支撐整台機器的骨架。噴頭在 X、Y 軸移動，平台或噴頭在 Z 軸上下，靠步進馬達精準控制位置。</p>
-        </div>
-        <div class="part-card">
-          <div class="part-icon fan">🌀</div>
-          <strong>散熱風扇</strong>
-          <p>噴頭旁邊的小風扇，幫助剛印出來的塑膠快速冷卻定型，特別是印懸空部分時非常重要。</p>
-        </div>
+      <h3>🔬 FDM 列印機長什麼樣？</h3>
+      <p class="section-lead">家裡最常見的 3D 列印就是 FDM（熔融沉積成型）— 像擠牙膏一樣把融化的塑膠擠出來。</p>
+      <div class="parts-grid">
+        <article class="part-card">
+          <svg width="60" height="60" viewBox="0 0 60 60" aria-hidden="true">
+            <rect x="22" y="10" width="16" height="26" fill="#9ca3af" stroke="#374151" stroke-width="2"/>
+            <polygon points="22,36 38,36 34,46 26,46" fill="#ef4444" stroke="#991b1b" stroke-width="2"/>
+            <circle cx="30" cy="50" r="3" fill="#fca5a5">
+              <animate attributeName="opacity" values="0.4;1;0.4" dur="0.8s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+          <h4>噴頭</h4>
+          <p>加熱到 200°C，把塑膠絲融化擠出來</p>
+        </article>
+        <article class="part-card">
+          <svg width="80" height="60" viewBox="0 0 80 60" aria-hidden="true">
+            <rect x="10" y="22" width="60" height="20" rx="3" fill="#d1d5db" stroke="#6b7280" stroke-width="2"/>
+            <rect x="14" y="26" width="52" height="6" fill="#fca5a5" opacity="0.7">
+              <animate attributeName="opacity" values="0.4;0.8;0.4" dur="1.5s" repeatCount="indefinite"/>
+            </rect>
+            <line x1="14" y1="38" x2="66" y2="38" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 3"/>
+          </svg>
+          <h4>熱床</h4>
+          <p>加熱到 60°C，讓第一層黏得牢</p>
+        </article>
+        <article class="part-card">
+          <svg width="60" height="60" viewBox="0 0 60 60" aria-hidden="true">
+            <circle cx="30" cy="30" r="22" fill="#fbbf24" stroke="#92400e" stroke-width="3">
+              <animateTransform attributeName="transform" type="rotate" from="0 30 30" to="360 30 30" dur="2.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="30" cy="30" r="8" fill="#92400e"/>
+            <line x1="52" y1="30" x2="58" y2="30" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <h4>線材</h4>
+          <p>捲在圓盤上的塑膠絲，1.75mm 細</p>
+        </article>
+        <article class="part-card">
+          <svg width="60" height="60" viewBox="0 0 60 60" aria-hidden="true">
+            <rect x="18" y="18" width="24" height="24" rx="3" fill="#a5f3fc" stroke="#0e7490" stroke-width="2"/>
+            <circle cx="30" cy="30" r="6" fill="#0e7490"/>
+            <path d="M30 24 L34 30 L30 36 L26 30 Z" fill="#a5f3fc"/>
+          </svg>
+          <h4>擠出機</h4>
+          <p>用齒輪把線材推進加熱區</p>
+        </article>
+        <article class="part-card">
+          <svg width="60" height="60" viewBox="0 0 60 60" aria-hidden="true">
+            <rect x="10" y="10" width="40" height="40" fill="none" stroke="#6b7280" stroke-width="3"/>
+            <line x1="10" y1="30" x2="50" y2="30" stroke="#6b7280" stroke-width="2"/>
+            <line x1="30" y1="10" x2="30" y2="50" stroke="#6b7280" stroke-width="2"/>
+            <text x="48" y="14" font-size="8" font-weight="900" fill="#6b7280">Y</text>
+            <text x="12" y="14" font-size="8" font-weight="900" fill="#6b7280">Z</text>
+            <text x="48" y="58" font-size="8" font-weight="900" fill="#6b7280">X</text>
+          </svg>
+          <h4>機架 + 導軌</h4>
+          <p>XYZ 三軸移動，步進馬達控制位置</p>
+        </article>
+        <article class="part-card">
+          <svg width="60" height="60" viewBox="0 0 60 60" aria-hidden="true">
+            <g>
+              <animateTransform attributeName="transform" type="rotate" from="0 30 30" to="360 30 30" dur="1s" repeatCount="indefinite"/>
+              <circle cx="30" cy="30" r="20" fill="#a5f3fc" opacity="0.4"/>
+              <path d="M30 12 Q 38 22 30 30 Q 22 22 30 12 Z" fill="#06b6d4"/>
+              <path d="M48 30 Q 38 38 30 30 Q 38 22 48 30 Z" fill="#06b6d4"/>
+              <path d="M30 48 Q 22 38 30 30 Q 38 38 30 48 Z" fill="#06b6d4"/>
+              <path d="M12 30 Q 22 22 30 30 Q 22 38 12 30 Z" fill="#06b6d4"/>
+            </g>
+            <circle cx="30" cy="30" r="4" fill="#0e7490"/>
+          </svg>
+          <h4>散熱風扇</h4>
+          <p>幫剛擠出來的塑膠快速冷卻定型</p>
+        </article>
       </div>
     </section>
 
-    <!-- ===== 材料介紹 ===== -->
+    <!-- ========== 材料 ========== -->
     <section class="section">
-      <h3><span class="emoji">🧪</span> 常見的 FDM 線材</h3>
-      <p style="color: #555; margin-bottom: 0.5rem;">
-        不同的材料有不同的特性，就像畫畫時選不同的顏料一樣！以下是最常見的四種：
-      </p>
+      <h3>🧪 常見的 4 種列印材料</h3>
+      <p class="section-lead">不同材料像不同顏料 — 各有強項，學校最常用最安全的 PLA！</p>
       <table class="material-table">
         <thead>
-          <tr>
-            <th>材料</th>
-            <th>噴頭溫度</th>
-            <th>特色</th>
-            <th>適合做什麼</th>
-          </tr>
+          <tr><th>材料</th><th>噴頭溫度</th><th>特色</th><th>適合做什麼</th></tr>
         </thead>
         <tbody>
           <tr>
             <td><span class="material-tag tag-pla">PLA</span></td>
-            <td>
-              <div class="temp-bar">190~220°C <div class="temp-fill" style="width:50px"></div></div>
-            </td>
-            <td>最好印、幾乎沒味道、環保（玉米澱粉做的）</td>
-            <td>公仔、模型、筆筒、教學用品</td>
+            <td><div class="temp-bar">190–220°C<div class="temp-fill" style="width:46px"></div></div></td>
+            <td>最好印、幾乎沒味道、玉米澱粉做的</td>
+            <td>公仔、模型、筆筒、學校教學</td>
           </tr>
           <tr>
             <td><span class="material-tag tag-abs">ABS</span></td>
-            <td>
-              <div class="temp-bar">230~250°C <div class="temp-fill" style="width:65px"></div></div>
-            </td>
-            <td>耐熱、耐撞，但有味道、容易翹邊</td>
-            <td>外殼、機械零件、需要耐衝擊的東西</td>
+            <td><div class="temp-bar">230–250°C<div class="temp-fill" style="width:62px"></div></div></td>
+            <td>耐熱耐撞，但有味道、容易翹邊</td>
+            <td>外殼、機械零件、耐衝擊的東西</td>
           </tr>
           <tr>
             <td><span class="material-tag tag-petg">PETG</span></td>
-            <td>
-              <div class="temp-bar">220~250°C <div class="temp-fill" style="width:60px"></div></div>
-            </td>
-            <td>介於 PLA 和 ABS 之間，耐用又好印</td>
-            <td>工具、水杯、戶外使用的東西</td>
+            <td><div class="temp-bar">220–250°C<div class="temp-fill" style="width:56px"></div></div></td>
+            <td>介於 PLA / ABS 之間，耐用又好印</td>
+            <td>工具、水杯、戶外使用</td>
           </tr>
           <tr>
             <td><span class="material-tag tag-tpu">TPU</span></td>
-            <td>
-              <div class="temp-bar">210~230°C <div class="temp-fill" style="width:55px"></div></div>
-            </td>
-            <td>軟軟的有彈性，像橡膠一樣</td>
+            <td><div class="temp-bar">210–230°C<div class="temp-fill" style="width:52px"></div></div></td>
+            <td>軟軟有彈性，像橡膠</td>
             <td>手機殼、鞋墊、緩衝墊</td>
           </tr>
         </tbody>
       </table>
-
-      <div class="highlight-box" style="margin-top: 1.5rem;">
-        <h4>🌱 小知識：PLA 最適合小朋友！</h4>
-        <p>
-          PLA 是用玉米或甘蔗做的，列印時幾乎沒有味道，溫度也比較低，
-          是學校和創客教室最推薦的入門材料。而且有超多顏色可以選！
-        </p>
-      </div>
     </section>
 
-    <!-- ===== 步驟 ===== -->
+    <!-- ========== 流程 ========== -->
     <section class="section">
-      <h3><span class="emoji">📋</span> FDM 列印的完整流程</h3>
+      <h3>📋 從點子到成品：5 個步驟</h3>
       <div class="steps-list">
         <div class="step-item">
           <span class="step-num">1</span>
           <div>
-            <h4>3D 建模（設計）</h4>
-            <p>用 Tinkercad、Fusion 360 或 Blender 等軟體畫出立體模型，或從 Thingiverse 等網站下載別人分享的 STL 檔。</p>
+            <h4>3D 建模 ✏️</h4>
+            <p>用 Tinkercad / Fusion 360 畫出想要的立體形狀，或從 Thingiverse 下載別人分享的</p>
           </div>
         </div>
         <div class="step-item">
           <span class="step-num">2</span>
           <div>
-            <h4>切片（Slicing）</h4>
-            <p>用切片軟體（如 Cura、PrusaSlicer）把模型「切」成幾百層薄片，並設定層高、填充率、速度等參數，產生 G-code 指令檔。</p>
+            <h4>切片（Slicing） 🔪</h4>
+            <p>用切片軟體（Cura、PrusaSlicer）把模型切成幾百層薄片，產生 G-code 指令</p>
           </div>
         </div>
         <div class="step-item">
           <span class="step-num">3</span>
           <div>
-            <h4>準備列印</h4>
-            <p>裝好線材、校正平台水平（很重要！），把 G-code 透過 SD 卡或 USB 傳到列印機，預熱噴頭和熱床。</p>
+            <h4>準備列印 🛠️</h4>
+            <p>裝好線材、校正平台、把 G-code 傳到列印機、預熱噴頭和熱床</p>
           </div>
         </div>
         <div class="step-item">
           <span class="step-num">4</span>
           <div>
-            <h4>開始列印</h4>
-            <p>按下開始，列印機會自動一層一層印。小東西可能 30 分鐘，大東西可能要好幾個小時甚至一整天！</p>
+            <h4>開始列印 🖨️</h4>
+            <p>按開始 → 列印機自動一層一層印。小物 30 分鐘、大物可能一整天！</p>
           </div>
         </div>
         <div class="step-item">
           <span class="step-num">5</span>
           <div>
-            <h4>後處理</h4>
-            <p>印好後等冷卻，從平台取下，用工具去除支撐材料，也可以砂紙打磨、上色讓它更好看。</p>
+            <h4>後處理 ✨</h4>
+            <p>冷卻後取下、去除支撐、可以砂紙打磨、上色，變得更漂亮</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ===== 可以印什麼 ===== -->
+    <!-- ========== 可以印什麼 ========== -->
     <section class="section">
-      <h3><span class="emoji">🎨</span> 可以印什麼？</h3>
-      <p style="margin-bottom: 1rem; color: #555;">3D 列印可以做很多東西，只要想得到、畫得出來，就有機會變成真的！</p>
-      <div class="idea-grid">
-        <div class="idea-card"><span class="icon">🧩</span><strong>玩具與公仔</strong><br>小車、恐龍、機器人</div>
-        <div class="idea-card"><span class="icon">✏️</span><strong>筆筒與收納</strong><br>桌上小物、文具盒</div>
-        <div class="idea-card"><span class="icon">🔧</span><strong>小零件</strong><br>螺絲、掛勾、把手</div>
-        <div class="idea-card"><span class="icon">🎁</span><strong>禮物</strong><br>獨一無二的卡片架、名字吊牌</div>
-        <div class="idea-card"><span class="icon">🤖</span><strong>創客專案</strong><br>機器人外殼、Arduino 底座</div>
+      <h3>🎨 可以印什麼？</h3>
+      <p class="section-lead">只要想得到、畫得出來，就有機會印出來！</p>
+      <div class="ideas-grid">
+        <article class="idea-card">
+          <span class="em">🧩</span>
+          <h4>玩具公仔</h4>
+          <p>小車、恐龍、機器人</p>
+        </article>
+        <article class="idea-card">
+          <span class="em">✏️</span>
+          <h4>筆筒收納</h4>
+          <p>桌上小物、文具盒</p>
+        </article>
+        <article class="idea-card">
+          <span class="em">🔧</span>
+          <h4>小零件</h4>
+          <p>螺絲、掛勾、把手</p>
+        </article>
+        <article class="idea-card">
+          <span class="em">🎁</span>
+          <h4>客製禮物</h4>
+          <p>名字吊牌、卡片架</p>
+        </article>
+        <article class="idea-card">
+          <span class="em">🤖</span>
+          <h4>創客專案</h4>
+          <p>機器人外殼、零件底座</p>
+        </article>
       </div>
     </section>
 
-    <!-- ===== 安全提醒 ===== -->
+    <!-- ========== 安全 ========== -->
     <section class="section">
-      <h3><span class="emoji">⚠️</span> 安全小提醒（小朋友要記得！）</h3>
+      <h3>⚠️ 安全小提醒</h3>
       <div class="safety-grid">
-        <div class="safety-card">
-          <span class="icon">🔥</span>
-          <div>
-            <h4>噴頭超級燙（200°C 以上）</h4>
-            <p>列印時噴頭溫度比煮開水還高好幾倍！絕對不能用手去摸，等完全冷卻再碰。</p>
-          </div>
-        </div>
-        <div class="safety-card">
-          <span class="icon">👃</span>
-          <div>
-            <h4>保持通風</h4>
-            <p>ABS 等材料加熱會有味道，一定要在空氣流通的地方使用。PLA 比較安全但也要注意。</p>
-          </div>
-        </div>
-        <div class="safety-card">
-          <span class="icon">👀</span>
-          <div>
-            <h4>大人陪同操作</h4>
-            <p>操作列印機和用刀片去除支撐時，最好有老師或大人在旁邊一起。</p>
-          </div>
-        </div>
-        <div class="safety-card">
-          <span class="icon">🔌</span>
-          <div>
-            <h4>電源安全</h4>
-            <p>列印機功率不小，要接在安全的插座上。長時間列印時不要無人看管。</p>
-          </div>
-        </div>
+        <article class="safety-card">
+          <div class="icon-emoji">🔥</div>
+          <h4>噴頭超燙</h4>
+          <p>200°C 比煮開水高 2 倍！絕對不要摸</p>
+        </article>
+        <article class="safety-card">
+          <div class="icon-emoji">👃</div>
+          <h4>保持通風</h4>
+          <p>ABS 有味道，要在空氣流通的地方</p>
+        </article>
+        <article class="safety-card">
+          <div class="icon-emoji">👀</div>
+          <h4>大人陪同</h4>
+          <p>操作機器、用刀片時，老師大人陪</p>
+        </article>
+        <article class="safety-card">
+          <div class="icon-emoji">🔌</div>
+          <h4>電源安全</h4>
+          <p>用穩定插座，長時間印不要無人看管</p>
+        </article>
       </div>
     </section>
 
-    <div style="text-align: center;">
-      <a href="../index.html" class="back-home">🏠 回到首頁繼續探索</a>
+    <!-- ========== 測驗 ========== -->
+    <section class="section">
+      <h3>🧠 來考一下：你抓到 3D 列印的概念了嗎？</h3>
+
+      <div class="quiz">
+        <h4>🤔 第 1 題：FDM 3D 列印機是怎麼把東西印出來的？</h4>
+        <div class="quiz-options" id="q1options">
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🎨</span><span>用顏料畫出來</span></button>
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">📚</span><span>一層一層疊起來</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">✂️</span><span>用刀切出來</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🪄</span><span>魔法變出來</span></button>
+        </div>
+        <div class="quiz-result" id="q1result" aria-live="polite"></div>
+      </div>
+
+      <div class="quiz">
+        <h4>🤔 第 2 題：學校最推薦小朋友用哪一種材料？</h4>
+        <div class="quiz-options" id="q2options">
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">🌽</span><span>PLA（玉米做）</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🛢️</span><span>ABS（味道大）</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">💧</span><span>水</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🍪</span><span>巧克力</span></button>
+        </div>
+        <div class="quiz-result" id="q2result" aria-live="polite"></div>
+      </div>
+
+      <div class="quiz">
+        <h4>🤔 第 3 題：列印時為什麼絕對不能摸噴頭？</h4>
+        <div class="quiz-options" id="q3options">
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🤫</span><span>會出聲</span></button>
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">🥵</span><span>燙到 200°C</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">⚡</span><span>會觸電</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🪄</span><span>會被吸進去</span></button>
+        </div>
+        <div class="quiz-result" id="q3result" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <div class="success-box">
+      <h3>🎉 你已經懂 3D 列印是怎麼回事了！</h3>
+      <p>記住核心概念：3D 列印 = 把塑膠融化 + 一層一層疊。設計→切片→列印→後處理，就能把想像變成真的東西。回到首頁繼續玩電路！</p>
     </div>
-  </div>
+
+    <div class="navigation">
+      <a href="../index.html" class="nav-btn">🏠 回到首頁繼續探索</a>
+    </div>
+  </main>
 
   <script>
   (() => {
     const canvas = document.getElementById('printerCanvas');
     const ctx = canvas.getContext('2d');
-    const W = canvas.width;
-    const H = canvas.height;
+    const W = canvas.width;   // 540
+    const H = canvas.height;  // 420
 
     // ── 像素格常數 ────────────────────────────────────────────────────
-    const PIXEL_SIZE = 8;
+    const PIXEL_SIZE = 9;
     const COLS = 28;
     const ROWS = 32;
-    const TOTAL_LAYERS = ROWS;
 
-    const BED_Y     = H - 50;
-    const OBJ_W     = COLS * PIXEL_SIZE;            // 224px
-    const OBJ_LEFT  = Math.round((W - OBJ_W) / 2); // 88px
-    const OBJ_RIGHT = OBJ_LEFT + OBJ_W;            // 312px
-    const BED_LEFT  = OBJ_LEFT - 40;               // 48px
-    const BED_RIGHT = OBJ_RIGHT + 40;              // 352px
+    const BED_Y     = H - 56;
+    const OBJ_W     = COLS * PIXEL_SIZE;             // 252
+    const OBJ_LEFT  = Math.round((W - OBJ_W) / 2);   // 144
+    const OBJ_RIGHT = OBJ_LEFT + OBJ_W;              // 396
+    const BED_LEFT  = OBJ_LEFT - 50;
+    const BED_RIGHT = OBJ_RIGHT + 50;
     const BED_WIDTH = BED_RIGHT - BED_LEFT;
-    const NOZZLE_W  = 14;
-    const NOZZLE_H  = 20;
+    const NOZZLE_W  = 16;
+    const NOZZLE_H  = 22;
 
     // 顏色對應：1=藍 2=白 3=紅 4=黑 5=黃
     const PIXEL_COLORS = {
-      1: '#00AEEF', // 哆啦A夢藍（身體／頭部）
-      2: '#FFFFFF', // 白色（臉、肚子）
-      3: '#E8001C', // 紅色（鼻子、領子）
-      4: '#1A1A1A', // 黑色（眼睛、鬍鬚、嘴巴）
-      5: '#FFD700', // 黃色（鈴鐺）
+      1: '#00AEEF',
+      2: '#FFFFFF',
+      3: '#E8001C',
+      4: '#1A1A1A',
+      5: '#FFD700',
+      6: '#FF6B9D',  // 粉紅 (for heart)
     };
 
-    // ── 哆啦A夢像素畫（第0列=頭頂，第31列=腳底）28 欄 × 32 列 ───────
+    // 哆啦A夢
     const DORAEMON_GRID = [
-      [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0], // 0 頭頂
-      [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0], // 1
-      [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0], // 2
-      [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0], // 3
-      [0,0,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,0,0], // 4 白色臉開始
-      [0,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,0], // 5
-      [0,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,0], // 6
-      [0,1,1,1,2,2,4,4,2,2,2,2,2,2,2,2,2,2,2,4,4,2,2,2,1,1,1,0], // 7 眼睛
-      [0,1,1,1,2,2,4,4,2,2,2,2,2,2,2,2,2,2,2,4,4,2,2,2,1,1,1,0], // 8
-      [0,1,1,2,2,2,2,2,2,2,2,2,3,3,3,2,2,2,2,2,2,2,2,2,2,1,1,0], // 9 紅鼻子
-      [0,1,1,2,2,2,2,2,2,2,2,2,3,3,3,2,2,2,2,2,2,2,2,2,2,1,1,0], // 10
-      [0,1,2,4,2,2,2,2,4,2,2,2,2,2,2,2,4,2,2,2,2,4,2,2,2,2,1,0], // 11 鬍鬚
-      [0,1,4,2,2,2,2,4,2,2,2,2,2,2,2,2,2,4,2,2,2,2,4,2,2,2,1,0], // 12
-      [0,1,1,2,2,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,2,2,2,1,1,1,0,0], // 13 嘴巴
-      [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0], // 14 下巴
-      [0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,0,0,0,0,0], // 15 紅領子
-      [0,0,1,1,1,1,0,0,0,5,5,5,5,5,5,5,5,5,0,0,0,1,1,1,1,0,0,0], // 16 鈴鐺＋身體側
-      [0,0,1,1,1,1,0,0,0,5,5,5,4,5,5,5,5,5,0,0,0,1,1,1,1,0,0,0], // 17 鈴鐺孔
-      [0,0,1,1,1,1,0,0,0,5,5,5,5,5,5,5,5,5,0,0,0,1,1,1,1,0,0,0], // 18
-      [0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0,0,0], // 19 身體＋白肚子
-      [0,0,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,0,0], // 20
-      [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,0,0], // 21 手臂延伸
-      [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,0,0], // 22
-      [0,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0,0,0], // 23
-      [0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,0,0,0,0], // 24
-      [0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,1,1,1,1,1,1,1,0,0,0,0,0], // 25 下腹部
-      [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0], // 26
-      [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0], // 27 臀部
-      [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0], // 28 腿
-      [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0], // 29
-      [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0], // 30 腳掌
-      [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0], // 31 腳底
+      [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
+      [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+      [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+      [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+      [0,0,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,0,0],
+      [0,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,0],
+      [0,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,0],
+      [0,1,1,1,2,2,4,4,2,2,2,2,2,2,2,2,2,2,2,4,4,2,2,2,1,1,1,0],
+      [0,1,1,1,2,2,4,4,2,2,2,2,2,2,2,2,2,2,2,4,4,2,2,2,1,1,1,0],
+      [0,1,1,2,2,2,2,2,2,2,2,2,3,3,3,2,2,2,2,2,2,2,2,2,2,1,1,0],
+      [0,1,1,2,2,2,2,2,2,2,2,2,3,3,3,2,2,2,2,2,2,2,2,2,2,1,1,0],
+      [0,1,2,4,2,2,2,2,4,2,2,2,2,2,2,2,4,2,2,2,2,4,2,2,2,2,1,0],
+      [0,1,4,2,2,2,2,4,2,2,2,2,2,2,2,2,2,4,2,2,2,2,4,2,2,2,1,0],
+      [0,1,1,2,2,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,2,2,2,1,1,1,0,0],
+      [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+      [0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,0,0,0,0,0],
+      [0,0,1,1,1,1,0,0,0,5,5,5,5,5,5,5,5,5,0,0,0,1,1,1,1,0,0,0],
+      [0,0,1,1,1,1,0,0,0,5,5,5,4,5,5,5,5,5,0,0,0,1,1,1,1,0,0,0],
+      [0,0,1,1,1,1,0,0,0,5,5,5,5,5,5,5,5,5,0,0,0,1,1,1,1,0,0,0],
+      [0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0,0,0],
+      [0,0,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,0,0],
+      [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,0,0],
+      [1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,0,0],
+      [0,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0,0,0],
+      [0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,0,0,0,0],
+      [0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,1,1,1,1,1,1,1,0,0,0,0,0],
+      [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0],
+      [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0],
+      [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0],
     ];
 
-    // 列印順序：從底（row31）往上（row0）
-    const PRINT_LAYERS = [...DORAEMON_GRID].reverse();
+    // 程式產生愛心 grid：尖端在底（row 31），上方為對稱兩瓣
+    function buildHeart() {
+      const grid = [];
+      for (let r = 0; r < ROWS; r++) {
+        const row = new Array(COLS).fill(0);
+        for (let c = 0; c < COLS; c++) {
+          // x 範圍 -1.05..1.05；y 範圍：r=0 → y=1.05（兩瓣頂端），r=31 → y=-1（尖端底）
+          const x = (c - 13.5) / 13;
+          const y = 1.05 - r / 15.5;
+          const e = Math.pow(x*x + y*y - 1, 3) - x*x * Math.pow(y, 3);
+          if (e <= 0) {
+            const inner = Math.pow(x*0.7, 2) + Math.pow(y*0.7 - 0.3, 2) < 0.25;
+            row[c] = inner ? 2 : 3;
+          }
+        }
+        grid.push(row);
+      }
+      return grid;
+    }
 
-    // ── 動畫狀態 ──────────────────────────────────────────────────────
-    let layersDone   = 0;        // 已完整印完的層數
-    let currentLayer = 0;        // 正在印的層（0=最底層）
-    let nozzleX      = OBJ_LEFT;
-    let direction    = 1;        // 1=由左→右，-1=由右→左
-    let printing     = true;
-    let finished     = false;
-    let cooldown     = 0;
-    let speed        = 4;        // 每幀移動的 canvas 像素數
+    // 程式產生星星 grid：5 角星，頂尖在頂部（row 0），下方兩尖在底（row 31）
+    function buildStar() {
+      const cx = 13.5, cy = 17.5;
+      const N = 5;
+      const outerR = 17, innerR = 7;
+      const pts = [];
+      for (let i = 0; i < N * 2; i++) {
+        const r = i % 2 === 0 ? outerR : innerR;
+        const angle = -Math.PI/2 + i * Math.PI / N;
+        pts.push([cx + r * Math.cos(angle), cy + r * Math.sin(angle)]);
+      }
+      function pointInPoly(x, y) {
+        let inside = false;
+        for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+          const [xi, yi] = pts[i];
+          const [xj, yj] = pts[j];
+          if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
+            inside = !inside;
+          }
+        }
+        return inside;
+      }
+      const grid = [];
+      for (let r = 0; r < ROWS; r++) {
+        const row = new Array(COLS).fill(0);
+        for (let c = 0; c < COLS; c++) {
+          if (pointInPoly(c + 0.5, r + 0.5)) row[c] = 5;
+        }
+        grid.push(row);
+      }
+      return grid;
+    }
 
-    // ── 繪圖輔助函式 ──────────────────────────────────────────────────
+    const MODELS = {
+      doraemon: DORAEMON_GRID,
+      heart: buildHeart(),
+      star: buildStar()
+    };
+
+    // 載入模型：reverse 後修剪掉開頭/結尾的空行，確保第一層就有內容
+    function loadModelLayers(key) {
+      let grid = [...MODELS[key]].reverse();
+      while (grid.length > 0 && grid[0].every(v => v === 0)) grid.shift();
+      while (grid.length > 0 && grid[grid.length - 1].every(v => v === 0)) grid.pop();
+      return grid;
+    }
+
+    // ── 狀態 ──────────────────────────────────────────────────────────
+    let currentModelKey = 'doraemon';
+    let PRINT_LAYERS  = loadModelLayers(currentModelKey);
+    let totalLayers   = PRINT_LAYERS.length;
+    let layersDone    = 0;
+    let currentLayer  = 0;
+    let nozzleX       = OBJ_LEFT;
+    let direction     = 1;
+    let printing      = true;
+    let isPaused      = false;
+    let finished      = false;
+    let cooldown      = 0;
+    let speed         = 5;
+    let confetti      = [];
+    let frame         = 0;
+
+    // 計算每個 model 有多少 pixel 要印（拿來算進度）
+    function countPixels(grid) {
+      let count = 0;
+      for (const row of grid) for (const v of row) if (v > 0) count++;
+      return count;
+    }
+
+    // ── 繪圖函式 ──────────────────────────────────────────────────────
+    function drawBg() {
+      ctx.fillStyle = '#0f0c29';
+      ctx.fillRect(0, 0, W, H);
+      // 微微星點 (假裝是噪點)
+      ctx.fillStyle = 'rgba(255,255,255,0.04)';
+      for (let i = 0; i < 30; i++) {
+        const x = (i * 73 + frame * 0.1) % W;
+        const y = (i * 41) % (H - 60);
+        ctx.fillRect(x, y, 2, 2);
+      }
+    }
+
     function drawFrame() {
+      // 機架（金屬色，左右支柱 + 上下橫桿）
       ctx.fillStyle = '#374151';
-      ctx.fillRect(20, 10, W - 40, 18);
-      ctx.fillRect(20, 10, 18, H - 30);
-      ctx.fillRect(W - 38, 10, 18, H - 30);
+      ctx.fillRect(20, 12, W - 40, 22);
+      ctx.fillRect(20, 12, 22, H - 36);
+      ctx.fillRect(W - 42, 12, 22, H - 36);
+      // 內側軌道
       ctx.fillStyle = '#4b5563';
-      ctx.fillRect(38, 16, 6, H - 46);
-      ctx.fillRect(W - 44, 16, 6, H - 46);
+      ctx.fillRect(42, 18, 6, H - 48);
+      ctx.fillRect(W - 48, 18, 6, H - 48);
+      // 螺絲
+      ctx.fillStyle = '#1f2937';
+      ctx.beginPath(); ctx.arc(31, 22, 3, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(W - 31, 22, 3, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(31, H - 30, 3, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(W - 31, H - 30, 3, 0, Math.PI*2); ctx.fill();
     }
 
     function drawBed() {
-      const grad = ctx.createLinearGradient(BED_LEFT, BED_Y, BED_LEFT, BED_Y + 14);
+      // 熱床主體（金屬漸層 + 加熱發紅）
+      const grad = ctx.createLinearGradient(BED_LEFT, BED_Y, BED_LEFT, BED_Y + 16);
       grad.addColorStop(0, '#9ca3af');
       grad.addColorStop(1, '#6b7280');
       ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.roundRect(BED_LEFT, BED_Y, BED_WIDTH, 14, 4);
+      ctx.roundRect(BED_LEFT, BED_Y, BED_WIDTH, 16, 5);
       ctx.fill();
+      // 加熱層（紅色脈動）
       ctx.fillStyle = '#ef4444';
-      ctx.globalAlpha = 0.15 + Math.sin(Date.now() / 400) * 0.05;
-      ctx.fillRect(BED_LEFT + 4, BED_Y + 2, BED_WIDTH - 8, 10);
+      ctx.globalAlpha = 0.18 + Math.sin(frame / 20) * 0.08;
+      ctx.fillRect(BED_LEFT + 4, BED_Y + 3, BED_WIDTH - 8, 10);
       ctx.globalAlpha = 1;
+      // 底座
       ctx.fillStyle = '#4b5563';
-      ctx.fillRect(BED_LEFT - 8, BED_Y + 14, BED_WIDTH + 16, 8);
+      ctx.fillRect(BED_LEFT - 10, BED_Y + 16, BED_WIDTH + 20, 10);
+      // 熱床標籤
+      ctx.fillStyle = '#fca5a5';
+      ctx.font = '700 9px Nunito';
+      ctx.textAlign = 'center';
+      ctx.fillText('🔥 HEATED BED', W/2, BED_Y + 24);
     }
 
     function drawOnePixel(ci, li, color) {
@@ -775,7 +1179,8 @@
       const y = BED_Y - (li + 1) * PIXEL_SIZE;
       ctx.fillStyle = color;
       ctx.fillRect(x, y, PIXEL_SIZE, PIXEL_SIZE);
-      ctx.strokeStyle = 'rgba(0,0,0,0.10)';
+      // 細微邊框增加立體感
+      ctx.strokeStyle = 'rgba(0,0,0,0.12)';
       ctx.lineWidth = 0.5;
       ctx.strokeRect(x, y, PIXEL_SIZE, PIXEL_SIZE);
     }
@@ -789,8 +1194,13 @@
         }
       }
       // 目前正在印的層（噴頭掃過的部分）
-      if (printing && currentLayer < ROWS) {
+      if (!finished && currentLayer < totalLayers) {
         const row = PRINT_LAYERS[currentLayer];
+        // 微光帶（顯示目前層）
+        const layerY = BED_Y - (currentLayer + 1) * PIXEL_SIZE;
+        ctx.fillStyle = 'rgba(255, 235, 59, 0.12)';
+        ctx.fillRect(OBJ_LEFT - 4, layerY, OBJ_W + 8, PIXEL_SIZE);
+
         for (let ci = 0; ci < COLS; ci++) {
           const pxLeft  = OBJ_LEFT + ci * PIXEL_SIZE;
           const pxRight = pxLeft + PIXEL_SIZE;
@@ -803,13 +1213,12 @@
     }
 
     function nozzleTipY() {
-      const layer = Math.min(currentLayer, ROWS - 1);
+      const layer = Math.min(currentLayer, totalLayers - 1);
       return BED_Y - (layer + 1) * PIXEL_SIZE - NOZZLE_H + 2;
     }
 
-    // 噴頭目前位置對應的像素顏色（噴出的材料顏色）
     function currentDropColor() {
-      if (!printing || currentLayer >= ROWS) return null;
+      if (finished || isPaused || currentLayer >= totalLayers) return null;
       const ci = Math.max(0, Math.min(COLS - 1,
         Math.floor((nozzleX - OBJ_LEFT) / PIXEL_SIZE)));
       const v = PRINT_LAYERS[currentLayer][ci];
@@ -817,113 +1226,218 @@
     }
 
     function drawNozzle() {
-      const ny = nozzleTipY();
-      const nx = nozzleX;
+      const ny = finished ? 40 : nozzleTipY();
+      const nx = finished ? W / 2 : nozzleX;
 
+      // 噴頭垂直管
       ctx.fillStyle = '#d1d5db';
-      ctx.fillRect(nx - 3, 28, 6, ny - 28);
+      ctx.fillRect(nx - 3, 36, 6, ny - 36);
 
-      const spoolX = W / 2 + 60, spoolY = 36;
-      ctx.globalAlpha = 0.8;
+      // 線材軸 (右上角，旋轉動畫已內建)
+      const spoolX = W - 80;
+      const spoolY = 50;
+      ctx.save();
+      ctx.translate(spoolX, spoolY);
+      ctx.rotate((frame / 8) % (Math.PI * 2));
+      // 軸盤
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath(); ctx.arc(0, 0, 16, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#92400e';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      // 中心
+      ctx.fillStyle = '#92400e';
+      ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI * 2); ctx.fill();
+      // 軸盤紋路
+      for (let i = 0; i < 6; i++) {
+        ctx.beginPath();
+        const a = i * Math.PI / 3;
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos(a) * 14, Math.sin(a) * 14);
+        ctx.strokeStyle = 'rgba(146, 64, 14, 0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // 線材線（從軸出來連到噴頭）
+      ctx.globalAlpha = 0.85;
       ctx.beginPath();
-      ctx.moveTo(spoolX, spoolY);
-      ctx.lineTo(nx, ny);
+      ctx.moveTo(spoolX, spoolY + 16);
+      ctx.bezierCurveTo(spoolX, spoolY + 50, nx + 20, ny - 30, nx, ny);
       ctx.lineWidth = 3;
       ctx.strokeStyle = '#fbbf24';
       ctx.stroke();
       ctx.globalAlpha = 1;
 
-      ctx.fillStyle = '#fbbf24';
-      ctx.beginPath(); ctx.arc(spoolX, spoolY, 12, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#92400e';
-      ctx.beginPath(); ctx.arc(spoolX, spoolY, 5, 0, Math.PI * 2); ctx.fill();
-
+      // 噴頭主體
       const g = ctx.createLinearGradient(nx - NOZZLE_W/2, ny, nx + NOZZLE_W/2, ny);
-      g.addColorStop(0, '#6b7280'); g.addColorStop(0.5, '#9ca3af'); g.addColorStop(1, '#6b7280');
+      g.addColorStop(0, '#6b7280');
+      g.addColorStop(0.5, '#9ca3af');
+      g.addColorStop(1, '#6b7280');
       ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.roundRect(nx - NOZZLE_W/2, ny, NOZZLE_W, NOZZLE_H - 6, 3);
+      ctx.roundRect(nx - NOZZLE_W/2, ny, NOZZLE_W, NOZZLE_H - 8, 3);
       ctx.fill();
 
+      // 噴嘴（紅色加熱發光）
       ctx.fillStyle = '#ef4444';
       ctx.beginPath();
-      ctx.moveTo(nx - NOZZLE_W/2, ny + NOZZLE_H - 6);
-      ctx.lineTo(nx + NOZZLE_W/2, ny + NOZZLE_H - 6);
-      ctx.lineTo(nx + 3, ny + NOZZLE_H);
-      ctx.lineTo(nx - 3, ny + NOZZLE_H);
-      ctx.closePath(); ctx.fill();
+      ctx.moveTo(nx - NOZZLE_W/2 + 1, ny + NOZZLE_H - 8);
+      ctx.lineTo(nx + NOZZLE_W/2 - 1, ny + NOZZLE_H - 8);
+      ctx.lineTo(nx + 4, ny + NOZZLE_H);
+      ctx.lineTo(nx - 4, ny + NOZZLE_H);
+      ctx.closePath();
+      ctx.fill();
 
-      if (printing && currentLayer < ROWS) {
-        // 擠出的材料小圓滴（顏色隨目前像素改變）
+      // 噴嘴熱光暈
+      if (!isPaused && !finished) {
+        ctx.shadowColor = '#ef4444';
+        ctx.shadowBlur = 12 + Math.sin(frame / 8) * 6;
+        ctx.fillStyle = '#fca5a5';
+        ctx.beginPath();
+        ctx.arc(nx, ny + NOZZLE_H - 2, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      // 擠出的塑膠（顏色隨像素變）
+      if (!isPaused && !finished && currentLayer < ROWS) {
         const dropColor = currentDropColor();
         if (dropColor) {
           ctx.fillStyle = dropColor;
-          ctx.globalAlpha = 0.75 + Math.sin(Date.now() / 80) * 0.25;
+          ctx.globalAlpha = 0.85 + Math.sin(frame / 6) * 0.15;
           ctx.beginPath();
-          ctx.arc(nx, ny + NOZZLE_H + 3, 4, 0, Math.PI * 2);
+          ctx.arc(nx, ny + NOZZLE_H + 4, 4.5, 0, Math.PI * 2);
           ctx.fill();
           ctx.globalAlpha = 1;
         }
-        ctx.shadowColor = '#ef4444';
-        ctx.shadowBlur = 8 + Math.sin(Date.now() / 200) * 4;
-        ctx.fillStyle = '#fca5a5';
-        ctx.beginPath(); ctx.arc(nx, ny + NOZZLE_H - 3, 2, 0, Math.PI * 2); ctx.fill();
-        ctx.shadowBlur = 0;
+
+        // 蒸氣粒子
+        ctx.fillStyle = 'rgba(255,255,255,0.25)';
+        for (let i = 0; i < 3; i++) {
+          const px = nx + (i - 1) * 4 + Math.sin((frame + i * 20) / 10) * 2;
+          const py = ny - 8 - ((frame + i * 30) % 30);
+          const opacity = 1 - ((frame + i * 30) % 30) / 30;
+          ctx.globalAlpha = opacity * 0.4;
+          ctx.beginPath();
+          ctx.arc(px, py, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
       }
+    }
+
+    // 慶祝粒子 (confetti)
+    function spawnConfetti() {
+      confetti = [];
+      const colors = ['#FF6B9D', '#FFD700', '#00AEEF', '#5CD85A', '#A55EEA', '#FF9800'];
+      for (let i = 0; i < 60; i++) {
+        confetti.push({
+          x: W / 2 + (Math.random() - 0.5) * 100,
+          y: H / 2,
+          vx: (Math.random() - 0.5) * 8,
+          vy: -Math.random() * 10 - 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 3 + Math.random() * 4,
+          rot: Math.random() * Math.PI,
+          vr: (Math.random() - 0.5) * 0.3,
+          life: 100 + Math.random() * 50
+        });
+      }
+    }
+
+    function drawConfetti() {
+      for (const p of confetti) {
+        if (p.life <= 0) continue;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.min(1, p.life / 30);
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function updateConfetti() {
+      for (const p of confetti) {
+        if (p.life <= 0) continue;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.25;   // gravity
+        p.vx *= 0.98;
+        p.rot += p.vr;
+        p.life--;
+      }
+      confetti = confetti.filter(p => p.life > 0);
     }
 
     function drawLabels() {
       ctx.fillStyle = '#9ca3af';
-      ctx.font = '600 11px Nunito, sans-serif';
+      ctx.font = '700 11px Nunito';
       ctx.textAlign = 'center';
-      ctx.fillText('FDM 3D Printer', W / 2, H - 10);
+      ctx.fillText('FDM 3D Printer · 模擬', W / 2, H - 8);
       if (finished) {
-        ctx.fillStyle = '#22c55e';
-        ctx.font = '800 15px Nunito, sans-serif';
-        ctx.fillText('✅ 哆啦A夢列印完成！', W / 2, H - 28);
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = '900 22px Nunito';
+        ctx.fillText('🎉 列印完成！', W / 2, H / 2 - 30);
       }
     }
 
     function updateStatus() {
-      const shown = Math.min(
-        layersDone + (printing && currentLayer < ROWS ? 1 : 0), ROWS);
-      document.getElementById('layerCount').textContent = `${shown} / ${ROWS}`;
-      document.getElementById('printStatus').textContent =
-        finished ? '✅ 完成！' : (printing ? '列印中...' : '暫停');
+      const pct = Math.min(100, Math.round((layersDone + (printing && currentLayer < totalLayers && !isPaused ? (direction === 1 ? (nozzleX - OBJ_LEFT) / OBJ_W : (OBJ_RIGHT - nozzleX) / OBJ_W) : 0)) / totalLayers * 100));
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressPct').textContent = pct + '%';
+
+      const shown = Math.min(layersDone + (printing && currentLayer < totalLayers ? 1 : 0), totalLayers);
+      document.getElementById('layerCount').textContent = `${shown} / ${totalLayers}`;
+
+      const status = document.getElementById('printStatus');
+      if (finished) { status.textContent = '✅ 完成！'; status.className = 'value safe'; }
+      else if (isPaused) { status.textContent = '⏸️ 暫停'; status.className = 'value warm'; }
+      else { status.textContent = '🖨️ 列印中'; status.className = 'value safe'; }
     }
 
     // ── 主動畫迴圈 ────────────────────────────────────────────────────
     function animate() {
-      ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = '#0f172a';
-      ctx.beginPath(); ctx.roundRect(0, 0, W, H, 12); ctx.fill();
-
+      frame++;
+      drawBg();
       drawFrame();
       drawBed();
       drawPrintedPixels();
       drawNozzle();
+      drawConfetti();
       drawLabels();
       updateStatus();
 
-      if (printing && currentLayer < ROWS) {
+      if (!isPaused && !finished && currentLayer < totalLayers) {
         nozzleX += speed * direction;
-
         if (direction === 1 && nozzleX >= OBJ_RIGHT) {
           nozzleX = OBJ_RIGHT;
           layersDone++;
           currentLayer++;
           direction = -1;
-          if (currentLayer >= ROWS) { finished = true; cooldown = 200; }
-          else nozzleX = OBJ_RIGHT;
+          if (currentLayer >= totalLayers) {
+            finished = true;
+            spawnConfetti();
+            cooldown = 300;
+          }
         } else if (direction === -1 && nozzleX <= OBJ_LEFT) {
           nozzleX = OBJ_LEFT;
           layersDone++;
           currentLayer++;
           direction = 1;
-          if (currentLayer >= ROWS) { finished = true; cooldown = 200; }
-          else nozzleX = OBJ_LEFT;
+          if (currentLayer >= totalLayers) {
+            finished = true;
+            spawnConfetti();
+            cooldown = 300;
+          }
         }
       }
+
+      updateConfetti();
 
       if (finished) {
         cooldown--;
@@ -934,26 +1448,84 @@
     }
 
     function resetPrint() {
+      PRINT_LAYERS = loadModelLayers(currentModelKey);
+      totalLayers  = PRINT_LAYERS.length;
       currentLayer = 0;
       layersDone   = 0;
       nozzleX      = OBJ_LEFT;
       direction    = 1;
       printing     = true;
+      isPaused     = false;
       finished     = false;
       cooldown     = 0;
+      confetti     = [];
+      document.getElementById('btnPause').textContent = '⏸️ 暫停';
     }
 
-    document.getElementById('btnRestart').addEventListener('click', resetPrint);
+    function skipToEnd() {
+      // 直接全部畫完，觸發完成
+      layersDone   = totalLayers;
+      currentLayer = totalLayers;
+      finished     = true;
+      spawnConfetti();
+      cooldown     = 300;
+    }
 
-    let speedLevel = 0;
-    const speeds      = [4, 8, 14];
-    const speedLabels = ['⚡ 加速', '⚡⚡ 更快', '🐢 正常速'];
-    document.getElementById('btnSpeed').addEventListener('click', () => {
-      speedLevel = (speedLevel + 1) % speeds.length;
-      speed = speeds[speedLevel];
-      document.getElementById('btnSpeed').textContent = speedLabels[speedLevel];
+    // ── 按鈕綁定 ─────────────────────────────────────────────────────
+    document.getElementById('btnRestart').addEventListener('click', resetPrint);
+    document.getElementById('btnPause').addEventListener('click', () => {
+      isPaused = !isPaused;
+      document.getElementById('btnPause').textContent = isPaused ? '▶️ 繼續' : '⏸️ 暫停';
+    });
+    document.getElementById('btnFinish').addEventListener('click', skipToEnd);
+
+    const slider = document.getElementById('speedSlider');
+    const speedReadout = document.getElementById('speedReadout');
+    slider.addEventListener('input', () => {
+      speed = parseInt(slider.value, 10);
+      speedReadout.textContent = speed + 'x';
     });
 
+    // 模型切換
+    document.querySelectorAll('.model-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.model-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentModelKey = btn.dataset.model;
+        resetPrint();
+      });
+    });
+
+    /* ===== 測驗 ===== */
+    function bindQuiz(optionsId, resultId, okMessage, hintMessage) {
+      const options = document.querySelectorAll('#' + optionsId + ' .quiz-option');
+      const result = document.getElementById(resultId);
+      options.forEach(option => {
+        option.addEventListener('click', () => {
+          const isCorrect = option.dataset.correct === 'true';
+          options.forEach(item => { item.classList.remove('correct', 'wrong'); item.disabled = false; });
+          option.classList.add(isCorrect ? 'correct' : 'wrong');
+          result.textContent = isCorrect ? '✅ 對了！' + okMessage : '❌ 再想想～' + hintMessage;
+          result.style.color = isCorrect ? '#1b6f2a' : '#b42323';
+          if (isCorrect) {
+            options.forEach(item => { item.disabled = true; });
+          } else {
+            setTimeout(() => { option.classList.remove('wrong'); }, 1500);
+          }
+        });
+      });
+    }
+    bindQuiz('q1options', 'q1result',
+      'FDM 把塑膠融化後一層一層疊起來，最後變成立體東西。',
+      '想想：3D 列印不是用畫的，是用什麼方式組合？');
+    bindQuiz('q2options', 'q2result',
+      'PLA 用玉米澱粉做、幾乎沒味道、溫度低，最適合學校使用。',
+      '提示：哪一種材料對小朋友最安全？');
+    bindQuiz('q3options', 'q3result',
+      '噴頭加熱到 200°C，是煮開水的 2 倍熱 — 摸了會嚴重燙傷！',
+      '想想：噴頭要把塑膠融化，溫度大概多高？');
+
+    // 啟動
     animate();
   })();
   </script>
