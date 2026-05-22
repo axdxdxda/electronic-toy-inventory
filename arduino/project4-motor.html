@@ -3,282 +3,384 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>功課四：震動馬達控制 - 電子元件教學</title>
+  <title>功課四：震動馬達控制 - 電流急急棒互動教學</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #2196F3;
-      --primary-dark: #1976D2;
-      --secondary: #FFC107;
-      --background: #f8f9fa;
-      --text: #333;
-      --border: #e9ecef;
-      --card-bg: #fff;
-      --shadow: 0 2px 10px rgba(0,0,0,0.1);
-      --motor: #9C27B0;
-      --motor-dark: #7B1FA2;
+      --primary: #00979d;
+      --primary-dark: #006a6e;
+      --accent: #f59f00;
+      --digital: #845ef7;
+      --digital-dark: #5f3dc4;
+      --analog: #06b6d4;
+      --analog-dark: #0e7490;
+      --pwm: #f76707;
+      --pwm-dark: #c2410c;
+      --power: #e03131;
+      --power-dark: #b42323;
+      --ground: #495057;
+      --ok: #2f9e44;
+      --ok-dark: #1b6f2a;
+      --ai: #10a37f;
+      --ai-dark: #0a7a5d;
+      --danger: #e03131;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --bg: #f5fafa;
+      --card: #ffffff;
+      --line: #d7e8e8;
+      --shadow: 0 12px 30px rgba(31, 41, 55, 0.12);
+      --code-bg: #1e3a3b;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
-      font-family: 'Microsoft YaHei', sans-serif;
-      background: var(--background);
-      color: var(--text);
-      line-height: 1.6;
+      margin: 0;
+      font-family: "Nunito", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(0, 151, 157, 0.18), transparent 28rem),
+        radial-gradient(circle at 88% 0%, rgba(132, 94, 247, 0.18), transparent 30rem),
+        var(--bg);
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.65;
     }
 
     .header {
-      background: var(--primary);
-      color: white;
-      padding: 1rem 0;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
       box-shadow: var(--shadow);
     }
-
     .nav {
-      max-width: 1200px;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 0 1rem;
+      padding: 0.9rem 1.25rem;
       display: flex;
+      align-items: center;
       justify-content: space-between;
+      gap: 1rem;
+    }
+    .nav h1 { margin: 0; font-size: clamp(1.05rem, 2.5vw, 1.45rem); font-weight: 900; }
+    .nav a {
+      color: #fff;
+      text-decoration: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-weight: 800;
+      white-space: nowrap;
+      min-height: 44px;
+      display: inline-flex;
       align-items: center;
     }
-
-    .nav h1 {
-      font-size: 1.5rem;
-    }
-
-    .nav a {
-      color: white;
-      text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-    }
-
-    .nav a:hover {
-      background: var(--primary-dark);
-    }
+    .nav a:hover, .nav a:focus-visible { background: rgba(255,255,255,0.18); outline: none; }
 
     .container {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      width: min(1180px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1.35rem 0 2.5rem;
     }
 
     .intro {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
+      background: linear-gradient(135deg, #e6f7f8 0%, #ddd6fe 45%, #fff4e0 100%);
+      border: 1px solid var(--line);
       box-shadow: var(--shadow);
-      margin-bottom: 2rem;
+      border-radius: 24px;
+      padding: clamp(1.4rem, 3vw, 2.2rem);
       text-align: center;
+      margin-bottom: 1.4rem;
     }
-
     .intro h2 {
-      color: var(--primary);
-      margin-bottom: 1rem;
-      font-size: 2rem;
+      margin: 0 0 0.5rem;
+      color: var(--primary-dark);
+      font-size: clamp(1.7rem, 4.6vw, 2.6rem);
+      line-height: 1.15;
+      font-weight: 900;
+    }
+    .intro p {
+      max-width: 780px;
+      margin: 0 auto;
+      color: #4d5b62;
+      font-size: clamp(1rem, 2.3vw, 1.18rem);
+      font-weight: 800;
     }
 
+    .dupont-kit,
+    .code-section,
+    .ai-section,
     .challenge-box {
-      background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
-      color: white;
-      padding: 2rem;
-      border-radius: 10px;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-
-    .challenge-box h3 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-    }
-
-    .ai-section {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 1.4rem;
+      padding: clamp(1.15rem, 3vw, 1.7rem);
+      border-radius: 20px;
+      background: var(--card);
+      border: 1px solid var(--line);
       box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-      border: 2px solid #10A37F;
+    }
+    .dupont-kit::before,
+    .code-section::before,
+    .ai-section::before,
+    .challenge-box::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 5px;
+      background: linear-gradient(90deg, var(--digital), var(--analog), var(--pwm), var(--power));
     }
 
-    .ai-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      color: #10A37F;
-    }
-
-    .question-template {
-      background: #f0f9ff;
-      border: 1px solid #e0f2fe;
-      border-radius: 5px;
-      padding: 1rem;
-      margin: 1rem 0;
-      font-family: monospace;
-    }
-
-    .code-section {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-    }
-
-    .code-block {
-      background: #2d3748;
-      color: #e2e8f0;
-      padding: 1rem;
-      border-radius: 5px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.9rem;
-      overflow-x: auto;
-      margin: 1rem 0;
-      white-space: pre-wrap;
-      line-height: 1.8;
-    }
-
-    .copy-btn {
-      background: var(--secondary);
-      color: #333;
-      border: none;
-      padding: 0.4rem 0.9rem;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-
-    .copy-btn:hover {
-      background: #ffd54f;
-    }
-
-    .code-block .string {
-      color: #ffa07a;
-    }
-
-    .code-block .comment {
-      color: #68d391;
-    }
-
-    .code-block .keyword {
-      color: #fbb6ce;
-    }
-
-    .code-block .function {
-      color: #90cdf4;
-    }
-
-    .hint-box {
-      background: #fff3cd;
-      border: 1px solid #ffeaa7;
-      border-radius: 5px;
-      padding: 1rem;
-      margin: 1rem 0;
-    }
-
-    .success-box {
-      background: #d4edda;
-      border: 1px solid #c3e6cb;
-      border-radius: 5px;
-      padding: 1rem;
-      margin: 1rem 0;
-    }
-
-    .navigation {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 2rem;
-      padding: 1rem 0;
-    }
-
-    .nav-btn {
-      background: var(--primary);
-      color: white;
-      padding: 0.8rem 1.5rem;
-      text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-    }
-
-    .nav-btn:hover {
-      background: var(--primary-dark);
-    }
-
-    .dupont-kit {
-      background: var(--card-bg);
-      padding: 1.5rem 1.75rem;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-      border: 2px solid #b3e5fc;
-    }
     .dupont-kit h3 {
-      color: var(--primary);
-      margin-bottom: 0.75rem;
-      font-size: 1.35rem;
+      margin: 0 0 0.55rem;
+      color: var(--primary-dark);
+      font-size: clamp(1.2rem, 3vw, 1.55rem);
+      font-weight: 900;
     }
     .dupont-summary {
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: #0277bd;
+      margin: 0 0 1rem;
+      color: #4d5b62;
+      font-weight: 800;
       line-height: 1.65;
     }
     .dupont-table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       margin-bottom: 1rem;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(31, 41, 55, 0.06);
     }
     .dupont-table th,
     .dupont-table td {
-      border: 1px solid #cfd8dc;
-      padding: 0.55rem 0.65rem;
+      padding: 0.7rem 0.65rem;
       text-align: center;
+      border-bottom: 1px solid var(--line);
     }
     .dupont-table th {
-      background: #006064;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: #fff;
-      font-weight: 700;
+      font-weight: 900;
+      letter-spacing: 0.05em;
     }
-    .dupont-table tbody tr:nth-child(even) { background: #eceff1; }
-    .dupont-img-wrap {
-      text-align: center;
-      margin-top: 0.75rem;
-    }
+    .dupont-table tbody tr:nth-child(even) { background: #f1f7f8; }
+    .dupont-table tbody tr:last-child td { border-bottom: 0; }
+    .dupont-table td strong { color: var(--pwm-dark); font-weight: 900; }
+    .dupont-img-wrap { text-align: center; margin-top: 0.85rem; }
     .dupont-img-wrap img {
       max-width: min(100%, 920px);
       height: auto;
-      border-radius: 8px;
-      border: 1px solid #e0e0e0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 22px rgba(31, 41, 55, 0.08);
     }
-    .dupont-caption {
-      font-size: 0.82rem;
-      color: #757575;
-      margin-top: 0.45rem;
+    .dupont-caption { font-size: 0.88rem; color: var(--muted); margin-top: 0.55rem; font-weight: 700; }
+
+    .challenge-box {
+      background: linear-gradient(135deg, #ede9fe 0%, #fff4e6 100%);
+      text-align: center;
+    }
+    .challenge-box::before { background: linear-gradient(90deg, var(--digital), var(--accent)); }
+    .challenge-box h3 {
+      margin: 0 0 0.55rem;
+      color: var(--digital-dark);
+      font-size: clamp(1.3rem, 3.4vw, 1.7rem);
+      font-weight: 900;
+    }
+    .challenge-box p {
+      margin: 0.35rem 0;
+      color: #3c2d68;
+      font-weight: 800;
+      font-size: clamp(1rem, 2.4vw, 1.12rem);
     }
 
-    @media (max-width: 768px) {
-      .navigation {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      
-      .code-section h4 {
-        font-size: 1.2rem;
-      }
+    .ai-section::before { background: linear-gradient(90deg, var(--ai), var(--ok)); }
+    .ai-header {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin: 0 0 0.7rem;
+      color: var(--ai-dark);
+    }
+    .ai-header h3 {
+      margin: 0;
+      color: var(--ai-dark);
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      font-weight: 900;
+    }
+    .ai-section > p { margin: 0 0 0.8rem; color: #4d5b62; font-weight: 700; }
+    .question-template {
+      background: #f0fdf9;
+      border: 2px solid #99e6cf;
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      margin: 0.8rem 0;
+      font-family: "JetBrains Mono", "Consolas", monospace;
+      font-size: 0.92rem;
+      color: #134e3a;
+      font-weight: 600;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+
+    .code-section h3 {
+      margin: 0 0 0.55rem;
+      color: var(--primary-dark);
+      font-size: clamp(1.25rem, 3.2vw, 1.65rem);
+      font-weight: 900;
+    }
+    .code-section h4 {
+      margin: 1.6rem 0 0.4rem;
+      color: var(--digital-dark);
+      font-size: clamp(1.05rem, 2.6vw, 1.2rem);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+    .code-section > p { margin: 0 0 0.6rem; color: #4d5b62; font-weight: 700; }
+    .code-block {
+      position: relative;
+      background: var(--code-bg);
+      color: #d1f7f7;
+      padding: 1rem 1.15rem;
+      border-radius: 12px;
+      font-family: "JetBrains Mono", "Consolas", monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      margin: 0.8rem 0 1.2rem;
+      white-space: pre;
+      line-height: 1.75;
+      border: 1px solid #134e51;
+      box-shadow: 0 6px 16px rgba(15, 70, 73, 0.18);
+    }
+    .code-block .comment  { color: #6b9ea0; font-style: italic; }
+    .code-block .keyword  { color: #ffd43b; font-weight: 700; }
+    .code-block .function { color: #ff9aab; font-weight: 700; }
+    .code-block .string   { color: #a5d8ff; }
+
+    .copy-btn {
+      background: linear-gradient(135deg, var(--accent), #e08e00);
+      color: #2a1900;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: 0 4px 12px rgba(245, 159, 0, 0.35);
+      transition: transform 0.15s, filter 0.15s;
+      margin: 0.4rem 0 0.3rem;
+    }
+    .copy-btn:hover, .copy-btn:focus-visible {
+      transform: translateY(-2px);
+      filter: brightness(1.06);
+      outline: none;
+    }
+
+    .hint-box {
+      background: linear-gradient(135deg, #fff8e1, #fff4e0);
+      border-left: 6px solid var(--accent);
+      border-radius: 14px;
+      padding: 1rem 1.15rem;
+      margin: 1rem 0;
+      box-shadow: 0 6px 16px rgba(245, 159, 0, 0.1);
+    }
+    .hint-box h4 { margin: 0 0 0.5rem; color: #8a5a00; font-size: 1.05rem; font-weight: 900; }
+    .hint-box p, .hint-box li { color: #4d3d1a; font-weight: 700; }
+    .hint-box ul, .hint-box ol { margin: 0.3rem 0 0; padding-left: 1.4rem; }
+    .hint-box li { margin: 0.25rem 0; }
+
+    .success-box {
+      position: relative;
+      overflow: hidden;
+      margin-top: 1.4rem;
+      padding: clamp(1.15rem, 3vw, 1.55rem);
+      border-radius: 20px;
+      border: 1px solid #b2f2bb;
+      background: linear-gradient(135deg, #e6f7e6, #fff8e1);
+      box-shadow: var(--shadow);
+    }
+    .success-box::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 5px;
+      background: linear-gradient(90deg, var(--ok), var(--accent));
+    }
+    .success-box h4 { margin: 0 0 0.55rem; color: var(--ok-dark); font-size: 1.3rem; font-weight: 900; }
+    .success-box p, .success-box li { color: #1b6f2a; font-weight: 800; }
+    .success-box ul { margin: 0.4rem 0 0.6rem; padding-left: 1.4rem; }
+    .success-box li { margin: 0.3rem 0; }
+    .success-box strong { color: var(--pwm-dark); }
+
+    details {
+      margin-top: 0.8rem;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 2px solid var(--line);
+    }
+    details summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 0.9rem 1.1rem;
+      background: linear-gradient(135deg, #e6f7f8, #ede9fe);
+      color: var(--primary-dark);
+      font-weight: 900;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    details summary::-webkit-details-marker { display: none; }
+    details summary::before { content: "▶"; transition: transform 0.2s; font-size: 0.85rem; }
+    details[open] summary::before { transform: rotate(90deg); }
+    details[open] summary { border-bottom: 1px solid var(--line); }
+    details .code-block { margin: 0; border-radius: 0; border: 0; box-shadow: none; }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.6rem;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.85rem 1.4rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      text-decoration: none;
+      font-weight: 900;
+      min-height: 44px;
+      box-shadow: 0 6px 18px rgba(0, 151, 157, 0.35);
+      transition: transform 0.15s, filter 0.15s;
+    }
+    .nav-btn:hover, .nav-btn:focus-visible {
+      filter: brightness(1.08);
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    @media (max-width: 900px) {
+      .nav { flex-wrap: wrap; }
+    }
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      .container { width: min(100% - 1rem, 1180px); }
+      .intro, .dupont-kit, .code-section, .ai-section, .challenge-box, .success-box { border-radius: 16px; }
+      .navigation { flex-direction: column; }
+      .nav-btn { width: 100%; }
+      .code-block { font-size: 0.82rem; }
+      .dupont-table { font-size: 0.85rem; }
+      .dupont-table th, .dupont-table td { padding: 0.55rem 0.4rem; }
     }
   </style>
 </head>
@@ -667,7 +769,6 @@ TM1637Display display(CLK, DIO);
       <ul>
         <li>✅ Arduino IDE安裝與使用</li>
         <li>✅ 接腳原理與電路基礎</li>
-        <li>✅ ChatGPT協作程式設計</li>
         <li>✅ <strong>功課一</strong>：RGB LED顏色控制</li>
         <li>✅ <strong>功課二</strong>：數碼管顯示與倒數</li>
         <li>✅ <strong>功課三</strong>：蜂鳴器音效控制</li>
@@ -675,13 +776,6 @@ TM1637Display display(CLK, DIO);
         <li>🔜 <strong>功課五</strong>：電流急急棒（下一頁）</li>
       </ul>
       <p><strong>🚀 下一步：</strong>請繼續挑戰 <strong>功課五：電流急急棒</strong>，結合感測、計時與警報的遊戲式專案！</p>
-      <p><strong>進階延伸：</strong></p>
-      <ul>
-        <li>試著改變倒數的時間長度（例如從30秒倒數）</li>
-        <li>在倒數的每個數字時加入短促的震動提示</li>
-        <li>請ChatGPT教你如何加入更多感測器（溫度、光線、距離）</li>
-        <li>探索無線通訊（藍牙、WiFi）連接手機App</li>
-      </ul>
     </div>
 
     <div class="navigation">
