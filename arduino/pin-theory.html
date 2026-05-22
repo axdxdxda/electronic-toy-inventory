@@ -1,1000 +1,1220 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arduino Leonardo 接腳原理詳解 - 電子元件教學</title>
+  <title>Arduino Leonardo 接腳原理 - 電流急急棒互動教學</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #2196F3;
-      --primary-dark: #1976D2;
-      --secondary: #FFC107;
-      --background: #f8f9fa;
-      --text: #333;
-      --border: #e9ecef;
-      --card-bg: #fff;
-      --shadow: 0 2px 10px rgba(0,0,0,0.1);
-      --digital: #4CAF50;
-      --analog: #FF9800;
-      --pwm: #9C27B0;
-      --power: #F44336;
+      --primary: #00979d;
+      --primary-dark: #006a6e;
+      --accent: #f59f00;
+      --digital: #845ef7;
+      --digital-dark: #5f3dc4;
+      --analog: #06b6d4;
+      --analog-dark: #0e7490;
+      --pwm: #f76707;
+      --pwm-dark: #c2410c;
+      --power: #e03131;
+      --power-dark: #b42323;
+      --ground: #495057;
+      --ok: #2f9e44;
+      --ok-dark: #1b6f2a;
+      --danger: #e03131;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --bg: #f5fafa;
+      --card: #ffffff;
+      --line: #d7e8e8;
+      --shadow: 0 12px 30px rgba(31, 41, 55, 0.12);
+      --code-bg: #1e3a3b;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
-      font-family: 'Microsoft YaHei', sans-serif;
-      background: var(--background);
-      color: var(--text);
-      line-height: 1.6;
+      margin: 0;
+      font-family: "Nunito", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(0, 151, 157, 0.18), transparent 28rem),
+        radial-gradient(circle at 88% 0%, rgba(132, 94, 247, 0.18), transparent 30rem),
+        var(--bg);
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.65;
     }
 
     .header {
-      background: var(--primary);
-      color: white;
-      padding: 1rem 0;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
       box-shadow: var(--shadow);
     }
-
     .nav {
-      max-width: 1200px;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 0 1rem;
+      padding: 0.9rem 1.25rem;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
     }
-
-    .nav h1 {
-      font-size: 1.5rem;
-    }
-
+    .nav h1 { margin: 0; font-size: clamp(1.05rem, 2.5vw, 1.45rem); font-weight: 900; }
+    .nav a, .nav-btn, button { min-height: 44px; font: inherit; }
     .nav a {
-      color: white;
+      color: #fff;
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-weight: 800;
+      white-space: nowrap;
     }
-
-    .nav a:hover {
-      background: var(--primary-dark);
-    }
+    .nav a:hover, .nav a:focus-visible { background: rgba(255,255,255,0.18); outline: none; }
 
     .container {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      width: min(1180px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1.35rem 0 2.5rem;
     }
 
-    .intro {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
+    .hero, .section, .success-box {
+      background: var(--card);
+      border: 1px solid var(--line);
       box-shadow: var(--shadow);
-      margin-bottom: 2rem;
+    }
+
+    .hero {
+      border-radius: 24px;
+      padding: clamp(1.2rem, 3vw, 2rem);
       text-align: center;
+      background: linear-gradient(135deg, #e6f7f8 0%, #ddd6fe 45%, #fff4e0 100%);
+      overflow: hidden;
+    }
+    .hero h2 {
+      margin: 0 0 0.45rem;
+      color: var(--primary-dark);
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      line-height: 1.15;
+      font-weight: 900;
+    }
+    .lead {
+      max-width: 780px;
+      margin: 0 auto 1rem;
+      color: #4d5b62;
+      font-size: clamp(1rem, 2.5vw, 1.18rem);
+      font-weight: 800;
+    }
+    .hero-scene { width: 100%; height: auto; display: block; overflow: visible; }
+    .svg-label {
+      font-family: "Nunito", "Microsoft JhengHei", sans-serif;
+      font-weight: 900;
+      fill: var(--ink);
+      paint-order: stroke;
+      stroke: rgba(255, 255, 255, 0.94);
+      stroke-width: 5px;
+      stroke-linejoin: round;
     }
 
-    .intro h2 {
-      color: var(--primary);
-      margin-bottom: 1rem;
-      font-size: 2rem;
-    }
-
-    .arduino-board {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-
-    .board-container {
-      background: #2E7D4F;
-      border-radius: 15px;
-      padding: 2rem;
-      margin: 2rem auto;
-      max-width: 600px;
+    .section {
       position: relative;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+      overflow: hidden;
+      margin-top: 1.4rem;
+      padding: clamp(1.15rem, 3vw, 1.7rem);
+      border-radius: 20px;
     }
-
-    .pin-row {
-      display: flex;
-      justify-content: space-between;
-      margin: 1rem 0;
-      gap: 0.5rem;
-    }
-
-    .pin {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.7rem;
-      font-weight: bold;
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s;
-      position: relative;
-    }
-
-    .pin:hover {
-      transform: scale(1.2);
-      box-shadow: 0 0 10px rgba(255,255,255,0.5);
-    }
-
-    .pin.digital {
-      background: var(--digital);
-    }
-
-    .pin.analog {
-      background: var(--analog);
-    }
-
-    .pin.pwm {
-      background: var(--pwm);
-    }
-
-    .pin.power {
-      background: var(--power);
-    }
-
-    .pin.ground {
-      background: #333;
-    }
-
-    .pin-label {
+    .section::before {
+      content: "";
       position: absolute;
-      top: -25px;
-      font-size: 0.6rem;
-      color: white;
-      font-weight: normal;
+      inset: 0 0 auto;
+      height: 5px;
+      background: linear-gradient(90deg, var(--digital), var(--analog), var(--pwm), var(--power));
+    }
+    .section h3 {
+      margin: 0 0 0.5rem;
+      color: var(--primary-dark);
+      text-align: center;
+      font-size: clamp(1.25rem, 3.2vw, 1.65rem);
+      line-height: 1.3;
+      font-weight: 900;
+    }
+    .section p.section-lead {
+      max-width: 780px;
+      margin: 0 auto 1rem;
+      text-align: center;
+      color: #4d5b62;
+      font-weight: 800;
+    }
+    .hint {
+      margin: 0.8rem auto 0;
+      max-width: 760px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 800;
     }
 
-    .pin-types {
+    /* 4 接腳家族 */
+    .family-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .pin-type-card {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      border-top: 4px solid;
-    }
-
-    .pin-type-card.digital {
-      border-top-color: var(--digital);
-    }
-
-    .pin-type-card.analog {
-      border-top-color: var(--analog);
-    }
-
-    .pin-type-card.pwm {
-      border-top-color: var(--pwm);
-    }
-
-    .pin-type-card.power {
-      border-top-color: var(--power);
-    }
-
-    .pin-type-card h3 {
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .pin-icon {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-    }
-
-    .pin-icon.digital {
-      background: var(--digital);
-    }
-
-    .pin-icon.analog {
-      background: var(--analog);
-    }
-
-    .pin-icon.pwm {
-      background: var(--pwm);
-    }
-
-    .pin-icon.power {
-      background: var(--power);
-    }
-
-    .code-example {
-      background: #2d3748;
-      color: #e2e8f0;
-      padding: 1rem;
-      border-radius: 5px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.9rem;
-      margin: 1rem 0;
-    }
-
-    .code-example .comment {
-      color: #68d391;
-    }
-
-    .code-example .keyword {
-      color: #fbb6ce;
-    }
-
-    .code-example .function {
-      color: #90cdf4;
-    }
-
-    .interactive-demo {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-    }
-
-    .demo-controls {
-      display: flex;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 1rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
     }
-
-    .demo-btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
+    .family-card {
+      padding: 1.1rem 1rem;
+      border-radius: 18px;
+      background: #fff;
+      border: 3px solid transparent;
+      box-shadow: 0 8px 22px rgba(31, 41, 55, 0.08);
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-
-    .demo-btn:hover {
-      background: var(--primary-dark);
+    .family-card.digital { border-color: var(--digital); }
+    .family-card.analog { border-color: var(--analog); }
+    .family-card.pwm { border-color: var(--pwm); }
+    .family-card.power { border-color: var(--power); }
+    .family-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(31, 41, 55, 0.14); }
+    .family-card svg { display: block; margin: 0 auto 0.5rem; }
+    .family-card h4 { margin: 0 0 0.3rem; font-size: 1.08rem; font-weight: 900; }
+    .family-card.digital h4 { color: var(--digital-dark); }
+    .family-card.analog h4 { color: var(--analog-dark); }
+    .family-card.pwm h4 { color: var(--pwm-dark); }
+    .family-card.power h4 { color: var(--power-dark); }
+    .family-card p { margin: 0; color: #4d5b62; font-size: 0.88rem; font-weight: 800; }
+    .family-card .badge {
+      display: inline-block;
+      margin-top: 0.4rem;
+      padding: 0.15rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: #fff;
     }
+    .family-card.digital .badge { background: var(--digital); }
+    .family-card.analog .badge { background: var(--analog); }
+    .family-card.pwm .badge { background: var(--pwm); }
+    .family-card.power .badge { background: var(--power); }
 
-    .demo-btn.active {
-      background: var(--secondary);
-      color: var(--text);
+    /* ===== 互動 Arduino 接腳圖 ===== */
+    .pin-lab {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 1.2rem;
+      align-items: start;
+      margin-top: 0.5rem;
     }
-
-    .pin-info {
-      background: var(--background);
+    .board-wrap {
+      background: linear-gradient(135deg, #e6f7f8, #f3f8fe);
+      border: 3px solid var(--primary);
+      border-radius: 18px;
       padding: 1rem;
-      border-radius: 5px;
-      margin-top: 1rem;
-      min-height: 60px;
+      text-align: center;
+    }
+    .board-wrap svg { width: 100%; height: auto; max-width: 560px; }
+    .pin-target { cursor: pointer; transition: filter 0.15s; }
+    .pin-target:hover .pin-circle { filter: brightness(1.2); }
+    .pin-target.active .pin-circle {
+      filter: drop-shadow(0 0 10px #ffd43b) brightness(1.25);
+      stroke: #ffd43b;
+      stroke-width: 3;
     }
 
-    .voltage-demo {
+    .pin-readout {
+      background: #fff;
+      border: 3px dashed var(--primary);
+      border-radius: 18px;
+      padding: 1.2rem;
       display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin: 1rem 0;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 240px;
+    }
+    .pin-readout.empty {
+      text-align: center;
+      color: #78909c;
+      border-style: solid;
+      background: #f5fafa;
+    }
+    .pin-readout h4 {
+      margin: 0 0 0.5rem;
+      color: var(--primary-dark);
+      font-size: 1.15rem;
+      font-weight: 900;
+      text-align: center;
+    }
+    .pin-readout .pin-name {
+      display: inline-block;
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      color: #fff;
+      font-weight: 900;
+      margin-bottom: 0.6rem;
+    }
+    .pin-readout p {
+      margin: 0 0 0.4rem;
+      color: #4d5b62;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+    .pin-readout ul {
+      margin: 0.3rem 0 0;
+      padding-left: 1.2rem;
+      color: #4d5b62;
+      font-size: 0.92rem;
+      font-weight: 800;
     }
 
+    /* ===== 類比電壓模擬器 ===== */
+    .analog-sim {
+      background: linear-gradient(135deg, #ecfeff, #e0f2fe);
+      border: 3px solid var(--analog);
+      border-radius: 18px;
+      padding: 1.4rem;
+      margin-top: 0.5rem;
+    }
+    .voltage-row {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 0.7rem;
+    }
+    .voltage-row label {
+      font-weight: 900;
+      color: var(--analog-dark);
+    }
     .voltage-bar {
-      width: 200px;
-      height: 20px;
-      background: #ddd;
-      border-radius: 10px;
+      height: 24px;
+      background: #fff;
+      border: 2px solid var(--analog);
+      border-radius: 999px;
       overflow: hidden;
       position: relative;
     }
-
     .voltage-fill {
       height: 100%;
-      background: linear-gradient(90deg, #4CAF50, #FFC107, #F44336);
-      width: 0%;
-      transition: width 0.5s;
+      background: linear-gradient(90deg, #67e8f9, #06b6d4);
+      transition: width 0.3s;
+      border-radius: 999px;
     }
-
+    .voltage-fill.analog { background: linear-gradient(90deg, #c4b5fd, #845ef7); }
     .voltage-value {
-      font-weight: bold;
-      color: var(--primary);
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #fff;
+      font-size: 0.95rem;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    }
+    .voltage-controls {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 0.6rem;
+      align-items: center;
+      justify-content: center;
+    }
+    .voltage-controls input[type=range] {
+      flex: 1;
+      min-width: 200px;
+      accent-color: var(--analog);
+    }
+    .voltage-readout-pill {
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      background: var(--analog);
+      color: #fff;
+      font-weight: 900;
+      min-width: 60px;
+      text-align: center;
+    }
+    .analog-sim .explain {
+      margin-top: 0.8rem;
+      padding: 0.7rem 0.9rem;
+      background: #fff;
+      border-radius: 12px;
+      color: #4d5b62;
+      font-weight: 800;
+      font-size: 0.9rem;
     }
 
-    .practical-examples {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-    }
-
-    .example-grid {
+    /* ===== 程式範例 ===== */
+    .code-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: 1fr 1fr;
       gap: 1rem;
-      margin-top: 1rem;
+    }
+    .code-block {
+      background: #fff;
+      border-radius: 14px;
+      border: 3px solid var(--line);
+      box-shadow: 0 8px 22px rgba(31, 41, 55, 0.06);
+      overflow: hidden;
+    }
+    .code-block.digital { border-color: var(--digital); }
+    .code-block.analog { border-color: var(--analog); }
+    .code-block.pwm { border-color: var(--pwm); }
+    .code-block.button { border-color: var(--ok); }
+    .code-header {
+      padding: 0.6rem 1rem;
+      color: #fff;
+      font-weight: 900;
+      font-size: 0.95rem;
+    }
+    .code-block.digital .code-header { background: var(--digital); }
+    .code-block.analog .code-header { background: var(--analog); }
+    .code-block.pwm .code-header { background: var(--pwm); }
+    .code-block.button .code-header { background: var(--ok); }
+    .code-body {
+      padding: 0.9rem 1rem;
+      background: var(--code-bg);
+      color: #d1f7f7;
+      font-family: "JetBrains Mono", "Consolas", monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    .code-body .kw { color: #ffd43b; font-weight: 700; }
+    .code-body .fn { color: #ff9aab; font-weight: 700; }
+    .code-body .num { color: #f59f00; }
+    .code-body .str { color: #a5d8ff; }
+    .code-body .com { color: #6b9ea0; font-style: italic; }
+
+    /* ===== 通訊介面 ===== */
+    .comm-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .comm-card {
+      padding: 1.1rem 1rem;
+      border-radius: 16px;
+      background: #fff;
+      border: 3px solid #0e7490;
+      text-align: center;
+      box-shadow: 0 8px 22px rgba(31, 41, 55, 0.06);
+    }
+    .comm-card h4 { margin: 0 0 0.4rem; color: #0e7490; font-size: 1.1rem; font-weight: 900; }
+    .comm-card p { margin: 0; color: #4d5b62; font-size: 0.92rem; font-weight: 800; }
+    .comm-card .pins-list {
+      margin: 0.6rem 0 0;
+      padding: 0.5rem;
+      background: #f1f7f8;
+      border-radius: 10px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: #0e7490;
     }
 
-    .example-card {
-      background: var(--background);
-      padding: 1rem;
-      border-radius: 5px;
-      border-left: 4px solid var(--primary);
+    /* ===== Tips ===== */
+    .tip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.8rem;
     }
+    .tip-card {
+      padding: 0.9rem 1rem;
+      border-radius: 14px;
+      background: #fff;
+      border-left: 5px solid var(--accent);
+      box-shadow: 0 6px 16px rgba(31, 41, 55, 0.05);
+    }
+    .tip-card h4 { margin: 0 0 0.2rem; color: var(--primary-dark); font-size: 1rem; font-weight: 900; }
+    .tip-card p { margin: 0; color: #4d5b62; font-size: 0.9rem; font-weight: 800; }
 
-    .tip {
-      background: #d4edda;
-      border: 1px solid #c3e6cb;
-      border-radius: 5px;
+    /* ===== 測驗 ===== */
+    .quiz {
+      margin-top: 0.8rem;
       padding: 1rem;
-      margin: 1rem 0;
+      border-radius: 16px;
+      background: #f8fbfe;
+      border-left: 6px solid var(--primary);
     }
+    .quiz h4 { margin: 0 0 0.7rem; color: #37474f; font-size: 1.05rem; font-weight: 900; }
+    .quiz-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.6rem; }
+    .quiz-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      min-height: 90px;
+      padding: 0.6rem;
+      border: 3px solid var(--line);
+      border-radius: 13px;
+      background: #fff;
+      color: #37474f;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 900;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .quiz-option .emoji { font-size: 1.7rem; line-height: 1; }
+    .quiz-option:hover, .quiz-option:focus-visible {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      outline: none;
+    }
+    .quiz-option.correct { background: #d3f9d8; border-color: var(--ok); color: var(--ok-dark); }
+    .quiz-option.wrong { background: #ffe3e3; border-color: var(--danger); color: #b42323; }
+    .quiz-result { min-height: 1.5rem; margin-top: 0.6rem; text-align: center; font-weight: 900; }
 
-    .warning {
-      background: #fff3cd;
-      border: 1px solid #ffeaa7;
-      border-radius: 5px;
-      padding: 1rem;
-      margin: 1rem 0;
+    .success-box {
+      margin-top: 1.4rem;
+      padding: clamp(1.15rem, 3vw, 1.55rem);
+      border-radius: 20px;
+      border-color: #b2f2bb;
+      background: linear-gradient(135deg, #e6f7e6, #fff8e1);
+      text-align: center;
     }
+    .success-box h3 { margin: 0 0 0.45rem; color: var(--ok-dark); font-size: 1.35rem; font-weight: 900; }
+    .success-box p { max-width: 760px; margin: 0 auto; color: #1b6f2a; font-weight: 800; }
 
     .navigation {
       display: flex;
       justify-content: space-between;
-      margin-top: 2rem;
-      padding: 1rem 0;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.4rem;
     }
-
     .nav-btn {
-      background: var(--primary);
-      color: white;
-      padding: 0.8rem 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.85rem 1.4rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
       text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+      font-weight: 900;
+      box-shadow: 0 6px 18px rgba(0, 151, 157, 0.35);
     }
+    .nav-btn:hover, .nav-btn:focus-visible { filter: brightness(1.08); transform: translateY(-2px); outline: none; }
 
-    .nav-btn:hover {
-      background: var(--primary-dark);
+    @media (max-width: 900px) {
+      .family-grid { grid-template-columns: 1fr 1fr; }
+      .pin-lab { grid-template-columns: 1fr; }
+      .code-grid { grid-template-columns: 1fr; }
+      .comm-grid { grid-template-columns: 1fr; }
+      .quiz-options { grid-template-columns: 1fr 1fr; }
     }
-
-    @media (max-width: 768px) {
-      .board-container {
-        padding: 1rem;
-        margin: 1rem auto;
-      }
-      
-      .pin-row {
-        gap: 0.2rem;
-      }
-      
-      .pin {
-        width: 25px;
-        height: 25px;
-        font-size: 0.6rem;
-      }
-      
-      .pin-types {
-        grid-template-columns: 1fr;
-      }
-      
-      .demo-controls {
-        justify-content: center;
-      }
-      
-      .navigation {
-        flex-direction: column;
-        gap: 1rem;
-      }
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      .container { width: min(100% - 1rem, 1180px); }
+      .hero, .section, .success-box { border-radius: 16px; }
+      .nav { align-items: flex-start; flex-direction: column; }
+      .family-grid, .quiz-options { grid-template-columns: 1fr; }
+      .voltage-row { grid-template-columns: 80px 1fr; }
+      .navigation { flex-direction: column; }
+      .nav-btn { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="nav">
-      <h1>📌 Arduino 接腳原理</h1>
+  <header class="header">
+    <nav class="nav" aria-label="頁面導覽">
+      <h1>📌 Arduino Leonardo 接腳原理</h1>
       <a href="../index.html">🏠 返回首頁</a>
-    </div>
-  </div>
+    </nav>
+  </header>
 
-  <div class="container">
-    <div class="intro">
-      <h2>🔌 深入了解Arduino Leonardo</h2>
-      <p>Arduino Leonardo是一款基於ATmega32u4微控制器的開發板，具有內建USB通訊功能和豐富的I/O接腳。</p>
-    </div>
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <h2>每根接腳都有名字和工作 📌</h2>
+      <p class="lead">我們用的是 <strong>Arduino Leonardo</strong> — 接腳分四大家族（數位 / 類比 / PWM / 電源），還有個超能力：能變成<strong>鍵盤滑鼠</strong>！</p>
+    </section>
 
-    <div class="leonardo-section" style="background: var(--card-bg); padding: 2rem; border-radius: 10px; box-shadow: var(--shadow); margin-bottom: 2rem; text-align: center;">
-      <h3 style="color: #0077BE; margin-bottom: 1.5rem; font-size: 1.8rem;">🎯 您的Arduino Leonardo接腳圖</h3>
-      <p>這是您提供的Arduino Leonardo圖片，我們將在此基礎上說明各個接腳功能：</p>
-      
-      <div style="position: relative; display: inline-block; margin: 2rem 0;">
-        <div style="position: relative; display: inline-block;">
-          <img src="./images/arduino-leonardo.jpg" 
-               style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: var(--shadow); 
-                      background: white; padding: 20px; border: 2px solid #e9ecef;" 
-               alt="Arduino Leonardo接腳圖" 
-               id="arduinoImage"
-               onload="showImageSuccess()"
-               onerror="showImageError(this)">
+    <!-- 4 接腳家族 -->
+    <section class="section">
+      <h3>🌈 接腳四大家族</h3>
+      <p class="section-lead">每種接腳負責不同工作。先認識它們，再學怎麼用。</p>
+      <div class="family-grid">
+        <article class="family-card digital">
+          <svg width="80" height="60" viewBox="0 0 80 60" aria-hidden="true">
+            <rect x="6" y="12" width="68" height="36" rx="4" fill="#ede9fe" stroke="#5f3dc4" stroke-width="3"/>
+            <path d="M14 36 L14 24 L26 24 L26 36 M26 24 L26 36 M36 36 L36 24 L48 24 L48 36 M48 24 L48 36 M58 36 L58 24 L70 24 L70 36"
+                  stroke="#5f3dc4" stroke-width="3" fill="none" stroke-linejoin="round"/>
+          </svg>
+          <h4>數位 Digital</h4>
+          <p>開或關，二選一<br>（HIGH = 5V / LOW = 0V）</p>
+          <span class="badge">D0 - D13</span>
+        </article>
+        <article class="family-card analog">
+          <svg width="80" height="60" viewBox="0 0 80 60" aria-hidden="true">
+            <rect x="6" y="12" width="68" height="36" rx="4" fill="#cffafe" stroke="#0e7490" stroke-width="3"/>
+            <path d="M10 40 Q 22 18 36 30 T 60 22 T 74 32" stroke="#0e7490" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </svg>
+          <h4>類比 Analog</h4>
+          <p>讀感測器數值<br>（0V ~ 5V 連續變化）</p>
+          <span class="badge">A0 - A5</span>
+        </article>
+        <article class="family-card pwm">
+          <svg width="80" height="60" viewBox="0 0 80 60" aria-hidden="true">
+            <rect x="6" y="12" width="68" height="36" rx="4" fill="#fff4e6" stroke="#c2410c" stroke-width="3"/>
+            <path d="M10 40 L14 40 L14 22 L24 22 L24 40 L34 40 L34 22 L44 22 L44 40 L54 40 L54 22 L64 22 L64 40 L74 40"
+                  stroke="#c2410c" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+          </svg>
+          <h4>PWM 調光</h4>
+          <p>快速開關模擬類比<br>調 LED 亮度、馬達速度</p>
+          <span class="badge">3 5 6 9 10 11 13</span>
+        </article>
+        <article class="family-card power">
+          <svg width="80" height="60" viewBox="0 0 80 60" aria-hidden="true">
+            <rect x="6" y="12" width="68" height="36" rx="4" fill="#ffe3e3" stroke="#b42323" stroke-width="3"/>
+            <path d="M36 18 L26 32 L36 32 L32 42 L48 26 L38 26 L42 18 Z" fill="#b42323" stroke="#b42323" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+          <h4>電源 Power</h4>
+          <p>給其他元件供電<br>5V / 3.3V / GND</p>
+          <span class="badge">5V · 3.3V · GND</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- 互動接腳地圖 -->
+    <section class="section">
+      <h3>🗺️ 點點看：互動 Arduino 接腳地圖</h3>
+      <p class="section-lead">點任一個接腳，右側顯示它能做什麼！</p>
+      <div class="pin-lab">
+        <div class="board-wrap">
+          <svg viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg" aria-label="可點選的 Arduino Leonardo 接腳地圖">
+            <!-- Leonardo realistic board v2（仿真實 PCB 外觀，2026-05-22 重繪） -->
+            <defs>
+              <filter id="leonardoShadow2" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0c4a4d" flood-opacity="0.25"/>
+              </filter>
+              <pattern id="leonardoTraces2" width="28" height="28" patternUnits="userSpaceOnUse">
+                <path d="M0 14 H28 M14 0 V28" stroke="#d9ffff" stroke-width="0.6" opacity="0.14"/>
+              </pattern>
+            </defs>
+
+            <!-- 背景 -->
+            <rect x="0" y="0" width="700" height="440" rx="14" fill="#eaf8f9"/>
+
+            <!-- PCB 板身（teal）+ 右下角缺口 — 為 RX/TX 預留右上角空間，右側延伸至 x=690 -->
+            <path d="M58 80 H672 Q690 80 690 98 V300 Q690 318 672 318 H600 L578 345 H58 Q40 345 40 327 V98 Q40 80 58 80 Z"
+                  fill="#2dbdc1" stroke="#0a7a7d" stroke-width="3.5" filter="url(#leonardoShadow2)"/>
+            <path d="M64 86 H668 Q684 86 684 100 V298 Q684 312 668 312 H598 L576 339 H64 Q46 339 46 325 V100 Q46 86 64 86 Z"
+                  fill="url(#leonardoTraces2)" opacity="0.85"/>
+
+            <!-- 4 個固定孔（白色圓圈）— 右上孔下移避開 RX/TX -->
+            <g fill="#fafefe" stroke="#0a7a7d" stroke-width="2.5">
+              <circle cx="66" cy="94" r="9"/>
+              <circle cx="215" cy="94" r="13"/>
+              <circle cx="660" cy="180" r="13"/>
+              <circle cx="660" cy="288" r="13"/>
+              <circle cx="210" cy="332" r="12"/>
+            </g>
+
+            <!-- Micro USB 接口 -->
+            <g>
+              <rect x="14" y="135" width="38" height="44" rx="5" fill="#c5cdd2" stroke="#516068" stroke-width="2.5"/>
+              <rect x="8" y="143" width="18" height="28" rx="2.5" fill="#e8eef1" stroke="#516068" stroke-width="2"/>
+              <line x1="52" y1="143" x2="105" y2="116" stroke="#d9ffff" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+              <line x1="52" y1="157" x2="112" y2="150" stroke="#d9ffff" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+              <line x1="52" y1="171" x2="105" y2="185" stroke="#d9ffff" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+              <text class="svg-label" x="33" y="196" text-anchor="middle" font-size="10.5" font-weight="800" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="3" paint-order="stroke">Micro USB</text>
+            </g>
+
+            <!-- DC 電源孔（barrel jack） -->
+            <g>
+              <rect x="28" y="240" width="90" height="56" rx="10" fill="#1a1a1a" stroke="#0a0a0a" stroke-width="3"/>
+              <ellipse cx="38" cy="268" rx="20" ry="26" fill="#0a0a0a"/>
+              <circle cx="98" cy="268" r="14" fill="#e8edef" stroke="#5a6a72" stroke-width="2.5"/>
+            </g>
+
+            <!-- RESET 按鈕 -->
+            <g>
+              <rect x="92" y="88" width="56" height="44" rx="7" fill="#eaeef0" stroke="#7d8a8e" stroke-width="2.5"/>
+              <circle cx="120" cy="110" r="14" fill="#ffffff" stroke="#c5cdd0" stroke-width="2"/>
+              <text class="svg-label" x="120" y="150" text-anchor="middle" font-size="10.5" font-weight="900" fill="#fff" stroke="rgba(0,0,0,0.35)" stroke-width="3" paint-order="stroke">RESET</text>
+            </g>
+
+            <!-- 橘色電容/元件 -->
+            <g fill="#fff8dc" stroke="#f08c00" stroke-width="2">
+              <rect x="158" y="108" width="14" height="28" rx="2.5"/>
+              <rect x="180" y="108" width="14" height="28" rx="2.5"/>
+              <rect x="298" y="215" width="14" height="32" rx="2.5"/>
+              <rect x="320" y="215" width="14" height="32" rx="2.5"/>
+              <rect x="496" y="222" width="14" height="38" rx="2.5"/>
+              <rect x="518" y="222" width="12" height="34" rx="2.5"/>
+              <rect x="226" y="275" width="32" height="14" rx="2.5"/>
+            </g>
+
+            <!-- 石英震盪器 -->
+            <rect x="380" y="232" width="34" height="18" rx="2" fill="#d0d8dc" stroke="#5a6a72" stroke-width="2"/>
+
+            <!-- L (D13) 與 PWR LED -->
+            <circle cx="170" cy="158" r="5" fill="#ff6b6b">
+              <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite"/>
+            </circle>
+            <text class="svg-label" x="184" y="162" font-size="11" font-weight="800" fill="#fff" stroke="rgba(0,0,0,0.35)" stroke-width="3" paint-order="stroke">L (D13)</text>
+            <circle cx="170" cy="182" r="4.5" fill="#51cf66"/>
+            <text class="svg-label" x="184" y="186" font-size="11" font-weight="800" fill="#fff" stroke="rgba(0,0,0,0.35)" stroke-width="3" paint-order="stroke">PWR</text>
+
+            <!-- ATmega 32u4 主晶片 -->
+            <g transform="translate(470 270)">
+              <rect x="-34" y="-34" width="68" height="68" rx="4" fill="#1a1a1a" stroke="#000" stroke-width="2.5"/>
+              <g stroke="#bcc5c9" stroke-width="2" stroke-linecap="round">
+                <line x1="-44" y1="-25" x2="-34" y2="-25"/><line x1="-44" y1="-17" x2="-34" y2="-17"/><line x1="-44" y1="-9" x2="-34" y2="-9"/><line x1="-44" y1="-1" x2="-34" y2="-1"/><line x1="-44" y1="7" x2="-34" y2="7"/><line x1="-44" y1="15" x2="-34" y2="15"/><line x1="-44" y1="23" x2="-34" y2="23"/>
+                <line x1="34" y1="-25" x2="44" y2="-25"/><line x1="34" y1="-17" x2="44" y2="-17"/><line x1="34" y1="-9" x2="44" y2="-9"/><line x1="34" y1="-1" x2="44" y2="-1"/><line x1="34" y1="7" x2="44" y2="7"/><line x1="34" y1="15" x2="44" y2="15"/><line x1="34" y1="23" x2="44" y2="23"/>
+                <line x1="-25" y1="-44" x2="-25" y2="-34"/><line x1="-17" y1="-44" x2="-17" y2="-34"/><line x1="-9" y1="-44" x2="-9" y2="-34"/><line x1="-1" y1="-44" x2="-1" y2="-34"/><line x1="7" y1="-44" x2="7" y2="-34"/><line x1="15" y1="-44" x2="15" y2="-34"/><line x1="25" y1="-44" x2="25" y2="-34"/>
+                <line x1="-25" y1="34" x2="-25" y2="44"/><line x1="-17" y1="34" x2="-17" y2="44"/><line x1="-9" y1="34" x2="-9" y2="44"/><line x1="-1" y1="34" x2="-1" y2="44"/><line x1="7" y1="34" x2="7" y2="44"/><line x1="15" y1="34" x2="15" y2="44"/><line x1="25" y1="34" x2="25" y2="44"/>
+              </g>
+              <text class="svg-label" x="0" y="-3" text-anchor="middle" font-size="10" font-weight="800" fill="#fff" stroke="none">ATmega</text>
+              <text class="svg-label" x="0" y="11" text-anchor="middle" font-size="10" font-weight="800" fill="#fff" stroke="none">32u4</text>
+            </g>
+
+            <!-- ICSP header（6-pin） -->
+            <g>
+              <rect x="545" y="252" width="44" height="34" rx="3" fill="#1a1a1a" stroke="#000" stroke-width="2"/>
+              <g fill="#3a3a3a">
+                <circle cx="557" cy="262" r="3.5"/><circle cx="567" cy="262" r="3.5"/><circle cx="577" cy="262" r="3.5"/>
+                <circle cx="557" cy="276" r="3.5"/><circle cx="567" cy="276" r="3.5"/><circle cx="577" cy="276" r="3.5"/>
+              </g>
+            </g>
+
+            <!-- Arduino 無限符號 logo + ARDUINO/LEONARDO 字 -->
+            <g opacity="0.95">
+              <path d="M312 220 C292 200 254 204 244 230 C234 256 258 280 286 268 C298 262 306 252 314 240 C322 252 330 262 342 268 C370 280 394 256 384 230 C374 204 336 200 316 220 Z"
+                    fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="266" y1="234" x2="284" y2="234" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+              <line x1="344" y1="234" x2="362" y2="234" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+              <line x1="353" y1="225" x2="353" y2="243" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+              <text class="svg-label" x="248" y="298" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" stroke="rgba(0,0,0,0.12)" stroke-width="1">ARDUINO</text>
+              <text class="svg-label" x="408" y="220" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" stroke="rgba(0,0,0,0.12)" stroke-width="1">LEONARDO</text>
+            </g>
+
+            <!-- ===== 上排接腳：黑色排針底座 + label + 可點 pin ===== -->
+            <g id="topPinHeader">
+              <!-- 三段排針底座 -->
+              <rect x="218" y="100" width="74" height="30" rx="4" fill="#0d0d0d"/>
+              <rect x="298" y="100" width="172" height="30" rx="4" fill="#0d0d0d"/>
+              <rect x="488" y="100" width="148" height="30" rx="4" fill="#0d0d0d"/>
+
+              <!-- pin label（上方） -->
+              <g class="svg-label" text-anchor="middle" font-size="9.5" font-weight="800" fill="#fff" stroke="rgba(0,0,0,0.28)" stroke-width="2" paint-order="stroke">
+                <text x="232" y="94">SCL</text>
+                <text x="254" y="94">SDA</text>
+                <text x="278" y="94">AREF</text>
+                <text x="312" y="94">GND</text>
+                <text x="334" y="94">~13</text>
+                <text x="356" y="94">12</text>
+                <text x="378" y="94">~11</text>
+                <text x="400" y="94">~10</text>
+                <text x="422" y="94">~9</text>
+                <text x="444" y="94">8</text>
+                <text x="502" y="94">7</text>
+                <text x="524" y="94">~6</text>
+                <text x="546" y="94">~5</text>
+                <text x="568" y="94">4</text>
+                <text x="590" y="94">~3</text>
+                <text x="614" y="94">2</text>
+              </g>
+
+              <!-- 非互動腳位（SCL/SDA/AREF/GND） -->
+              <g fill="#2a2a2a">
+                <circle cx="232" cy="115" r="6.5"/>
+                <circle cx="254" cy="115" r="6.5"/>
+                <circle cx="278" cy="115" r="6.5"/>
+                <circle cx="312" cy="115" r="6.5"/>
+              </g>
+
+              <!-- 互動腳位（PWM=橘 / 普通數位=深灰） -->
+              <g class="pin-target" data-pin="D13"><circle class="pin-circle" cx="334" cy="115" r="9.5" fill="#f76707" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="D12"><circle class="pin-circle" cx="356" cy="115" r="9.5" fill="#1f2937" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="D11"><circle class="pin-circle" cx="378" cy="115" r="9.5" fill="#f76707" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="D10"><circle class="pin-circle" cx="400" cy="115" r="9.5" fill="#f76707" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="D9"><circle class="pin-circle" cx="422" cy="115" r="9.5" fill="#f76707" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="D8"><circle class="pin-circle" cx="444" cy="115" r="9.5" fill="#1f2937" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="D7"><circle class="pin-circle" cx="502" cy="115" r="9.5" fill="#1f2937" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="D6"><circle class="pin-circle" cx="524" cy="115" r="9.5" fill="#f76707" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="D5"><circle class="pin-circle" cx="546" cy="115" r="9.5" fill="#f76707" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="D4"><circle class="pin-circle" cx="568" cy="115" r="9.5" fill="#1f2937" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="D3"><circle class="pin-circle" cx="590" cy="115" r="9.5" fill="#f76707" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="D2"><circle class="pin-circle" cx="614" cy="115" r="9.5" fill="#1f2937" stroke="#fff" stroke-width="2"/></g>
+            </g>
+
+            <!-- ===== RX / TX 排針 + 黃 LED（右上角，緊鄰 D2） ===== -->
+            <g id="rxTxArea">
+              <!-- 小型 2-pin 黑色排針底座（與主上排同一水平線） -->
+              <rect x="640" y="100" width="44" height="30" rx="4" fill="#0d0d0d"/>
+
+              <!-- pin label（上方） -->
+              <g class="svg-label" text-anchor="middle" font-size="9.5" font-weight="800" fill="#fff" stroke="rgba(0,0,0,0.28)" stroke-width="2" paint-order="stroke">
+                <text x="652" y="94">TX</text>
+                <text x="672" y="94">RX</text>
+              </g>
+
+              <!-- 互動腳位（D1=TX, D0=RX）— TX 在左、RX 在右 -->
+              <g class="pin-target" data-pin="D1"><circle class="pin-circle" cx="652" cy="115" r="9.5" fill="#1f2937" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="D0"><circle class="pin-circle" cx="672" cy="115" r="9.5" fill="#1f2937" stroke="#fff" stroke-width="2"/></g>
+
+              <!-- 黃色 RX / TX 指示 LED（在 D2 與 RX 之間的板身上） -->
+              <circle cx="628" cy="146" r="5" fill="#ffd43b">
+                <animate attributeName="opacity" values="0.4;1;0.4" dur="0.7s" repeatCount="indefinite"/>
+              </circle>
+              <text class="svg-label" x="640" y="150" font-size="10" font-weight="800" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="2.5" paint-order="stroke">RX</text>
+              <circle cx="628" cy="164" r="5" fill="#ffd43b"/>
+              <text class="svg-label" x="640" y="168" font-size="10" font-weight="800" fill="#fff" stroke="rgba(0,0,0,0.3)" stroke-width="2.5" paint-order="stroke">TX</text>
+            </g>
+
+            <!-- ===== 下排接腳：POWER + ANALOG IN ===== -->
+            <g id="bottomPinHeader">
+              <rect x="270" y="298" width="172" height="30" rx="4" fill="#0d0d0d"/>
+              <rect x="472" y="298" width="148" height="30" rx="4" fill="#0d0d0d"/>
+
+              <!-- 區塊標題 -->
+              <text class="svg-label" x="356" y="293" text-anchor="middle" font-size="14" font-weight="900" fill="#fff" stroke="rgba(0,0,0,0.2)" stroke-width="2" paint-order="stroke">POWER</text>
+              <text class="svg-label" x="546" y="293" text-anchor="middle" font-size="14" font-weight="900" fill="#fff" stroke="rgba(0,0,0,0.2)" stroke-width="2" paint-order="stroke">ANALOG IN</text>
+
+              <!-- pin label（下方） -->
+              <g class="svg-label" text-anchor="middle" font-size="9.5" font-weight="800" fill="#fff" stroke="rgba(0,0,0,0.28)" stroke-width="2" paint-order="stroke">
+                <text x="284" y="342">IOREF</text>
+                <text x="306" y="342">RST</text>
+                <text x="328" y="342">3V3</text>
+                <text x="350" y="342">5V</text>
+                <text x="372" y="342">GND</text>
+                <text x="394" y="342">GND</text>
+                <text x="416" y="342">VIN</text>
+                <text x="486" y="342">A0</text>
+                <text x="508" y="342">A1</text>
+                <text x="530" y="342">A2</text>
+                <text x="552" y="342">A3</text>
+                <text x="574" y="342">A4</text>
+                <text x="596" y="342">A5</text>
+              </g>
+
+              <!-- 互動腳位 -->
+              <g class="pin-target" data-pin="IOREF"><circle class="pin-circle" cx="284" cy="313" r="9.5" fill="#9775fa" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="RESET"><circle class="pin-circle" cx="306" cy="313" r="9.5" fill="#9775fa" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="3V3"><circle class="pin-circle" cx="328" cy="313" r="9.5" fill="#e03131" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="5V"><circle class="pin-circle" cx="350" cy="313" r="9.5" fill="#e03131" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="GND1"><circle class="pin-circle" cx="372" cy="313" r="9.5" fill="#495057" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="GND2"><circle class="pin-circle" cx="394" cy="313" r="9.5" fill="#495057" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="VIN"><circle class="pin-circle" cx="416" cy="313" r="9.5" fill="#e03131" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="A0"><circle class="pin-circle" cx="486" cy="313" r="9.5" fill="#06b6d4" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="A1"><circle class="pin-circle" cx="508" cy="313" r="9.5" fill="#06b6d4" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="A2"><circle class="pin-circle" cx="530" cy="313" r="9.5" fill="#06b6d4" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="A3"><circle class="pin-circle" cx="552" cy="313" r="9.5" fill="#06b6d4" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="A4"><circle class="pin-circle" cx="574" cy="313" r="9.5" fill="#06b6d4" stroke="#fff" stroke-width="2"/></g>
+              <g class="pin-target" data-pin="A5"><circle class="pin-circle" cx="596" cy="313" r="9.5" fill="#06b6d4" stroke="#fff" stroke-width="2"/></g>
+            </g>
+
+            <!-- 圖例（板外下方） -->
+            <g transform="translate(40 400)" font-family="sans-serif" font-size="12" font-weight="800">
+              <circle cx="6" cy="0" r="6" fill="#1f2937"/>
+              <text x="18" y="4" fill="#1f2937">數位</text>
+              <circle cx="66" cy="0" r="6" fill="#f76707"/>
+              <text x="78" y="4" fill="#1f2937">PWM (~)</text>
+              <circle cx="160" cy="0" r="6" fill="#06b6d4"/>
+              <text x="172" y="4" fill="#1f2937">類比</text>
+              <circle cx="220" cy="0" r="6" fill="#e03131"/>
+              <text x="232" y="4" fill="#1f2937">電源</text>
+              <circle cx="288" cy="0" r="6" fill="#495057"/>
+              <text x="300" y="4" fill="#1f2937">GND</text>
+              <circle cx="350" cy="0" r="6" fill="#9775fa"/>
+              <text x="362" y="4" fill="#1f2937">控制</text>
+            </g>
+          </svg>
         </div>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem; text-align: left;">
-          <div style="background: var(--background); padding: 1rem; border-radius: 5px; border-left: 4px solid var(--digital);">
-            <strong>數位接腳 (0-13)</strong><br>
-            可設定為輸入或輸出，讀取或輸出HIGH/LOW信號
-          </div>
-          <div style="background: var(--background); padding: 1rem; border-radius: 5px; border-left: 4px solid var(--analog);">
-            <strong>類比接腳 (A0-A5)</strong><br>
-            可讀取0-5V連續電壓值，解析度10位元(0-1023)
-          </div>
-          <div style="background: var(--background); padding: 1rem; border-radius: 5px; border-left: 4px solid var(--pwm);">
-            <strong>PWM接腳 (3,5,6,9,10,11,13)</strong><br>
-            可輸出模擬類比電壓，用於控制亮度或轉速
-          </div>
-          <div style="background: var(--background); padding: 1rem; border-radius: 5px; border-left: 4px solid var(--power);">
-            <strong>電源接腳</strong><br>
-            提供穩定的3.3V和5V電源給外部元件
-          </div>
+        <div class="pin-readout empty" id="pinReadout">
+          <h4>👆 點任一接腳</h4>
+          <p style="text-align:center;">接腳資訊會出現在這裡 — 包含類型、能做什麼、特殊功能等。</p>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div style="background: var(--card-bg); padding: 2rem; border-radius: 10px; box-shadow: var(--shadow); margin-bottom: 2rem;">
-      <h3 style="color: #0077BE; margin-bottom: 1.5rem; text-align: center;">📋 Arduino Leonardo 完整接腳說明</h3>
-      
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
-        <!-- 數位接腳區域 -->
-        <div style="background: var(--background); padding: 1.5rem; border-radius: 10px; border-top: 4px solid var(--digital);">
-          <h4 style="color: var(--digital); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-            <span style="width: 16px; height: 16px; background: var(--digital); border-radius: 50%;"></span>
-            數位接腳 (Digital Pins)
-          </h4>
-          <p><strong>接腳範圍：</strong>D0 - D13 (共14個)</p>
-          <p><strong>電壓範圍：</strong>0V (LOW) 或 5V (HIGH)</p>
-          <p><strong>最大電流：</strong>每個接腳40mA</p>
-          <p><strong>功能：</strong></p>
-          <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-            <li><strong>D0 (RX)：</strong>序列通訊接收</li>
-            <li><strong>D1 (TX)：</strong>序列通訊傳送</li>
-            <li><strong>D2 (SDA)：</strong>I2C資料線</li>
-            <li><strong>D3 (SCL)：</strong>I2C時鐘線</li>
-            <li><strong>D4-D12：</strong>一般數位I/O</li>
-            <li><strong>D13：</strong>內建LED + SPI時鐘</li>
-          </ul>
+    <!-- 類比電壓模擬器 -->
+    <section class="section">
+      <h3>📊 類比讀值是怎麼來的？拉拉看！</h3>
+      <p class="section-lead">類比接腳把 0~5V 電壓轉成 0~1023 的數字（10-bit）。拉滑桿試試！</p>
+      <div class="analog-sim">
+        <div class="voltage-row">
+          <label>電壓</label>
+          <div class="voltage-bar">
+            <div class="voltage-fill" id="voltFill" style="width: 50%"></div>
+            <div class="voltage-value" id="voltText">2.5V</div>
+          </div>
         </div>
-
-        <!-- PWM接腳區域 -->
-        <div style="background: var(--background); padding: 1.5rem; border-radius: 10px; border-top: 4px solid var(--pwm);">
-          <h4 style="color: var(--pwm); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-            <span style="width: 16px; height: 16px; background: var(--pwm); border-radius: 50%;"></span>
-            PWM接腳 (脈波寬度調變)
-          </h4>
-          <p><strong>接腳：</strong>D3, D5, D6, D9, D10, D11, D13</p>
-          <p><strong>輸出範圍：</strong>0-255 (對應0-5V)</p>
-          <p><strong>頻率：</strong>約490Hz或980Hz</p>
-          <p><strong>用途：</strong></p>
-          <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-            <li>LED亮度調節</li>
-            <li>馬達轉速控制</li>
-            <li>伺服馬達角度控制</li>
-            <li>音頻信號產生</li>
-          </ul>
+        <div class="voltage-row">
+          <label>類比讀值</label>
+          <div class="voltage-bar">
+            <div class="voltage-fill analog" id="analogFill" style="width: 50%"></div>
+            <div class="voltage-value" id="analogText">512</div>
+          </div>
+        </div>
+        <div class="voltage-controls">
+          <span>0V</span>
+          <input type="range" id="voltSlider" min="0" max="500" value="250">
+          <span>5V</span>
+          <span class="voltage-readout-pill" id="voltPill">2.5V</span>
+        </div>
+        <div class="explain" id="voltExplain">
+          📐 公式：<code style="background:#f5f7fa;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;">analogRead(A0) ≈ 電壓 × 1023 / 5</code>
         </div>
       </div>
+    </section>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
-        <!-- 類比接腳區域 -->
-        <div style="background: var(--background); padding: 1.5rem; border-radius: 10px; border-top: 4px solid var(--analog);">
-          <h4 style="color: var(--analog); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-            <span style="width: 16px; height: 16px; background: var(--analog); border-radius: 50%;"></span>
-            類比接腳 (Analog Pins)
-          </h4>
-          <p><strong>接腳範圍：</strong>A0 - A5, A6 - A11 (共12個)</p>
-          <p><strong>輸入範圍：</strong>0-5V</p>
-          <p><strong>解析度：</strong>10位元 (0-1023)</p>
-          <p><strong>輸入阻抗：</strong>100MΩ</p>
-          <p><strong>特殊功能：</strong></p>
-          <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-            <li><strong>A4 (SDA)：</strong>I2C資料線</li>
-            <li><strong>A5 (SCL)：</strong>I2C時鐘線</li>
-            <li>可作為數位I/O使用</li>
-            <li>A6-A11僅能作為類比輸入</li>
-          </ul>
-        </div>
-
-        <!-- 電源接腳區域 -->
-        <div style="background: var(--background); padding: 1.5rem; border-radius: 10px; border-top: 4px solid var(--power);">
-          <h4 style="color: var(--power); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-            <span style="width: 16px; height: 16px; background: var(--power); border-radius: 50%;"></span>
-            電源接腳 (Power Pins)
-          </h4>
-          <p><strong>VIN：</strong>外部電源輸入 (7-12V)</p>
-          <p><strong>5V：</strong>5V穩壓輸出 (最大500mA)</p>
-          <p><strong>3.3V：</strong>3.3V穩壓輸出 (最大50mA)</p>
-          <p><strong>GND：</strong>接地點 (0V參考)</p>
-          <p><strong>IOREF：</strong>I/O邏輯電平參考 (5V)</p>
-          <p><strong>RESET：</strong>重置接腳</p>
-          <p><strong>AREF：</strong>類比參考電壓</p>
-        </div>
-      </div>
-
-      <!-- 通訊接腳詳細說明 -->
-      <div style="background: var(--background); padding: 1.5rem; border-radius: 10px; border-top: 4px solid #0077BE;">
-        <h4 style="color: #0077BE; margin-bottom: 1rem;">🔗 通訊介面說明</h4>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-          <div>
-            <h5 style="color: #0077BE;">📡 I2C (Wire)</h5>
-            <p>SDA: 接腳2 或 A4<br>SCL: 接腳3 或 A5<br>支援多設備通訊</p>
-          </div>
-          <div>
-            <h5 style="color: #0077BE;">📊 SPI</h5>
-            <p>MISO: 接腳12<br>MOSI: 接腳11<br>SCK: 接腳13<br>SS: 接腳10</p>
-          </div>
-          <div>
-            <h5 style="color: #0077BE;">💬 UART</h5>
-            <p>RX: 接腳0<br>TX: 接腳1<br>USB: Serial<br>硬體: Serial1</p>
-          </div>
-          <div>
-            <h5 style="color: #0077BE;">🖱️ USB HID</h5>
-            <p>原生USB支援<br>鍵盤/滑鼠模擬<br>MIDI設備<br>自訂HID</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 程式碼範例區域 -->
-    <div style="background: var(--card-bg); padding: 2rem; border-radius: 10px; box-shadow: var(--shadow); margin-bottom: 2rem;">
-      <h3 style="color: #0077BE; margin-bottom: 1.5rem; text-align: center;">💻 Arduino Leonardo 實用程式範例</h3>
-      
-      <div style="display: grid; gap: 2rem;">
-        <!-- 基本I/O範例 -->
-        <div style="background: var(--background); padding: 1.5rem; border-radius: 10px;">
-          <h4 style="color: var(--primary); margin-bottom: 1rem;">🔗 基本數位I/O控制</h4>
-          <div style="background: #2d3748; color: #e2e8f0; padding: 1rem; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 0.9rem; overflow-x: auto;">
-<span style="color: #68d391;">// 控制內建LED (接腳13)</span>
-<span style="color: #fbb6ce;">void</span> <span style="color: #90cdf4;">setup</span>() {
-  pinMode(13, OUTPUT);     <span style="color: #68d391;">// 設定接腳13為輸出</span>
-  pinMode(2, INPUT_PULLUP); <span style="color: #68d391;">// 設定接腳2為按鈕輸入</span>
+    <!-- 4 個程式碼範例 -->
+    <section class="section">
+      <h3>💻 4 個關鍵程式範例</h3>
+      <p class="section-lead">不同接腳用不同函式 — 對照接腳家族看就懂了！</p>
+      <div class="code-grid">
+        <article class="code-block digital">
+          <div class="code-header">🟣 數位輸出：點亮 LED</div>
+          <div class="code-body"><span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">pinMode</span>(<span class="num">13</span>, <span class="kw">OUTPUT</span>);  <span class="com">// 13 號設為輸出</span>
 }
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="fn">digitalWrite</span>(<span class="num">13</span>, <span class="kw">HIGH</span>);  <span class="com">// 5V 開燈</span>
+  <span class="fn">delay</span>(<span class="num">1000</span>);
+  <span class="fn">digitalWrite</span>(<span class="num">13</span>, <span class="kw">LOW</span>);   <span class="com">// 0V 關燈</span>
+  <span class="fn">delay</span>(<span class="num">1000</span>);
+}</div>
+        </article>
 
-<span style="color: #fbb6ce;">void</span> <span style="color: #90cdf4;">loop</span>() {
-  <span style="color: #fbb6ce;">if</span> (digitalRead(2) == LOW) {  <span style="color: #68d391;">// 按鈕按下</span>
-    digitalWrite(13, HIGH);        <span style="color: #68d391;">// LED亮起</span>
-  } <span style="color: #fbb6ce;">else</span> {
-    digitalWrite(13, LOW);         <span style="color: #68d391;">// LED熄滅</span>
+        <article class="code-block analog">
+          <div class="code-header">🔵 類比輸入：讀感測器</div>
+          <div class="code-body"><span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">Serial</span>.<span class="fn">begin</span>(<span class="num">9600</span>);
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> v = <span class="fn">analogRead</span>(A0);  <span class="com">// 0-1023</span>
+  <span class="kw">float</span> voltage = v * <span class="num">5.0</span> / <span class="num">1023</span>;
+  <span class="fn">Serial</span>.<span class="fn">println</span>(voltage);
+  <span class="fn">delay</span>(<span class="num">500</span>);
+}</div>
+        </article>
+
+        <article class="code-block pwm">
+          <div class="code-header">🟠 PWM 調光：呼吸燈</div>
+          <div class="code-body"><span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">pinMode</span>(<span class="num">9</span>, <span class="kw">OUTPUT</span>);  <span class="com">// ~9 支援 PWM</span>
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i <= <span class="num">255</span>; i++) {
+    <span class="fn">analogWrite</span>(<span class="num">9</span>, i);  <span class="com">// 漸亮</span>
+    <span class="fn">delay</span>(<span class="num">5</span>);
   }
-}
-          </div>
-        </div>
+}</div>
+        </article>
 
-        <!-- PWM範例 -->
-        <div style="background: var(--background); padding: 1.5rem; border-radius: 10px;">
-          <h4 style="color: var(--primary); margin-bottom: 1rem;">🌈 PWM調光範例</h4>
-          <div style="background: #2d3748; color: #e2e8f0; padding: 1rem; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 0.9rem; overflow-x: auto;">
-<span style="color: #68d391;">// LED呼吸燈效果 (使用PWM接腳)</span>
-<span style="color: #fbb6ce;">void</span> <span style="color: #90cdf4;">setup</span>() {
-  pinMode(9, OUTPUT);  <span style="color: #68d391;">// PWM接腳</span>
+        <article class="code-block button">
+          <div class="code-header">🟢 按鈕輸入：用內建上拉</div>
+          <div class="code-body"><span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">pinMode</span>(<span class="num">2</span>, <span class="kw">INPUT_PULLUP</span>);
+  <span class="fn">pinMode</span>(<span class="num">13</span>, <span class="kw">OUTPUT</span>);
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (<span class="fn">digitalRead</span>(<span class="num">2</span>) == <span class="kw">LOW</span>)
+    <span class="fn">digitalWrite</span>(<span class="num">13</span>, <span class="kw">HIGH</span>);  <span class="com">// 按下 = 亮</span>
+  <span class="kw">else</span>
+    <span class="fn">digitalWrite</span>(<span class="num">13</span>, <span class="kw">LOW</span>);
+}</div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 通訊介面 -->
+    <section class="section">
+      <h3>📡 Leonardo 的通訊介面</h3>
+      <p class="section-lead">想接 LCD 顯示器、藍牙模組、SD 卡？要用這幾種通訊。Leonardo 的接腳跟 Uno 有點不同 — 看清楚別接錯！</p>
+      <div class="comm-grid">
+        <article class="comm-card">
+          <h4>I2C（兩線）</h4>
+          <p>用兩條線就能接很多裝置（LCD、感測器都常用）。</p>
+          <div class="pins-list">SDA = D2<br>SCL = D3<br>⚠️ 與 Uno 不同！</div>
+        </article>
+        <article class="comm-card">
+          <h4>SPI（高速）</h4>
+          <p>傳輸最快，常用於 SD 卡、彩色螢幕、無線模組。</p>
+          <div class="pins-list">在板子中央的<br><strong>ICSP 6-pin header</strong><br>（不是 D11-D13）</div>
+        </article>
+        <article class="comm-card">
+          <h4>UART（序列）</h4>
+          <p>USB 跟硬體 UART 是分開的兩條 — Leonardo 很特別！</p>
+          <div class="pins-list">USB ↔ Serial<br>D0/D1 ↔ Serial1</div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Leonardo 超能力：USB HID -->
+    <section class="section">
+      <h3>🦸 Leonardo 的超能力：變身鍵盤滑鼠！</h3>
+      <p class="section-lead">Leonardo 的晶片支援 USB HID — 可以假裝成鍵盤或滑鼠，自動幫電腦打字、按鍵、移動游標！這是 Uno 做不到的。</p>
+      <div class="code-grid">
+        <article class="code-block button">
+          <div class="code-header">⌨️ 鍵盤模擬：自動打字</div>
+          <div class="code-body"><span class="kw">#include</span> <span class="str">&lt;Keyboard.h&gt;</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">pinMode</span>(<span class="num">2</span>, <span class="kw">INPUT_PULLUP</span>);
+  <span class="fn">Keyboard</span>.<span class="fn">begin</span>();
 }
 
-<span style="color: #fbb6ce;">void</span> <span style="color: #90cdf4;">loop</span>() {
-  <span style="color: #68d391;">// 漸亮</span>
-  <span style="color: #fbb6ce;">for</span>(<span style="color: #fbb6ce;">int</span> brightness = 0; brightness <= 255; brightness++) {
-    analogWrite(9, brightness);
-    delay(5);
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (<span class="fn">digitalRead</span>(<span class="num">2</span>) == <span class="kw">LOW</span>) {
+    <span class="fn">Keyboard</span>.<span class="fn">print</span>(<span class="str">"Hello!"</span>);
+    <span class="fn">delay</span>(<span class="num">1000</span>);  <span class="com">// 避免重複</span>
   }
-  
-  <span style="color: #68d391;">// 漸暗</span>
-  <span style="color: #fbb6ce;">for</span>(<span style="color: #fbb6ce;">int</span> brightness = 255; brightness >= 0; brightness--) {
-    analogWrite(9, brightness);
-    delay(5);
-  }
-}
-          </div>
-        </div>
+}</div>
+        </article>
+        <article class="code-block pwm">
+          <div class="code-header">🖱️ 滑鼠模擬：自動移動</div>
+          <div class="code-body"><span class="kw">#include</span> <span class="str">&lt;Mouse.h&gt;</span>
 
-        <!-- 類比輸入範例 -->
-        <div style="background: var(--background); padding: 1.5rem; border-radius: 10px;">
-          <h4 style="color: var(--primary); margin-bottom: 1rem;">📊 類比感測器讀取</h4>
-          <div style="background: #2d3748; color: #e2e8f0; padding: 1rem; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 0.9rem; overflow-x: auto;">
-<span style="color: #68d391;">// 讀取電位器或感測器</span>
-<span style="color: #fbb6ce;">void</span> <span style="color: #90cdf4;">setup</span>() {
-  Serial.begin(9600);
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">Mouse</span>.<span class="fn">begin</span>();
 }
 
-<span style="color: #fbb6ce;">void</span> <span style="color: #90cdf4;">loop</span>() {
-  <span style="color: #fbb6ce;">int</span> sensorValue = analogRead(A0);     <span style="color: #68d391;">// 讀取A0</span>
-  <span style="color: #fbb6ce;">float</span> voltage = sensorValue * (5.0 / 1023.0); <span style="color: #68d391;">// 轉換為電壓</span>
-  
-  Serial.print(<span style="color: #f7931e;">"感測器讀值: "</span>);
-  Serial.print(sensorValue);
-  Serial.print(<span style="color: #f7931e;">", 電壓: "</span>);
-  Serial.println(voltage);
-  
-  delay(500);
-}
-          </div>
-        </div>
-
-        <!-- USB HID範例 -->
-        <div style="background: var(--background); padding: 1.5rem; border-radius: 10px;">
-          <h4 style="color: var(--primary); margin-bottom: 1rem;">🖱️ USB鍵盤滑鼠模擬</h4>
-          <div style="background: #2d3748; color: #e2e8f0; padding: 1rem; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 0.9rem; overflow-x: auto;">
-<span style="color: #68d391;">// Leonardo獨有功能：模擬鍵盤/滑鼠</span>
-<span style="color: #fbb6ce;">#include</span> <span style="color: #f7931e;">"Keyboard.h"</span>
-<span style="color: #fbb6ce;">#include</span> <span style="color: #f7931e;">"Mouse.h"</span>
-
-<span style="color: #fbb6ce;">void</span> <span style="color: #90cdf4;">setup</span>() {
-  Keyboard.begin();
-  Mouse.begin();
-  pinMode(2, INPUT_PULLUP);  <span style="color: #68d391;">// 按鈕</span>
-}
-
-<span style="color: #fbb6ce;">void</span> <span style="color: #90cdf4;">loop</span>() {
-  <span style="color: #fbb6ce;">if</span> (digitalRead(2) == LOW) {
-    Keyboard.print(<span style="color: #f7931e;">"Hello from Arduino!"</span>);  <span style="color: #68d391;">// 輸入文字</span>
-    delay(1000);
-  }
-}
-          </div>
-        </div>
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="fn">Mouse</span>.<span class="fn">move</span>(<span class="num">10</span>, <span class="num">0</span>);  <span class="com">// 右移 10px</span>
+  <span class="fn">delay</span>(<span class="num">100</span>);
+  <span class="fn">Mouse</span>.<span class="fn">move</span>(-<span class="num">10</span>, <span class="num">0</span>); <span class="com">// 左移 10px</span>
+  <span class="fn">delay</span>(<span class="num">100</span>);
+}</div>
+        </article>
       </div>
+      <div style="margin-top: 0.8rem; padding: 0.9rem 1rem; background: #fff4e6; border: 3px solid #ffd8a8; border-radius: 14px; text-align: center; font-weight: 800; color: #7c3f00;">
+        ⚠️ <strong>玩 HID 時要小心</strong> — 程式跑起來會「自動操作電腦」！如果做錯可能很難停下來。建議先在按鈕觸發後才執行，並準備一個 reset 按鈕。
+      </div>
+    </section>
+
+    <!-- 訣竅 -->
+    <section class="section">
+      <h3>💡 挑接腳的小訣竅</h3>
+      <div class="tip-grid">
+        <article class="tip-card">
+          <h4>💡 LED 亮暗 → ~PWM</h4>
+          <p>要調 LED 亮度或馬達轉速，挑有「~」符號的接腳</p>
+        </article>
+        <article class="tip-card">
+          <h4>🌡️ 感測器 → A0-A5</h4>
+          <p>讀光感、溫度、搖桿等連續變化的感測器用類比腳</p>
+        </article>
+        <article class="tip-card">
+          <h4>🔘 簡單開關 → 任一數位</h4>
+          <p>單純的按鈕、繼電器，任何數位腳都行</p>
+        </article>
+        <article class="tip-card">
+          <h4>⚠️ 避開 0 / 1</h4>
+          <p>這兩腳是序列通訊用，會跟 USB 傳輸打架</p>
+        </article>
+        <article class="tip-card">
+          <h4>✅ 13 號內建 LED</h4>
+          <p>剛開始測程式時用 13 號最方便，板上已內建 L 燈</p>
+        </article>
+        <article class="tip-card">
+          <h4>🛡️ 接地一定要</h4>
+          <p>所有元件的 GND 一定要連回 Arduino 的 GND 才會運作</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 測驗 -->
+    <section class="section">
+      <h3>🧠 來考一下：你抓到接腳分類了嗎？</h3>
+
+      <div class="quiz">
+        <h4>🤔 第 1 題：要調 LED 亮度，要用哪種接腳？</h4>
+        <div class="quiz-options" id="q1options">
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🟣</span><span>普通數位</span></button>
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">🟠</span><span>PWM（~）</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🔴</span><span>5V 電源</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">⚫</span><span>GND</span></button>
+        </div>
+        <div class="quiz-result" id="q1result"></div>
+      </div>
+
+      <div class="quiz">
+        <h4>🤔 第 2 題：讀光感測器（一直變化的值）要用哪個？</h4>
+        <div class="quiz-options" id="q2options">
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🟣</span><span>D2 數位</span></button>
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">🔵</span><span>A0 類比</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🔴</span><span>5V 電源</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🟠</span><span>~3 PWM</span></button>
+        </div>
+        <div class="quiz-result" id="q2result"></div>
+      </div>
+
+      <div class="quiz">
+        <h4>🤔 第 3 題：類比讀值的範圍是？</h4>
+        <div class="quiz-options" id="q3options">
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">2️⃣</span><span>0-1（HIGH/LOW）</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🔢</span><span>0-255</span></button>
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">🎚️</span><span>0-1023</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">♾️</span><span>0-無限</span></button>
+        </div>
+        <div class="quiz-result" id="q3result"></div>
+      </div>
+
+      <div class="quiz">
+        <h4>🤔 第 4 題：Leonardo 比 Uno 多了什麼超能力？</h4>
+        <div class="quiz-options" id="q4options">
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🌈</span><span>更多顏色</span></button>
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">⌨️</span><span>能模擬鍵盤滑鼠</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">📶</span><span>內建 WiFi</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🔋</span><span>內建電池</span></button>
+        </div>
+        <div class="quiz-result" id="q4result"></div>
+      </div>
+
+      <div class="quiz">
+        <h4>🤔 第 5 題：在 Leonardo 上，I2C 的 SDA 接腳是哪一支？</h4>
+        <div class="quiz-options" id="q5options">
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🔵</span><span>A4</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🔵</span><span>A5</span></button>
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">🟣</span><span>D2</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🟣</span><span>D13</span></button>
+        </div>
+        <div class="quiz-result" id="q5result"></div>
+      </div>
+    </section>
+
+    <div class="success-box">
+      <h3>🎉 Leonardo 接腳全認識了！</h3>
+      <p>記住四大家族（數位 / 類比 / PWM / 電源）+ Leonardo 三大特色：D13 也是 PWM、I2C 在 D2/D3、能變鍵盤滑鼠！功課一的 RGB 燈用 PWM 控制紅綠藍 — 馬上來挑戰！</p>
     </div>
 
-    <div class="arduino-board">
-      <h3>🎯 互動式Arduino接腳圖</h3>
-      <p>點擊各個接腳了解其功能：</p>
-      
-      <div class="board-container">
-        <!-- 上排接腳 -->
-        <div class="pin-row">
-          <div class="pin power" data-pin="3V3">
-            <div class="pin-label">3.3V</div>
-            3V3
-          </div>
-          <div class="pin power" data-pin="5V">
-            <div class="pin-label">5V</div>
-            5V
-          </div>
-          <div class="pin ground" data-pin="GND1">
-            <div class="pin-label">GND</div>
-            GND
-          </div>
-          <div class="pin ground" data-pin="GND2">
-            <div class="pin-label">GND</div>
-            GND
-          </div>
-          <div class="pin power" data-pin="VIN">
-            <div class="pin-label">VIN</div>
-            VIN
-          </div>
-        </div>
-
-        <!-- 類比接腳 -->
-        <div class="pin-row">
-          <div class="pin analog" data-pin="A0">A0</div>
-          <div class="pin analog" data-pin="A1">A1</div>
-          <div class="pin analog" data-pin="A2">A2</div>
-          <div class="pin analog" data-pin="A3">A3</div>
-          <div class="pin analog" data-pin="A4">A4</div>
-          <div class="pin analog" data-pin="A5">A5</div>
-        </div>
-
-        <!-- 數位接腳 (右側) -->
-        <div class="pin-row">
-          <div class="pin digital" data-pin="D13">13</div>
-          <div class="pin digital" data-pin="D12">12</div>
-          <div class="pin pwm" data-pin="D11">~11</div>
-          <div class="pin pwm" data-pin="D10">~10</div>
-          <div class="pin pwm" data-pin="D9">~9</div>
-          <div class="pin digital" data-pin="D8">8</div>
-        </div>
-
-        <div class="pin-row">
-          <div class="pin digital" data-pin="D7">7</div>
-          <div class="pin pwm" data-pin="D6">~6</div>
-          <div class="pin pwm" data-pin="D5">~5</div>
-          <div class="pin digital" data-pin="D4">4</div>
-          <div class="pin pwm" data-pin="D3">~3</div>
-          <div class="pin digital" data-pin="D2">2</div>
-          <div class="pin digital" data-pin="D1">1</div>
-          <div class="pin digital" data-pin="D0">0</div>
-        </div>
-      </div>
-
-      <div class="pin-info" id="pinInfo">
-        💡 點擊任一接腳查看詳細說明
-      </div>
-    </div>
-
-    <div class="pin-types">
-      <div class="pin-type-card digital">
-        <h3>
-          <div class="pin-icon digital"></div>
-          數位接腳 (Digital Pins)
-        </h3>
-        <p><strong>功能：</strong>只能輸出或讀取高電位(5V)或低電位(0V)</p>
-        <p><strong>用途：</strong>控制LED燈、讀取按鈕狀態</p>
-        <p><strong>接腳：</strong>0-13 (共14個)</p>
-        
-        <div class="code-example">
-<span class="comment">// 數位輸出範例</span>
-<span class="keyword">void</span> <span class="function">setup</span>() {
-  pinMode(13, OUTPUT);  <span class="comment">// 設定腳位13為輸出</span>
-}
-
-<span class="keyword">void</span> <span class="function">loop</span>() {
-  digitalWrite(13, HIGH); <span class="comment">// 輸出5V</span>
-  delay(1000);
-  digitalWrite(13, LOW);  <span class="comment">// 輸出0V</span>
-  delay(1000);
-}
-        </div>
-      </div>
-
-      <div class="pin-type-card analog">
-        <h3>
-          <div class="pin-icon analog"></div>
-          類比接腳 (Analog Pins)
-        </h3>
-        <p><strong>功能：</strong>可讀取0-5V之間的連續電壓值</p>
-        <p><strong>用途：</strong>讀取感測器數值、電位器調節</p>
-        <p><strong>接腳：</strong>A0-A5 (共6個)</p>
-        <p><strong>解析度：</strong>10位元 (0-1023)</p>
-
-        <div class="code-example">
-<span class="comment">// 類比輸入範例</span>
-<span class="keyword">void</span> <span class="function">setup</span>() {
-  Serial.begin(9600);
-}
-
-<span class="keyword">void</span> <span class="function">loop</span>() {
-  <span class="keyword">int</span> value = analogRead(A0); <span class="comment">// 讀取A0電壓</span>
-  Serial.println(value);          <span class="comment">// 顯示數值(0-1023)</span>
-  delay(100);
-}
-        </div>
-      </div>
-
-      <div class="pin-type-card pwm">
-        <h3>
-          <div class="pin-icon pwm"></div>
-          PWM接腳 (脈波調變)
-        </h3>
-        <p><strong>功能：</strong>可輸出模擬類比的電壓(透過快速開關)</p>
-        <p><strong>用途：</strong>調節LED亮度、控制馬達轉速</p>
-        <p><strong>接腳：</strong>3, 5, 6, 9, 10, 11 (標示~符號)</p>
-        <p><strong>數值範圍：</strong>0-255</p>
-
-        <div class="code-example">
-<span class="comment">// PWM輸出範例</span>
-<span class="keyword">void</span> <span class="function">setup</span>() {
-  pinMode(9, OUTPUT);
-}
-
-<span class="keyword">void</span> <span class="function">loop</span>() {
-  <span class="keyword">for</span>(<span class="keyword">int</span> i=0; i<=255; i++) {
-    analogWrite(9, i);  <span class="comment">// 輸出PWM值(0-255)</span>
-    delay(10);          <span class="comment">// LED逐漸變亮</span>
-  }
-}
-        </div>
-      </div>
-
-      <div class="pin-type-card power">
-        <h3>
-          <div class="pin-icon power"></div>
-          電源接腳 (Power Pins)
-        </h3>
-        <p><strong>5V：</strong>提供5V穩定電源</p>
-        <p><strong>3.3V：</strong>提供3.3V穩定電源</p>
-        <p><strong>GND：</strong>接地端(0V參考點)</p>
-        <p><strong>VIN：</strong>外部電源輸入(7-12V)</p>
-
-        <div class="warning">
-          <h4>⚠️ 電源使用注意事項</h4>
-          <ul>
-            <li>5V和3.3V總電流不可超過500mA</li>
-            <li>每個數位接腳最大電流40mA</li>
-            <li>必須正確連接GND作為電路迴路</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="interactive-demo">
-      <h3>🎮 電壓讀取模擬器</h3>
-      <p>模擬不同電壓輸入到類比接腳的讀值：</p>
-      
-      <div class="demo-controls">
-        <button class="demo-btn" onclick="setVoltage(0)">0V</button>
-        <button class="demo-btn" onclick="setVoltage(1.65)">1.65V</button>
-        <button class="demo-btn" onclick="setVoltage(2.5)">2.5V</button>
-        <button class="demo-btn" onclick="setVoltage(3.3)">3.3V</button>
-        <button class="demo-btn" onclick="setVoltage(5)">5V</button>
-      </div>
-
-      <div class="voltage-demo">
-        <span>輸入電壓：</span>
-        <div class="voltage-bar">
-          <div class="voltage-fill" id="voltageFill"></div>
-        </div>
-        <span class="voltage-value" id="voltageValue">0V</span>
-      </div>
-
-      <div class="voltage-demo">
-        <span>Arduino讀值：</span>
-        <div class="voltage-bar">
-          <div class="voltage-fill" id="analogFill"></div>
-        </div>
-        <span class="voltage-value" id="analogValue">0</span>
-      </div>
-    </div>
-
-    <div class="practical-examples">
-      <h3>💼 實際應用範例</h3>
-      
-      <div class="example-grid">
-        <div class="example-card">
-          <h4>🔴 控制LED燈</h4>
-          <p><strong>使用接腳：</strong>數位接腳(如13)</p>
-          <p><strong>程式：</strong>digitalWrite(13, HIGH/LOW)</p>
-          <p><strong>應用：</strong>指示燈、警示燈</p>
-        </div>
-
-        <div class="example-card">
-          <h4>🔘 讀取按鈕</h4>
-          <p><strong>使用接腳：</strong>數位接腳(如2)</p>
-          <p><strong>程式：</strong>digitalRead(2)</p>
-          <p><strong>應用：</strong>開關控制、選單操作</p>
-        </div>
-
-        <div class="example-card">
-          <h4>🌡️ 溫度感測器</h4>
-          <p><strong>使用接腳：</strong>類比接腳(如A0)</p>
-          <p><strong>程式：</strong>analogRead(A0)</p>
-          <p><strong>應用：</strong>溫度監控、自動風扇</p>
-        </div>
-
-        <div class="example-card">
-          <h4>💡 調光燈具</h4>
-          <p><strong>使用接腳：</strong>PWM接腳(如9)</p>
-          <p><strong>程式：</strong>analogWrite(9, 0-255)</p>
-          <p><strong>應用：</strong>亮度調節、氣氛燈</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="tip">
-      <h4>💡 選擇接腳的技巧</h4>
-      <ul>
-        <li><strong>簡單開關控制：</strong>使用數位接腳</li>
-        <li><strong>感測器讀取：</strong>使用類比接腳</li>
-        <li><strong>亮度/速度調節：</strong>使用PWM接腳</li>
-        <li><strong>序列通訊：</strong>避免使用接腳0和1</li>
-        <li><strong>內建LED：</strong>接腳13已連接LED，適合測試</li>
-      </ul>
-    </div>
-
-    <div class="navigation">
-      <a href="ide-usage.html" class="nav-btn">⬅️ 上一步：IDE使用</a>
-      <a href="chatgpt-guide.html" class="nav-btn">下一步：ChatGPT協作 ➡️</a>
-    </div>
-  </div>
+    <nav class="navigation" aria-label="上下頁">
+      <a href="ide-usage.html" class="nav-btn">⬅️ 上一步：IDE 使用</a>
+      <a href="project1-rgb.html" class="nav-btn">下一步：功課一 RGB 燈 ➡️</a>
+    </nav>
+  </main>
 
   <script>
-    // 接腳資訊資料
-    const pinData = {
-      'D0': '接腳0 - 數位I/O，也用於序列通訊RX',
-      'D1': '接腳1 - 數位I/O，也用於序列通訊TX',
-      'D2': '接腳2 - 數位I/O，支援外部中斷',
-      'D3': '接腳3 - 數位I/O + PWM，支援外部中斷',
-      'D4': '接腳4 - 數位I/O',
-      'D5': '接腳5 - 數位I/O + PWM',
-      'D6': '接腳6 - 數位I/O + PWM',
-      'D7': '接腳7 - 數位I/O',
-      'D8': '接腳8 - 數位I/O',
-      'D9': '接腳9 - 數位I/O + PWM',
-      'D10': '接腳10 - 數位I/O + PWM + SPI CS',
-      'D11': '接腳11 - 數位I/O + PWM + SPI MOSI',
-      'D12': '接腳12 - 數位I/O + SPI MISO',
-      'D13': '接腳13 - 數位I/O + SPI SCK，內建LED',
-      'A0': '類比輸入A0 - 可讀取0-5V電壓，解析度10位元(0-1023)',
-      'A1': '類比輸入A1 - 可讀取0-5V電壓，解析度10位元(0-1023)',
-      'A2': '類比輸入A2 - 可讀取0-5V電壓，解析度10位元(0-1023)',
-      'A3': '類比輸入A3 - 可讀取0-5V電壓，解析度10位元(0-1023)',
-      'A4': '類比輸入A4 - 可讀取0-5V電壓，也用於I2C SDA',
-      'A5': '類比輸入A5 - 可讀取0-5V電壓，也用於I2C SCL',
-      '5V': '5V電源輸出 - 提供穩定5V電源，最大電流500mA',
-      '3V3': '3.3V電源輸出 - 提供穩定3.3V電源，最大電流50mA',
-      'GND1': '接地 - 電路負極，0V參考點',
-      'GND2': '接地 - 電路負極，0V參考點',
-      'VIN': '外部電源輸入 - 可接7-12V直流電源'
+    /* ===== Leonardo 接腳資料 ===== */
+    const PIN_INFO = {
+      D0: { name: 'D0 (RX / Serial1)', type: 'digital', color: '#5f3dc4', desc: '數位 I/O + 硬體 UART 接收端', notes: ['Leonardo 的 USB 與硬體序列是分開的：USB 用 Serial、D0/D1 用 Serial1', '接藍牙或 GPS 模組常用'] },
+      D1: { name: 'D1 (TX / Serial1)', type: 'digital', color: '#5f3dc4', desc: '數位 I/O + 硬體 UART 傳送端', notes: ['同 D0：跟 USB 是不同條通訊線'] },
+      D2: { name: 'D2 (SDA / INT1)', type: 'digital', color: '#5f3dc4', desc: '數位 I/O + I2C 資料線 + 外部中斷', notes: ['Leonardo 的 I2C SDA 在這（不是 Uno 的 A4）', '接 I2C LCD、感測器一定要用'] },
+      D3: { name: 'D3 (~PWM / SCL / INT0)', type: 'pwm', color: '#c2410c', desc: '數位 I/O + PWM + I2C 時鐘線 + 外部中斷', notes: ['Leonardo 的 I2C SCL 在這（不是 Uno 的 A5）', '可同時做 PWM 或 I2C — 但不能同時'] },
+      D4: { name: 'D4 (A6)', type: 'digital', color: '#5f3dc4', desc: '數位 I/O — 也可當類比 A6 用', notes: ['Leonardo 獨家：D4/D6/D8/D9/D10/D12 都可當類比'] },
+      D5: { name: 'D5 (~PWM)', type: 'pwm', color: '#c2410c', desc: '數位 I/O + PWM', notes: ['調光/調速首選之一', '功課一 RGB 紅色就接這支'] },
+      D6: { name: 'D6 (~PWM / A7)', type: 'pwm', color: '#c2410c', desc: '數位 I/O + PWM — 也可當類比 A7', notes: ['RGB 綠色常用這支'] },
+      D7: { name: 'D7', type: 'digital', color: '#5f3dc4', desc: '一般數位 I/O', notes: ['沒有 PWM，只能 HIGH/LOW'] },
+      D8: { name: 'D8 (A8)', type: 'digital', color: '#5f3dc4', desc: '數位 I/O — 也可當類比 A8', notes: ['沒有 PWM'] },
+      D9: { name: 'D9 (~PWM / A9)', type: 'pwm', color: '#c2410c', desc: '數位 I/O + PWM — 也可當類比 A9', notes: ['呼吸燈練習常用'] },
+      D10: { name: 'D10 (~PWM / A10)', type: 'pwm', color: '#c2410c', desc: '數位 I/O + PWM — 也可當類比 A10', notes: ['RGB 藍色常用這支'] },
+      D11: { name: 'D11 (~PWM)', type: 'pwm', color: '#c2410c', desc: '數位 I/O + PWM', notes: ['多一個 PWM 選擇'] },
+      D12: { name: 'D12 (A11)', type: 'digital', color: '#5f3dc4', desc: '數位 I/O — 也可當類比 A11', notes: ['沒有 PWM'] },
+      D13: { name: 'D13 (~PWM / 內建 LED)', type: 'pwm', color: '#c2410c', desc: '數位 I/O + PWM + 內建 L 燈', notes: ['板上就有 L 燈，測試最方便', 'Leonardo 比 Uno 多了 PWM 在這支！'] },
+      A0: { name: 'A0', type: 'analog', color: '#0e7490', desc: '類比輸入（0V ~ 5V → 0 ~ 1023）', notes: ['接光感、溫度、搖桿、電位器', '也可當數位 I/O'] },
+      A1: { name: 'A1', type: 'analog', color: '#0e7490', desc: '類比輸入', notes: ['同 A0'] },
+      A2: { name: 'A2', type: 'analog', color: '#0e7490', desc: '類比輸入', notes: ['同 A0'] },
+      A3: { name: 'A3', type: 'analog', color: '#0e7490', desc: '類比輸入', notes: ['同 A0'] },
+      A4: { name: 'A4', type: 'analog', color: '#0e7490', desc: '類比輸入', notes: ['Leonardo 的 A4 純粹是類比（Uno 是 I2C SDA，但 Leonardo 把 I2C 移到 D2 了）'] },
+      A5: { name: 'A5', type: 'analog', color: '#0e7490', desc: '類比輸入', notes: ['Leonardo 的 A5 純粹是類比（Uno 的 SCL 已移到 D3）'] },
+      '5V': { name: '5V', type: 'power', color: '#b42323', desc: '5V 電源輸出', notes: ['最大電流 500mA', '給感測器、LED 供電'] },
+      '3V3': { name: '3.3V', type: 'power', color: '#b42323', desc: '3.3V 電源輸出', notes: ['最大電流 50mA', '給 ESP-01、藍芽 3.3V 元件用'] },
+      VIN: { name: 'VIN', type: 'power', color: '#b42323', desc: '外部電源輸入', notes: ['可接 7-12V 直流', '不接時板子用 USB 供電'] },
+      GND1: { name: 'GND', type: 'ground', color: '#495057', desc: '接地（0V 參考）', notes: ['所有元件的 GND 都要連回來', '板上多個 GND 都通用'] },
+      GND2: { name: 'GND', type: 'ground', color: '#495057', desc: '接地（0V 參考）', notes: ['同上'] },
+      IOREF: { name: 'IOREF', type: 'power', color: '#9775fa', desc: 'I/O 邏輯電平參考', notes: ['給擴充板（shield）判斷電壓用的'] },
+      RESET: { name: 'RESET', type: 'power', color: '#9775fa', desc: '重置接腳', notes: ['接到 GND 會重新啟動板子', '通常不用碰它'] }
     };
 
-    // 為每個接腳添加點擊事件
-    document.querySelectorAll('.pin').forEach(pin => {
-      pin.addEventListener('click', function() {
-        const pinName = this.getAttribute('data-pin');
-        const info = pinData[pinName];
-        document.getElementById('pinInfo').innerHTML = `<strong>${pinName}：</strong>${info}`;
+    const TYPE_LABEL = {
+      digital: '🟣 數位',
+      analog: '🔵 類比',
+      pwm: '🟠 PWM',
+      power: '🔴 電源',
+      ground: '⚫ GND'
+    };
+
+    const readout = document.getElementById('pinReadout');
+    document.querySelectorAll('.pin-target').forEach(el => {
+      const fire = () => {
+        const pin = el.dataset.pin;
+        const info = PIN_INFO[pin];
+        if (!info) return;
+        document.querySelectorAll('.pin-target.active').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        readout.classList.remove('empty');
+        readout.innerHTML =
+          '<h4>' + info.name + '</h4>' +
+          '<div style="text-align:center;"><span class="pin-name" style="background:' + info.color + '">' + TYPE_LABEL[info.type] + '</span></div>' +
+          '<p><strong>功能：</strong>' + info.desc + '</p>' +
+          (info.notes && info.notes.length ?
+            '<p><strong>備註：</strong></p><ul>' + info.notes.map(n => '<li>' + n + '</li>').join('') + '</ul>'
+            : '');
+      };
+      el.addEventListener('click', fire);
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fire(); }
       });
     });
 
-    // 電壓模擬器
-    function setVoltage(voltage) {
-      const voltagePercent = (voltage / 5) * 100;
-      const analogValue = Math.round((voltage / 5) * 1023);
-      const analogPercent = (analogValue / 1023) * 100;
+    /* ===== 類比電壓模擬器 ===== */
+    const voltSlider = document.getElementById('voltSlider');
+    const voltFill = document.getElementById('voltFill');
+    const voltText = document.getElementById('voltText');
+    const analogFill = document.getElementById('analogFill');
+    const analogText = document.getElementById('analogText');
+    const voltPill = document.getElementById('voltPill');
+    const voltExplain = document.getElementById('voltExplain');
 
-      document.getElementById('voltageFill').style.width = voltagePercent + '%';
-      document.getElementById('voltageValue').textContent = voltage + 'V';
-      document.getElementById('analogFill').style.width = analogPercent + '%';
-      document.getElementById('analogValue').textContent = analogValue;
+    function updateVolt() {
+      const v = parseInt(voltSlider.value, 10) / 100;  /* 0..5 */
+      const analog = Math.round(v * 1023 / 5);
+      const pct = (v / 5) * 100;
+      const analogPct = (analog / 1023) * 100;
+      voltFill.style.width = pct + '%';
+      voltText.textContent = v.toFixed(2) + 'V';
+      analogFill.style.width = analogPct + '%';
+      analogText.textContent = analog;
+      voltPill.textContent = v.toFixed(2) + 'V';
+      const explain = analog === 0 ? '🌑 完全沒電壓 → 讀值 0' :
+                      analog === 1023 ? '⚡ 滿電壓 5V → 讀值 1023（最大值）' :
+                      analog < 256 ? '🌙 低電壓 → 讀值偏低' :
+                      analog > 768 ? '☀️ 高電壓 → 讀值偏高' :
+                      '🌗 電壓在中間 → 讀值約 ' + analog;
+      voltExplain.innerHTML = explain + '<br><code style="background:#f5f7fa;padding:2px 6px;border-radius:4px;font-family:\'JetBrains Mono\',monospace;font-size:0.85rem;">analogRead(A0) = ' + analog + '</code>';
+    }
+    voltSlider.addEventListener('input', updateVolt);
+    updateVolt();
 
-      // 更新按鈕狀態
-      document.querySelectorAll('.demo-btn').forEach(btn => {
-        btn.classList.remove('active');
+    /* ===== 測驗 ===== */
+    function bindQuiz(optionsId, resultId, okMessage, hintMessage) {
+      const options = document.querySelectorAll('#' + optionsId + ' .quiz-option');
+      const result = document.getElementById(resultId);
+      options.forEach(option => {
+        option.addEventListener('click', () => {
+          const isCorrect = option.dataset.correct === 'true';
+          options.forEach(item => { item.classList.remove('correct', 'wrong'); item.disabled = false; });
+          option.classList.add(isCorrect ? 'correct' : 'wrong');
+          result.textContent = isCorrect ? '✅ 對了！' + okMessage : '❌ 再想想～' + hintMessage;
+          result.style.color = isCorrect ? '#1b6f2a' : '#b42323';
+          if (isCorrect) {
+            options.forEach(item => { item.disabled = true; });
+          } else {
+            setTimeout(() => { option.classList.remove('wrong'); }, 1500);
+          }
+        });
       });
-      event.target.classList.add('active');
     }
-
-    // 圖片載入成功處理
-    function showImageSuccess() {
-      console.log('Arduino Leonardo圖片載入成功！');
-    }
-
-    // 圖片載入失敗處理
-    function showImageError(img) {
-      console.log('圖片載入失敗，顯示錯誤提示');
-      img.style.display = 'none';
-      
-      // 創建錯誤提示元素
-      const errorDiv = document.createElement('div');
-      errorDiv.style.cssText = `
-        background: linear-gradient(135deg, #ff6b6b, #ffa726);
-        color: white;
-        padding: 2rem;
-        border-radius: 10px;
-        box-shadow: var(--shadow);
-        min-height: 300px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        font-size: 1.1rem;
-      `;
-      
-      errorDiv.innerHTML = `
-        <div>
-          <h3 style="margin-bottom: 1rem;">⚠️ 圖片載入失敗</h3>
-          <p>請檢查以下項目：</p>
-          <ul style="text-align: left; margin: 1rem 0; display: inline-block;">
-            <li>圖片檔案是否存在於 <strong>arduino/images/arduino-leonardo.jpg</strong></li>
-            <li>檔案名稱是否正確（區分大小寫）</li>
-            <li>圖片格式是否為 JPG</li>
-            <li>檔案是否損壞</li>
-          </ul>
-          <p style="font-size: 0.9rem; opacity: 0.8; margin-top: 1rem;">
-            如果問題持續，請嘗試重新命名圖片為 arduino-leonardo.jpg
-          </p>
-        </div>
-      `;
-      
-      // 插入錯誤提示到圖片位置
-      img.parentNode.appendChild(errorDiv);
-    }
+    bindQuiz('q1options', 'q1result',
+      'PWM 接腳（標 ~）可以快速開關模擬不同亮度。',
+      '想想：哪種接腳能輸出「中間值」，不只是 HIGH/LOW？');
+    bindQuiz('q2options', 'q2result',
+      '光感測器電壓是連續變化的 0-5V，要用類比接腳 A0-A5。',
+      '感測器讀的是「程度大小」，要用哪一家族？');
+    bindQuiz('q3options', 'q3result',
+      '類比是 10-bit，所以 0-1023 共 1024 階。',
+      '提示：10 位元 = 2^10 = 1024 個可能值。');
+    bindQuiz('q4options', 'q4result',
+      'Leonardo 用 ATmega32u4 晶片，原生支援 USB HID — 能變鍵盤滑鼠！',
+      '提示：跟「USB」有關，能自動操作電腦。');
+    bindQuiz('q5options', 'q5result',
+      '對！Leonardo 把 I2C 從 A4/A5 改到 D2/D3，記得別接錯。',
+      '提示：Leonardo 跟 Uno 不一樣 — 看「通訊介面」那段。');
   </script>
 </body>
 </html>

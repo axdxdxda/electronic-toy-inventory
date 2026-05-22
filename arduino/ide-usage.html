@@ -1,516 +1,913 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arduino IDE 使用教學 - 電子元件教學</title>
+  <title>掌握 Arduino IDE 操作 - 電流急急棒互動教學</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #2196F3;
-      --primary-dark: #1976D2;
-      --secondary: #FFC107;
-      --background: #f8f9fa;
-      --text: #333;
-      --border: #e9ecef;
-      --card-bg: #fff;
-      --shadow: 0 2px 10px rgba(0,0,0,0.1);
+      --primary: #00979d;
+      --primary-dark: #006a6e;
+      --accent: #f59f00;
+      --ok: #2f9e44;
+      --ok-dark: #1b6f2a;
+      --warn: #f08c00;
+      --danger: #e03131;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --bg: #f5fafa;
+      --card: #ffffff;
+      --line: #d7e8e8;
+      --shadow: 0 12px 30px rgba(31, 41, 55, 0.12);
+      --code-bg: #1e3a3b;
+      --code-fg: #d1f7f7;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
-      font-family: 'Microsoft YaHei', sans-serif;
-      background: var(--background);
-      color: var(--text);
-      line-height: 1.6;
+      margin: 0;
+      font-family: "Nunito", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(0, 151, 157, 0.18), transparent 28rem),
+        radial-gradient(circle at 88% 0%, rgba(245, 159, 0, 0.18), transparent 30rem),
+        var(--bg);
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.65;
     }
 
     .header {
-      background: var(--primary);
-      color: white;
-      padding: 1rem 0;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
       box-shadow: var(--shadow);
     }
-
     .nav {
-      max-width: 1200px;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 0 1rem;
+      padding: 0.9rem 1.25rem;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
     }
-
-    .nav h1 {
-      font-size: 1.5rem;
-    }
-
+    .nav h1 { margin: 0; font-size: clamp(1.05rem, 2.5vw, 1.45rem); font-weight: 900; }
+    .nav a, .nav-btn, button { min-height: 44px; font: inherit; }
     .nav a {
-      color: white;
+      color: #fff;
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-weight: 800;
+      white-space: nowrap;
     }
-
-    .nav a:hover {
-      background: var(--primary-dark);
-    }
+    .nav a:hover, .nav a:focus-visible { background: rgba(255,255,255,0.18); outline: none; }
 
     .container {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      width: min(1180px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1.35rem 0 2.5rem;
     }
 
-    .intro {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
+    .hero, .section, .success-box {
+      background: var(--card);
+      border: 1px solid var(--line);
       box-shadow: var(--shadow);
-      margin-bottom: 2rem;
+    }
+
+    .hero {
+      border-radius: 24px;
+      padding: clamp(1.2rem, 3vw, 2rem);
       text-align: center;
+      background: linear-gradient(135deg, #e6f7f8 0%, #c5ecee 45%, #fff4e0 100%);
+      overflow: hidden;
+    }
+    .hero h2 {
+      margin: 0 0 0.45rem;
+      color: var(--primary-dark);
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      line-height: 1.15;
+      font-weight: 900;
+    }
+    .lead {
+      max-width: 780px;
+      margin: 0 auto 1rem;
+      color: #4d5b62;
+      font-size: clamp(1rem, 2.5vw, 1.18rem);
+      font-weight: 800;
+    }
+    .hero-scene { width: 100%; height: auto; display: block; overflow: visible; }
+    .svg-label {
+      font-family: "Nunito", "Microsoft JhengHei", sans-serif;
+      font-weight: 900;
+      fill: var(--ink);
+      paint-order: stroke;
+      stroke: rgba(255, 255, 255, 0.94);
+      stroke-width: 5px;
+      stroke-linejoin: round;
     }
 
-    .intro h2 {
-      color: var(--primary);
-      margin-bottom: 1rem;
-      font-size: 2rem;
-    }
-
-    .interface-demo {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-    }
-
-    .interface-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .interface-section {
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      padding: 1rem;
-      min-height: 200px;
+    .section {
       position: relative;
+      overflow: hidden;
+      margin-top: 1.4rem;
+      padding: clamp(1.15rem, 3vw, 1.7rem);
+      border-radius: 20px;
+    }
+    .section::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--ok));
+    }
+    .section h3 {
+      margin: 0 0 0.5rem;
+      color: var(--primary-dark);
+      text-align: center;
+      font-size: clamp(1.25rem, 3.2vw, 1.65rem);
+      line-height: 1.3;
+      font-weight: 900;
+    }
+    .section p.section-lead {
+      max-width: 780px;
+      margin: 0 auto 1rem;
+      text-align: center;
+      color: #4d5b62;
+      font-weight: 800;
+    }
+    .hint {
+      margin: 0.8rem auto 0;
+      max-width: 760px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 800;
     }
 
-    .toolbar {
-      background: #f0f0f0;
-      border-radius: 5px;
-      padding: 1rem;
-      margin-bottom: 1rem;
+    /* ===== 互動 IDE 模擬器 ===== */
+    .ide-window {
+      max-width: 980px;
+      margin: 0.5rem auto 0;
+      border-radius: 16px;
+      background: var(--code-bg);
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+      border: 4px solid var(--primary);
+    }
+    .ide-titlebar {
       display: flex;
-      gap: 1rem;
       align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      font-weight: 900;
+      font-size: 0.95rem;
     }
+    .ide-titlebar .dots { display: flex; gap: 5px; margin-right: 0.5rem; }
+    .ide-titlebar .dots span { width: 12px; height: 12px; border-radius: 50%; }
+    .ide-titlebar .dots span:nth-child(1) { background: #ff6b6b; }
+    .ide-titlebar .dots span:nth-child(2) { background: #ffd43b; }
+    .ide-titlebar .dots span:nth-child(3) { background: #51cf66; }
 
-    .btn-demo {
-      background: var(--primary);
-      color: white;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 3px;
+    .ide-toolbar {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      background: #2a4a4b;
+      flex-wrap: wrap;
+    }
+    .ide-btn {
+      padding: 0.45rem 0.9rem;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      background: #1a3637;
+      color: var(--code-fg);
+      font-family: inherit;
+      font-weight: 900;
+      font-size: 0.88rem;
       cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    .btn-demo:hover {
-      background: var(--primary-dark);
-    }
-
-    .code-area {
-      background: #2d3748;
-      color: #e2e8f0;
-      padding: 1rem;
-      border-radius: 5px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.9rem;
-      line-height: 1.4;
-      min-height: 150px;
-    }
-
-    .code-area .comment {
-      color: #68d391;
-    }
-
-    .code-area .keyword {
-      color: #fbb6ce;
-    }
-
-    .code-area .function {
-      color: #90cdf4;
-    }
-
-    .console-area {
-      background: #1a202c;
-      color: #e2e8f0;
-      padding: 1rem;
-      border-radius: 5px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.8rem;
-      min-height: 100px;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .feature-card {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      text-align: center;
-    }
-
-    .feature-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-
-    .feature-card h3 {
-      color: var(--primary);
-      margin-bottom: 1rem;
-    }
-
-    .shortcuts {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-    }
-
-    .shortcuts h3 {
-      color: var(--primary);
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-
-    .shortcuts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
-    }
-
-    .shortcut-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 1rem;
-      background: var(--background);
-      border-radius: 5px;
-    }
-
-    .shortcut-key {
-      background: var(--primary);
-      color: white;
-      padding: 0.2rem 0.5rem;
-      border-radius: 3px;
-      font-family: monospace;
-      font-size: 0.8rem;
-    }
-
-    .step-by-step {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-    }
-
-    .step-by-step h3 {
-      color: var(--primary);
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-
-    .step {
-      border-left: 4px solid var(--primary);
-      padding: 1rem;
-      margin-bottom: 1rem;
-      background: var(--background);
-      border-radius: 0 5px 5px 0;
-    }
-
-    .step-number {
-      background: var(--primary);
-      color: white;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
+      transition: all 0.2s;
       display: inline-flex;
       align-items: center;
+      gap: 0.35rem;
+      min-height: 36px;
+    }
+    .ide-btn:hover {
+      background: var(--primary);
+      transform: translateY(-2px);
+    }
+    .ide-btn.active { background: var(--accent); color: #1f2937; border-color: var(--accent); }
+    .ide-board-select {
+      margin-left: auto;
+      padding: 0.45rem 0.8rem;
+      background: #1a3637;
+      color: var(--code-fg);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+
+    .ide-body {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    .ide-code {
+      padding: 1rem 1.2rem;
+      font-family: "JetBrains Mono", "Consolas", monospace;
+      font-size: 0.9rem;
+      color: var(--code-fg);
+      line-height: 1.7;
+      min-height: 240px;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    .ide-code .kw { color: #ffd43b; font-weight: 700; }
+    .ide-code .fn { color: #ff9aab; font-weight: 700; }
+    .ide-code .num { color: #f59f00; }
+    .ide-code .str { color: #a5d8ff; }
+    .ide-code .com { color: #6b9ea0; font-style: italic; }
+
+    .ide-console {
+      padding: 0.9rem 1.2rem;
+      background: #0f2425;
+      color: #b2f2bb;
+      font-family: "JetBrains Mono", "Consolas", monospace;
+      font-size: 0.82rem;
+      min-height: 110px;
+      border-top: 3px solid var(--primary);
+      white-space: pre-wrap;
+      overflow-y: auto;
+      max-height: 200px;
+    }
+    .ide-console .err { color: #ff8787; }
+    .ide-console .ok-msg { color: #b2f2bb; font-weight: 700; }
+    .ide-console .info { color: #a5d8ff; }
+
+    .ide-statusbar {
+      padding: 0.45rem 1.2rem;
+      background: #1a3637;
+      color: #74c0c0;
+      font-size: 0.78rem;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .ide-help {
+      margin-top: 0.8rem;
+      text-align: center;
+      color: #4d5b62;
+      font-size: 0.93rem;
+      font-weight: 800;
+    }
+    .ide-help kbd {
+      background: var(--code-bg);
+      color: #fff;
+      padding: 0.1rem 0.4rem;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      font-weight: 900;
+    }
+
+    /* ===== 四個按鈕角色卡 ===== */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .feature-card {
+      padding: 1.1rem 1rem;
+      border-radius: 16px;
+      background: #fff;
+      border: 3px solid var(--line);
+      text-align: center;
+      box-shadow: 0 8px 22px rgba(31, 41, 55, 0.06);
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .feature-card.verify { border-color: var(--ok); }
+    .feature-card.upload { border-color: var(--accent); }
+    .feature-card.monitor { border-color: var(--primary); }
+    .feature-card.lib { border-color: #845ef7; }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 28px rgba(31, 41, 55, 0.12);
+    }
+    .feature-card svg { display: block; margin: 0 auto 0.4rem; }
+    .feature-card h4 { margin: 0 0 0.2rem; font-size: 1.05rem; font-weight: 900; }
+    .feature-card.verify h4 { color: var(--ok-dark); }
+    .feature-card.upload h4 { color: #b76b00; }
+    .feature-card.monitor h4 { color: var(--primary-dark); }
+    .feature-card.lib h4 { color: #5f3dc4; }
+    .feature-card p { margin: 0; color: #4d5b62; font-size: 0.88rem; font-weight: 800; }
+
+    /* ===== 流程 ===== */
+    .flow-list { display: flex; flex-direction: column; gap: 0.65rem; }
+    .flow-item {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.8rem 1rem;
+      background: #fff;
+      border-radius: 14px;
+      border-left: 5px solid var(--primary);
+      box-shadow: 0 6px 16px rgba(31, 41, 55, 0.06);
+      transition: transform 0.2s, background 0.2s;
+    }
+    .flow-item:hover { background: #e6f7f8; transform: translateX(4px); }
+    .flow-num {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+    .flow-item strong { color: var(--primary-dark); }
+    .flow-item p { margin: 0; color: #4d5b62; font-size: 0.93rem; font-weight: 800; }
+    .flow-item kbd {
+      background: var(--code-bg);
+      color: #fff;
+      padding: 0.1rem 0.5rem;
+      border-radius: 5px;
+      font-size: 0.82rem;
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 900;
+    }
+
+    /* ===== 快捷鍵 ===== */
+    .shortcut-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+    .shortcut-card {
+      padding: 0.8rem 0.7rem;
+      border-radius: 12px;
+      background: #fff;
+      border: 3px solid var(--line);
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .shortcut-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .shortcut-card .keys {
+      display: flex;
       justify-content: center;
-      font-weight: bold;
-      margin-right: 1rem;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 0.3rem;
     }
+    .shortcut-card kbd {
+      background: linear-gradient(180deg, #fff, #e5e7eb);
+      border: 2px solid #9ca3af;
+      border-bottom-width: 3px;
+      border-radius: 6px;
+      padding: 0.2rem 0.55rem;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: var(--ink);
+      box-shadow: 0 2px 0 #6b7280;
+      min-width: 28px;
+    }
+    .shortcut-card .plus { color: var(--muted); font-weight: 900; }
+    .shortcut-card .label { font-size: 0.85rem; font-weight: 800; color: var(--ink); }
 
-    .warning {
-      background: #fff3cd;
-      border: 1px solid #ffeaa7;
-      border-radius: 5px;
-      padding: 1rem;
-      margin: 1rem 0;
+    /* ===== Tips / FAQ ===== */
+    .tip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.8rem;
     }
+    .tip-card {
+      padding: 1rem;
+      border-radius: 14px;
+      background: #fff;
+      border-left: 5px solid var(--accent);
+      box-shadow: 0 6px 16px rgba(31, 41, 55, 0.05);
+    }
+    .tip-card h4 { margin: 0 0 0.3rem; color: var(--primary-dark); font-size: 1rem; font-weight: 900; }
+    .tip-card p { margin: 0; color: #4d5b62; font-size: 0.92rem; font-weight: 800; }
+    .tip-card.warn { border-left-color: var(--danger); }
+    .tip-card.warn h4 { color: #b42323; }
 
-    .tip {
-      background: #d4edda;
-      border: 1px solid #c3e6cb;
-      border-radius: 5px;
+    /* ===== 測驗 ===== */
+    .quiz {
+      margin-top: 0.8rem;
       padding: 1rem;
-      margin: 1rem 0;
+      border-radius: 16px;
+      background: #f8fbfe;
+      border-left: 6px solid var(--primary);
     }
+    .quiz h4 { margin: 0 0 0.7rem; color: #37474f; font-size: 1.05rem; font-weight: 900; }
+    .quiz-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.6rem; }
+    .quiz-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      min-height: 90px;
+      padding: 0.6rem;
+      border: 3px solid var(--line);
+      border-radius: 13px;
+      background: #fff;
+      color: #37474f;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 900;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .quiz-option .emoji { font-size: 1.7rem; line-height: 1; }
+    .quiz-option:hover, .quiz-option:focus-visible {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      outline: none;
+    }
+    .quiz-option.correct { background: #d3f9d8; border-color: var(--ok); color: var(--ok-dark); }
+    .quiz-option.wrong { background: #ffe3e3; border-color: var(--danger); color: #b42323; }
+    .quiz-result { min-height: 1.5rem; margin-top: 0.6rem; text-align: center; font-weight: 900; }
+
+    .success-box {
+      margin-top: 1.4rem;
+      padding: clamp(1.15rem, 3vw, 1.55rem);
+      border-radius: 20px;
+      border-color: #b2f2bb;
+      background: linear-gradient(135deg, #e6f7e6, #fff8e1);
+      text-align: center;
+    }
+    .success-box h3 { margin: 0 0 0.45rem; color: var(--ok-dark); font-size: 1.35rem; font-weight: 900; }
+    .success-box p { max-width: 760px; margin: 0 auto; color: #1b6f2a; font-weight: 800; }
 
     .navigation {
       display: flex;
       justify-content: space-between;
-      margin-top: 2rem;
-      padding: 1rem 0;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.4rem;
     }
-
     .nav-btn {
-      background: var(--primary);
-      color: white;
-      padding: 0.8rem 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.85rem 1.4rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
       text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+      font-weight: 900;
+      box-shadow: 0 6px 18px rgba(0, 151, 157, 0.35);
     }
+    .nav-btn:hover, .nav-btn:focus-visible { filter: brightness(1.08); transform: translateY(-2px); outline: none; }
 
-    .nav-btn:hover {
-      background: var(--primary-dark);
+    @media (max-width: 900px) {
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+      .shortcut-grid { grid-template-columns: 1fr 1fr; }
+      .tip-grid { grid-template-columns: 1fr; }
+      .quiz-options { grid-template-columns: 1fr 1fr; }
     }
-
-    @media (max-width: 768px) {
-      .interface-layout {
-        grid-template-columns: 1fr;
-      }
-      
-      .features-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .shortcuts-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .navigation {
-        flex-direction: column;
-        gap: 1rem;
-      }
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      .container { width: min(100% - 1rem, 1180px); }
+      .hero, .section, .success-box { border-radius: 16px; }
+      .nav { align-items: flex-start; flex-direction: column; }
+      .feature-grid, .shortcut-grid, .quiz-options { grid-template-columns: 1fr; }
+      .ide-toolbar { padding: 0.4rem; }
+      .ide-btn { font-size: 0.8rem; padding: 0.35rem 0.6rem; }
+      .ide-board-select { display: none; }
+      .navigation { flex-direction: column; }
+      .nav-btn { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="nav">
-      <h1>⚙️ Arduino IDE 使用教學</h1>
+  <header class="header">
+    <nav class="nav" aria-label="頁面導覽">
+      <h1>⚙️ 掌握 Arduino IDE 操作</h1>
       <a href="../index.html">🏠 返回首頁</a>
-    </div>
-  </div>
+    </nav>
+  </header>
 
-  <div class="container">
-    <div class="intro">
-      <h2>🎮 掌握Arduino IDE操作</h2>
-      <p>了解IDE各種功能，讓你的程式開發更有效率！</p>
-    </div>
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <h2>四個按鈕，搞定 Arduino IDE 🎮</h2>
+      <p class="lead">驗證 → 上傳 → 序列監視器 → 程式庫 — 學會這 4 個按鈕，就能讓 Arduino 跑你寫的任何程式！</p>
 
-    <div class="interface-demo">
-      <h3>🖥️ IDE介面導覽</h3>
-      
-      <div class="interface-layout">
-        <div class="interface-section">
-          <h4>📝 程式編輯區</h4>
-          <div class="toolbar">
-            <button class="btn-demo">✅ 驗證</button>
-            <button class="btn-demo">➡️ 上傳</button>
-            <button class="btn-demo">🔍 序列監視器</button>
-          </div>
-          <div class="code-area">
-<span class="comment">// 這是你寫程式的地方</span>
-<span class="keyword">void</span> <span class="function">setup</span>() {
-  <span class="comment">// 初始化設定</span>
-  Serial.begin(9600);
-  pinMode(13, OUTPUT);
+      <svg class="hero-scene" viewBox="0 0 1000 260" xmlns="http://www.w3.org/2000/svg" aria-label="Arduino IDE 介面預覽">
+        <rect x="40" y="20" width="920" height="220" rx="24" fill="rgba(255,255,255,0.55)"/>
+
+        <!-- IDE 視窗框 -->
+        <g transform="translate(500 130)">
+          <rect x="-360" y="-90" width="720" height="180" rx="14" fill="#1e3a3b" stroke="#006a6e" stroke-width="5"/>
+          <!-- 標題列 -->
+          <rect x="-360" y="-90" width="720" height="28" fill="#00979d"/>
+          <circle cx="-340" cy="-76" r="5" fill="#ff6b6b"/>
+          <circle cx="-322" cy="-76" r="5" fill="#ffd43b"/>
+          <circle cx="-304" cy="-76" r="5" fill="#51cf66"/>
+          <text class="svg-label" x="-180" y="-72" font-size="13" fill="#fff" stroke="none">Arduino IDE — Blink.ino</text>
+          <!-- 工具列 -->
+          <rect x="-360" y="-62" width="720" height="32" fill="#2a4a4b"/>
+          <!-- 驗證按鈕 -->
+          <rect x="-350" y="-56" width="80" height="20" rx="4" fill="#2f9e44"/>
+          <text class="svg-label" x="-310" y="-43" text-anchor="middle" font-size="11" fill="#fff" stroke="none">✓ 驗證</text>
+          <!-- 上傳按鈕 -->
+          <rect x="-264" y="-56" width="80" height="20" rx="4" fill="#f59f00"/>
+          <text class="svg-label" x="-224" y="-43" text-anchor="middle" font-size="11" fill="#fff" stroke="none">→ 上傳</text>
+          <!-- 序列監視器按鈕 -->
+          <rect x="-178" y="-56" width="100" height="20" rx="4" fill="#1a3637"/>
+          <text class="svg-label" x="-128" y="-43" text-anchor="middle" font-size="11" fill="#d1f7f7" stroke="none">🔍 序列監視器</text>
+          <!-- 程式碼區 -->
+          <text x="-340" y="-15" font-family="monospace" font-size="11" fill="#ffd43b">void setup() {</text>
+          <text x="-320" y="0" font-family="monospace" font-size="11" fill="#6b9ea0">// 初始化</text>
+          <text x="-320" y="15" font-family="monospace" font-size="11" fill="#a5d8ff">pinMode(13, OUTPUT);</text>
+          <text x="-340" y="30" font-family="monospace" font-size="11" fill="#ffd43b">}</text>
+          <text x="-340" y="50" font-family="monospace" font-size="11" fill="#ffd43b">void loop() {</text>
+          <text x="-320" y="65" font-family="monospace" font-size="11" fill="#a5d8ff">digitalWrite(13, HIGH);</text>
+          <text x="-320" y="80" font-family="monospace" font-size="11" fill="#a5d8ff">delay(1000);</text>
+        </g>
+
+        <!-- 黃色資料粒子流出（代表上傳到 Arduino） -->
+        <circle r="5" fill="#ffd43b">
+          <animateMotion dur="2s" repeatCount="indefinite" path="M860 130 L920 130"/>
+        </circle>
+        <circle r="5" fill="#ffd43b">
+          <animateMotion dur="2s" begin="0.6s" repeatCount="indefinite" path="M860 130 L920 130"/>
+        </circle>
+
+        <!-- Arduino 板小圖 -->
+        <g transform="translate(940 130)">
+          <rect x="-22" y="-26" width="44" height="52" rx="4" fill="#00979d" stroke="#006a6e" stroke-width="3"/>
+          <rect x="-12" y="-12" width="14" height="14" rx="2" fill="#1f2937"/>
+          <circle cx="12" cy="-2" r="3" fill="#ff6b6b">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+      </svg>
+    </section>
+
+    <!-- ===== 互動 IDE 模擬器 ===== -->
+    <section class="section">
+      <h3>🎮 試試看：點按鈕模擬寫程式</h3>
+      <p class="section-lead">這是模擬的 Arduino IDE — 點工具列按鈕看 console 跳出什麼訊息！</p>
+      <div class="ide-window" id="ideSim">
+        <div class="ide-titlebar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <span>Blink.ino — Arduino IDE 2.3</span>
+        </div>
+        <div class="ide-toolbar">
+          <button type="button" class="ide-btn" data-action="verify">✅ 驗證</button>
+          <button type="button" class="ide-btn" data-action="upload">➡️ 上傳</button>
+          <button type="button" class="ide-btn" data-action="monitor">🔍 序列監視器</button>
+          <span class="ide-board-select">📋 Arduino Uno · COM3</span>
+        </div>
+        <div class="ide-body">
+          <div class="ide-code"><span class="com">// 經典範例：讓內建 LED 一秒閃一下</span>
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">pinMode</span>(<span class="num">13</span>, <span class="kw">OUTPUT</span>);    <span class="com">// 13 號腳設為輸出</span>
+  <span class="fn">Serial</span>.<span class="fn">begin</span>(<span class="num">9600</span>);    <span class="com">// 啟動序列傳輸</span>
 }
 
-<span class="keyword">void</span> <span class="function">loop</span>() {
-  <span class="comment">// 主要程式迴圈</span>
-  digitalWrite(13, HIGH);
-  delay(1000);
-  digitalWrite(13, LOW);
-  delay(1000);
-}
-          </div>
-        </div>
-
-        <div class="interface-section">
-          <h4>📊 輸出與偵錯區</h4>
-          <div class="console-area">
-編譯完成。
-草圖佔用記憶體： 924 bytes (2%)
-全域變數： 9 bytes (0%)
-
-連接到 COM3...
-上傳成功！
-
-序列監視器：
-系統開始運行...
-LED 狀態：開
-LED 狀態：關
-LED 狀態：開
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="fn">digitalWrite</span>(<span class="num">13</span>, <span class="kw">HIGH</span>);   <span class="com">// 開燈</span>
+  <span class="fn">Serial</span>.<span class="fn">println</span>(<span class="str">"LED: ON"</span>);
+  <span class="fn">delay</span>(<span class="num">1000</span>);                <span class="com">// 等 1 秒</span>
+  <span class="fn">digitalWrite</span>(<span class="num">13</span>, <span class="kw">LOW</span>);    <span class="com">// 關燈</span>
+  <span class="fn">Serial</span>.<span class="fn">println</span>(<span class="str">"LED: OFF"</span>);
+  <span class="fn">delay</span>(<span class="num">1000</span>);
+}</div>
+          <div class="ide-console" id="ideConsole"><span class="info">💡 點上面的按鈕試試看會發生什麼事！</span></div>
+          <div class="ide-statusbar">
+            <span>📋 Arduino Uno · COM3</span>
+            <span id="ideStatus">就緒</span>
           </div>
         </div>
       </div>
+      <p class="ide-help">💡 試試三個按鈕：先 <kbd>驗證</kbd> 看看程式有沒有錯，再 <kbd>上傳</kbd> 到 Arduino，最後 <kbd>序列監視器</kbd> 看 LED 狀態！</p>
+    </section>
+
+    <!-- ===== 4 個功能介紹 ===== -->
+    <section class="section">
+      <h3>🔍 四個核心功能</h3>
+      <p class="section-lead">每個按鈕都有它的用途，記下它們才不會搞混。</p>
+      <div class="feature-grid">
+        <article class="feature-card verify">
+          <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
+            <circle cx="28" cy="28" r="22" fill="#d3f9d8" stroke="#2f9e44" stroke-width="3"/>
+            <path d="M18 28 L25 35 L38 22" stroke="#1b6f2a" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h4>✅ 驗證（編譯）</h4>
+          <p>檢查程式有沒有打錯字，不用接 Arduino 也能測</p>
+        </article>
+        <article class="feature-card upload">
+          <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
+            <circle cx="28" cy="28" r="22" fill="#fff4e0" stroke="#f59f00" stroke-width="3"/>
+            <path d="M28 18 L28 36 M20 26 L28 18 L36 26" stroke="#b76b00" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="18" y="38" width="20" height="3" rx="1.5" fill="#b76b00"/>
+          </svg>
+          <h4>➡️ 上傳</h4>
+          <p>把程式寫進 Arduino，讓它開始執行</p>
+        </article>
+        <article class="feature-card monitor">
+          <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
+            <rect x="10" y="14" width="36" height="28" rx="3" fill="#1e3a3b" stroke="#006a6e" stroke-width="3"/>
+            <rect x="14" y="20" width="14" height="2" fill="#b2f2bb"/>
+            <rect x="14" y="24" width="22" height="2" fill="#a5d8ff"/>
+            <rect x="14" y="28" width="18" height="2" fill="#b2f2bb"/>
+            <rect x="14" y="32" width="24" height="2" fill="#a5d8ff"/>
+            <circle cx="40" cy="22" r="2" fill="#51cf66">
+              <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+          <h4>🔍 序列監視器</h4>
+          <p>即時看 Arduino 傳回來的訊息，超好除錯</p>
+        </article>
+        <article class="feature-card lib">
+          <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
+            <rect x="10" y="14" width="9" height="32" rx="1.5" fill="#845ef7" stroke="#5f3dc4" stroke-width="2"/>
+            <rect x="22" y="14" width="9" height="32" rx="1.5" fill="#9775fa" stroke="#5f3dc4" stroke-width="2"/>
+            <rect x="34" y="14" width="9" height="32" rx="1.5" fill="#b197fc" stroke="#5f3dc4" stroke-width="2"/>
+            <rect x="46" y="20" width="3" height="22" fill="#5f3dc4"/>
+          </svg>
+          <h4>📚 程式庫管理</h4>
+          <p>下載別人寫好的功能，省下重新發明輪子的時間</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== 完整流程 ===== -->
+    <section class="section">
+      <h3>📋 第一次寫程式：8 步驟流程</h3>
+      <p class="section-lead">照順序做就對了 — 每步都很簡單！</p>
+      <div class="flow-list">
+        <article class="flow-item">
+          <span class="flow-num">1</span>
+          <div><strong>開新檔</strong> <p>檔案 → 新增（或按 <kbd>Ctrl+N</kbd>）</p></div>
+        </article>
+        <article class="flow-item">
+          <span class="flow-num">2</span>
+          <div><strong>寫程式</strong> <p>在中間的編輯區輸入 Arduino 程式碼</p></div>
+        </article>
+        <article class="flow-item">
+          <span class="flow-num">3</span>
+          <div><strong>存檔</strong> <p>按 <kbd>Ctrl+S</kbd>，取個好記的檔名</p></div>
+        </article>
+        <article class="flow-item">
+          <span class="flow-num">4</span>
+          <div><strong>選開發板</strong> <p>工具 → 開發板 → 選 Arduino Uno（或你用的型號）</p></div>
+        </article>
+        <article class="flow-item">
+          <span class="flow-num">5</span>
+          <div><strong>選序列埠</strong> <p>工具 → 序列埠 → 選 COM3 之類的（看哪個有 Arduino）</p></div>
+        </article>
+        <article class="flow-item">
+          <span class="flow-num">6</span>
+          <div><strong>按驗證 ✅</strong> <p>檢查有沒有打錯字，紅字 = 有錯，得修正</p></div>
+        </article>
+        <article class="flow-item">
+          <span class="flow-num">7</span>
+          <div><strong>按上傳 ➡️</strong> <p>程式燒進 Arduino，等 5-10 秒看到「上傳完成」</p></div>
+        </article>
+        <article class="flow-item">
+          <span class="flow-num">8</span>
+          <div><strong>觀察結果</strong> <p>看 Arduino 有沒有按你寫的方式動，必要時開序列監視器</p></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== 快捷鍵 ===== -->
+    <section class="section">
+      <h3>⚡ 8 個常用快捷鍵</h3>
+      <p class="section-lead">熟練快捷鍵 = 寫程式快 3 倍！</p>
+      <div class="shortcut-grid">
+        <div class="shortcut-card">
+          <div class="keys"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>R</kbd></div>
+          <div class="label">✅ 驗證</div>
+        </div>
+        <div class="shortcut-card">
+          <div class="keys"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>U</kbd></div>
+          <div class="label">➡️ 上傳</div>
+        </div>
+        <div class="shortcut-card">
+          <div class="keys"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>N</kbd></div>
+          <div class="label">📄 新增檔案</div>
+        </div>
+        <div class="shortcut-card">
+          <div class="keys"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>O</kbd></div>
+          <div class="label">📂 開啟檔案</div>
+        </div>
+        <div class="shortcut-card">
+          <div class="keys"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>S</kbd></div>
+          <div class="label">💾 儲存</div>
+        </div>
+        <div class="shortcut-card">
+          <div class="keys"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>F</kbd></div>
+          <div class="label">🔎 尋找文字</div>
+        </div>
+        <div class="shortcut-card">
+          <div class="keys"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>/</kbd></div>
+          <div class="label">💬 註解切換</div>
+        </div>
+        <div class="shortcut-card">
+          <div class="keys"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>T</kbd></div>
+          <div class="label">📐 自動排版</div>
+        </div>
+      </div>
+      <p class="hint">💡 Mac 的話 <kbd>Ctrl</kbd> 換成 <kbd>⌘</kbd> Command 鍵就好</p>
+    </section>
+
+    <!-- ===== Tips & 常見問題 ===== -->
+    <section class="section">
+      <h3>💡 實用小技巧 + 常見問題</h3>
+      <div class="tip-grid">
+        <article class="tip-card">
+          <h4>🪄 自動完成</h4>
+          <p>輸入函數名稱前 2-3 個字，IDE 會跳出建議 — 按 Tab 鍵自動補完！</p>
+        </article>
+        <article class="tip-card">
+          <h4>🎨 語法高亮</h4>
+          <p>不同顏色代表不同意思：黃色=關鍵字、藍色=字串、灰色=註解</p>
+        </article>
+        <article class="tip-card warn">
+          <h4>❌ 上傳失敗？</h4>
+          <p>檢查：USB 線、開發板選對、序列埠選對。或者拔 USB 重插</p>
+        </article>
+        <article class="tip-card warn">
+          <h4>❌ 編譯錯誤？</h4>
+          <p>仔細看紅字訊息，最常見：少分號 <kbd>;</kbd> 或括號 <kbd>{ }</kbd> 沒配對</p>
+        </article>
+        <article class="tip-card">
+          <h4>📚 範例程式寶庫</h4>
+          <p>檔案 → 範例 → 內建超多範例可以直接修改學習！</p>
+        </article>
+        <article class="tip-card">
+          <h4>🔍 序列監視器卡卡？</h4>
+          <p>看右下角「鮑率」要跟程式裡 <kbd>Serial.begin(9600)</kbd> 一樣</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== 測驗 ===== -->
+    <section class="section">
+      <h3>🧠 來考一下：你抓到 IDE 訣竅了嗎？</h3>
+
+      <div class="quiz">
+        <h4>🤔 第 1 題：要把程式燒到 Arduino 板上，要按哪個按鈕？</h4>
+        <div class="quiz-options" id="q1options">
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">✅</span><span>驗證</span></button>
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">➡️</span><span>上傳</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🔍</span><span>序列監視器</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">📚</span><span>程式庫</span></button>
+        </div>
+        <div class="quiz-result" id="q1result"></div>
+      </div>
+
+      <div class="quiz">
+        <h4>🤔 第 2 題：上傳前發現有錯誤，會在哪裡先發現？</h4>
+        <div class="quiz-options" id="q2options">
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">✅</span><span>驗證時</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🤞</span><span>上傳到一半</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">🎲</span><span>看運氣</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">😴</span><span>不會發現</span></button>
+        </div>
+        <div class="quiz-result" id="q2result"></div>
+      </div>
+
+      <div class="quiz">
+        <h4>🤔 第 3 題：上傳的快捷鍵是？</h4>
+        <div class="quiz-options" id="q3options">
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">⌨️</span><span>Ctrl+S</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">⌨️</span><span>Ctrl+R</span></button>
+          <button class="quiz-option" type="button" data-correct="true"><span class="emoji">⌨️</span><span>Ctrl+U</span></button>
+          <button class="quiz-option" type="button" data-correct="false"><span class="emoji">⌨️</span><span>Ctrl+N</span></button>
+        </div>
+        <div class="quiz-result" id="q3result"></div>
+      </div>
+    </section>
+
+    <div class="success-box">
+      <h3>🎉 IDE 操作你已經懂了！</h3>
+      <p>記住四個按鈕（驗證 / 上傳 / 序列監視器 / 程式庫）和 8 步驟流程，就可以開始寫程式控制 Arduino。下一步去認識每根接腳！</p>
     </div>
 
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">✅</div>
-        <h3>驗證程式</h3>
-        <p>檢查程式語法是否正確，不需連接Arduino就能測試程式碼</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">➡️</div>
-        <h3>上傳程式</h3>
-        <p>將程式燒錄到Arduino開發板中，讓Arduino執行你的程式</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">🔍</div>
-        <h3>序列監視器</h3>
-        <p>即時監看Arduino傳送的資料，方便除錯和監控程式運行狀態</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">📚</div>
-        <h3>程式庫管理</h3>
-        <p>安裝和管理第三方程式庫，擴展Arduino的功能</p>
-      </div>
-    </div>
-
-    <div class="step-by-step">
-      <h3>📋 第一次寫程式的完整流程</h3>
-      
-      <div class="step">
-        <span class="step-number">1</span>
-        <strong>開啟新檔案：</strong>檔案 → 新增，或使用快捷鍵 Ctrl+N
-      </div>
-
-      <div class="step">
-        <span class="step-number">2</span>
-        <strong>撰寫程式：</strong>在編輯區輸入你的Arduino程式碼
-      </div>
-
-      <div class="step">
-        <span class="step-number">3</span>
-        <strong>儲存檔案：</strong>Ctrl+S 儲存，選擇檔案名稱和位置
-      </div>
-
-      <div class="step">
-        <span class="step-number">4</span>
-        <strong>驗證程式：</strong>點擊 ✅ 按鈕檢查語法錯誤
-      </div>
-
-      <div class="step">
-        <span class="step-number">5</span>
-        <strong>選擇開發板：</strong>工具 → 開發板，選擇你的Arduino型號
-      </div>
-
-      <div class="step">
-        <span class="step-number">6</span>
-        <strong>選擇序列埠：</strong>工具 → 序列埠，選擇Arduino連接的COM埠
-      </div>
-
-      <div class="step">
-        <span class="step-number">7</span>
-        <strong>上傳程式：</strong>點擊 ➡️ 按鈕將程式傳送到Arduino
-      </div>
-
-      <div class="step">
-        <span class="step-number">8</span>
-        <strong>測試結果：</strong>觀察Arduino的反應，使用序列監視器查看輸出
-      </div>
-    </div>
-
-    <div class="shortcuts">
-      <h3>⚡ 常用快捷鍵</h3>
-      <div class="shortcuts-grid">
-        <div class="shortcut-item">
-          <span>驗證程式</span>
-          <span class="shortcut-key">Ctrl + R</span>
-        </div>
-        <div class="shortcut-item">
-          <span>上傳程式</span>
-          <span class="shortcut-key">Ctrl + U</span>
-        </div>
-        <div class="shortcut-item">
-          <span>新增檔案</span>
-          <span class="shortcut-key">Ctrl + N</span>
-        </div>
-        <div class="shortcut-item">
-          <span>開啟檔案</span>
-          <span class="shortcut-key">Ctrl + O</span>
-        </div>
-        <div class="shortcut-item">
-          <span>儲存檔案</span>
-          <span class="shortcut-key">Ctrl + S</span>
-        </div>
-        <div class="shortcut-item">
-          <span>尋找文字</span>
-          <span class="shortcut-key">Ctrl + F</span>
-        </div>
-        <div class="shortcut-item">
-          <span>註解/取消註解</span>
-          <span class="shortcut-key">Ctrl + /</span>
-        </div>
-        <div class="shortcut-item">
-          <span>自動縮排</span>
-          <span class="shortcut-key">Ctrl + T</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="tip">
-      <h4>💡 實用小技巧</h4>
-      <ul>
-        <li><strong>自動完成：</strong>輸入函數名稱時，IDE會自動建議完成</li>
-        <li><strong>語法高亮：</strong>不同顏色代表不同的程式元素，幫助閱讀</li>
-        <li><strong>錯誤提示：</strong>紅色底線表示語法錯誤，滑鼠移過去可看錯誤訊息</li>
-        <li><strong>範例程式：</strong>檔案 → 範例，有豐富的學習範例</li>
-      </ul>
-    </div>
-
-    <div class="warning">
-      <h4>⚠️ 常見問題解決</h4>
-      <ul>
-        <li><strong>上傳失敗：</strong>檢查USB連線、序列埠選擇、開發板型號</li>
-        <li><strong>編譯錯誤：</strong>仔細檢查程式語法，缺少分號或括號</li>
-        <li><strong>序列監視器無資料：</strong>確認鮑率設定是否與程式一致</li>
-        <li><strong>程式無反應：</strong>檢查電路連接、接腳編號是否正確</li>
-      </ul>
-    </div>
-
-    <div class="navigation">
-      <a href="ide-install.html" class="nav-btn">⬅️ 上一步：IDE安裝</a>
+    <nav class="navigation" aria-label="上下頁">
+      <a href="ide-install.html" class="nav-btn">⬅️ 上一步：IDE 安裝</a>
       <a href="pin-theory.html" class="nav-btn">下一步：接腳原理 ➡️</a>
-    </div>
-  </div>
+    </nav>
+  </main>
+
+  <script>
+    /* ===== 互動 IDE 模擬 ===== */
+    const ideConsole = document.getElementById('ideConsole');
+    const ideStatus = document.getElementById('ideStatus');
+    const ideButtons = document.querySelectorAll('.ide-btn');
+
+    function appendConsole(html, clear) {
+      if (clear) ideConsole.innerHTML = '';
+      ideConsole.innerHTML += html;
+      ideConsole.scrollTop = ideConsole.scrollHeight;
+    }
+
+    function setActive(action) {
+      ideButtons.forEach(b => b.classList.toggle('active', b.dataset.action === action));
+    }
+
+    function runAction(action) {
+      setActive(action);
+      if (action === 'verify') {
+        ideStatus.textContent = '驗證中...';
+        appendConsole('<span class="info">▶ 驗證程式...</span>\n', true);
+        setTimeout(() => {
+          appendConsole('正在編譯 Blink.ino...\n');
+        }, 300);
+        setTimeout(() => {
+          appendConsole('<span class="ok-msg">✓ 編譯完成。</span>\n');
+          appendConsole('草圖佔用程式儲存空間: <span class="info">924 bytes (2%)</span>\n');
+          appendConsole('全域變數使用記憶體: <span class="info">9 bytes (0%)</span>\n');
+          appendConsole('<span class="ok-msg">→ 沒有錯誤！可以按上傳了。</span>');
+          ideStatus.textContent = '✓ 驗證成功';
+        }, 1200);
+      } else if (action === 'upload') {
+        ideStatus.textContent = '上傳中...';
+        appendConsole('<span class="info">▶ 上傳到 Arduino Uno (COM3)...</span>\n', true);
+        setTimeout(() => {
+          appendConsole('連接到開發板...\n');
+        }, 300);
+        setTimeout(() => {
+          appendConsole('燒錄中: ████████████░░░░ 75%\n');
+        }, 900);
+        setTimeout(() => {
+          appendConsole('燒錄中: ████████████████ 100%\n');
+        }, 1500);
+        setTimeout(() => {
+          appendConsole('<span class="ok-msg">✓ 上傳成功！</span>\n');
+          appendConsole('<span class="info">💡 看看 Arduino 上的 L 燈，是不是開始閃了？</span>');
+          ideStatus.textContent = '✓ 上傳完成';
+        }, 2100);
+      } else if (action === 'monitor') {
+        ideStatus.textContent = '🔍 監視中（9600 baud）';
+        appendConsole('<span class="info">📡 開啟序列監視器 (9600 baud)...</span>\n', true);
+        const messages = [
+          '<span class="ok-msg">LED: ON  💡</span>',
+          '<span class="info">LED: OFF 🌑</span>',
+          '<span class="ok-msg">LED: ON  💡</span>',
+          '<span class="info">LED: OFF 🌑</span>',
+          '<span class="ok-msg">LED: ON  💡</span>',
+          '<span class="info">LED: OFF 🌑</span>'
+        ];
+        let i = 0;
+        const iv = setInterval(() => {
+          if (i >= messages.length) { clearInterval(iv); return; }
+          appendConsole(messages[i] + '\n');
+          i++;
+        }, 600);
+      }
+    }
+
+    ideButtons.forEach(btn => {
+      btn.addEventListener('click', () => runAction(btn.dataset.action));
+    });
+
+    /* ===== 測驗 ===== */
+    function bindQuiz(optionsId, resultId, okMessage, hintMessage) {
+      const options = document.querySelectorAll('#' + optionsId + ' .quiz-option');
+      const result = document.getElementById(resultId);
+      options.forEach(option => {
+        option.addEventListener('click', () => {
+          const isCorrect = option.dataset.correct === 'true';
+          options.forEach(item => { item.classList.remove('correct', 'wrong'); item.disabled = false; });
+          option.classList.add(isCorrect ? 'correct' : 'wrong');
+          result.textContent = isCorrect ? '✅ 對了！' + okMessage : '❌ 再想想～' + hintMessage;
+          result.style.color = isCorrect ? '#1b6f2a' : '#b42323';
+          if (isCorrect) {
+            options.forEach(item => { item.disabled = true; });
+          } else {
+            setTimeout(() => { option.classList.remove('wrong'); }, 1500);
+          }
+        });
+      });
+    }
+    bindQuiz('q1options', 'q1result',
+      '上傳（➡️）才會把程式燒到 Arduino — 驗證只是檢查語法。',
+      '哪個按鈕讓 Arduino「真的開始跑程式」？');
+    bindQuiz('q2options', 'q2result',
+      '驗證會編譯程式，所以打錯字會立刻發現，省得白白上傳一次。',
+      '提示：上傳前一定會先做的步驟是？');
+    bindQuiz('q3options', 'q3result',
+      'U = Upload（上傳），所以快捷鍵是 Ctrl+U。',
+      '想想英文字 — Upload 的開頭是哪個字母？');
+  </script>
 </body>
 </html>
